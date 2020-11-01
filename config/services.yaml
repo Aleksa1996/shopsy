@@ -1,0 +1,106 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+      - '../src/Tests/'
+      - '../src/Shared/**'
+      - '../src/Shopsy/Users/{Domain,Application}'
+
+  # controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  App\Shopsy\Users\Infrastructure\Delivery\API\Symfony\Controller\:
+    resource: '../src/Shopsy/Users/Infrastructure/Delivery/API/Symfony/Controller'
+    tags: [ 'controller.service_arguments' ]
+
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones
+
+  App\Swoole\Server\Runtime\HMR\InotifyHMR:
+    decorates: 'K911\Swoole\Server\Runtime\HMR\HotModuleReloaderInterface'
+
+  App\Shopsy\Users\Domain\Model\UserRepository: '@App\Shopsy\Users\Infrastructure\Persistence\Doctrine\DoctrineUserRepository'
+
+  App\Shopsy\Users\Domain\Model\PasswordHasher: '@App\Shopsy\Users\Infrastructure\Authentication\DefaultPasswordHasher'
+
+  App\Shopsy\Users\Domain\Model\Authentication: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2Authentication'
+
+  App\Shopsy\Users\Application\DataTransformer\ArrayUserDataTransformer:
+    class: App\Shopsy\Users\Application\DataTransformer\ArrayUserDataTransformer
+
+  App\Shopsy\Users\Application\DataTransformer\UserDataTransformer: '@App\Shopsy\Users\Application\DataTransformer\ArrayUserDataTransformer'
+
+# Transactional
+  App\Shared\Infrastructure\Application\Service\DoctrineSession:
+    class: App\Shared\Infrastructure\Application\Service\DoctrineSession
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+
+  App\Shared\Application\Service\TransactionalApplicationService:
+    class: App\Shared\Application\Service\TransactionalApplicationService
+    arguments:
+      $session: '@App\Shared\Infrastructure\Application\Service\DoctrineSession'
+
+  App\Shopsy\Users\Application\Service\SignUpUserService:
+    class: App\Shopsy\Users\Application\Service\SignUpUserService
+    arguments:
+      $userRepository: '@App\Shopsy\Users\Domain\Model\UserRepository'
+      $userDataTransformer: '@App\Shopsy\Users\Application\DataTransformer\UserDataTransformer'
+      $passwordHasher: '@App\Shopsy\Users\Domain\Model\PasswordHasher'
+
+  App\Shopsy\Users\Application\Service\SignInUserService:
+    class: App\Shopsy\Users\Application\Service\SignInUserService
+    arguments:
+      $authentication: '@App\Shopsy\Users\Domain\Model\Authentication'
+      $userDataTransformer: '@App\Shopsy\Users\Application\DataTransformer\UserDataTransformer'
+
+  # LEAGUE OAUTH 2 SERVER
+  PrivateCryptKey:
+    class: League\OAuth2\Server\CryptKey
+    arguments:
+      $keyPath: '%env(OAUTH2_PRIVATE_KEY)%'
+      $passPhrase: null
+      $keyPermissionsCheck: false
+
+  PublicCryptKey:
+    class: League\OAuth2\Server\CryptKey
+    arguments:
+      $keyPath: '%env(OAUTH2_PUBLIC_KEY)%'
+      $passPhrase: null
+      $keyPermissionsCheck: false
+
+  League\OAuth2\Server\AuthorizationServer:
+    arguments:
+      $clientRepository: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2\Repository\ClientRepository'
+      $accessTokenRepository: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2\Repository\AccessTokenRepository'
+      $scopeRepository: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2\Repository\ScopeRepository'
+      $privateKey: '@PrivateCryptKey'
+      $encryptionKey: '%env(OAUTH2_ENCRYPTION_KEY)%'
+    calls:
+      - enableGrantType: ['@League\OAuth2\Server\Grant\PasswordGrant']
+
+  League\OAuth2\Server\Grant\PasswordGrant:
+    arguments:
+      $userRepository: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2\Repository\UserRepository'
+      $refreshTokenRepository: '@App\Shopsy\Users\Infrastructure\Authentication\Oauth2\Repository\RefreshTokenRepository'
+
+
+  # php bin/console config:dump-reference debug
+  # php bin/console debug:config debug
+  # bin/console swoole:server:run

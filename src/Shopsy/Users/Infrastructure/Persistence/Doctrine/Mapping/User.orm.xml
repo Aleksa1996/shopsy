@@ -1,0 +1,17 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Shopsy\Users\Domain\Model\User" table="sh_users"
+            repository-class="App\Shopsy\Users\Infrastructure\Persistence\Doctrine\DoctrineUserRepository">
+        <id name="id" column="id" type="user_id">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="firstName" column="first_name" type="user_first_name" length="220"/>
+        <field name="lastName" column="last_name" type="user_last_name" length="220"/>
+        <field name="email" column="email" type="user_email" length="220" unique="true"/>
+        <field name="password" column="password" type="user_password" length="220"/>
+        <field name="createdOn" column="created_on" type="datetime"/>
+        <field name="updatedOn" column="updated_on" type="datetime"/>
+    </entity>
+</doctrine-mapping>

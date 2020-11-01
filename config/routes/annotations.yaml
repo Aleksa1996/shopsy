@@ -1,0 +1,7 @@
+controllers:
+    resource: ../../src/Shopsy/Users/Infrastructure/Delivery/API/Symfony/Controller/
+    type: annotation
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: annotation

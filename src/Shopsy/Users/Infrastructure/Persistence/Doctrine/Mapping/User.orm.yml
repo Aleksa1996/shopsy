@@ -1,0 +1,32 @@
+App\Shopsy\Users\Domain\Model\User:
+  type: entity
+  id:
+    id:
+      column: id
+      type: user_id
+  table: sh_users
+  repositoryClass: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\DoctrineUserRepository
+  fields:
+    firstName:
+      column: first_name
+      type: user_first_name
+      length: 220
+    lastName:
+      column: last_name
+      type: user_last_name
+      length: 220
+    email:
+      column: email
+      type: user_email
+      length: 220
+      unique: true
+    password:
+      column: password
+      type: user_password
+      length: 220
+    createdOn:
+      column: created_on
+      type: datetime
+    updatedOn:
+      column: updated_on
+      type: datetime
