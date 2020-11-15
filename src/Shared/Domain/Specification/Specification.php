@@ -2,36 +2,48 @@
 
 namespace App\Shared\Domain\Specification;
 
-/**
- * Interface Specification
- *
- * @package Ddd\Domain\Specification
- */
-interface Specification
+use BadMethodCallException;
+
+abstract class Specification
 {
     /**
      * @param mixed $object
-     *
      * @return bool
      */
-    public function isSatisfiedBy($object);
+    abstract public function isSatisfiedBy($object): bool;
+
+    /**
+     * @param string $alias
+     * @return string
+     */
+    public function whereExpression(string $alias): string
+    {
+        throw new BadMethodCallException('Where expression is not supported');
+    }
 
     /**
      * @param Specification $specification
-     *
-     * @return Specification
+     * @return AndSpecification
      */
-    public function andSpecification(Specification $specification);
+    public function and(Specification $specification): AndSpecification
+    {
+        return new AndSpecification($this, $specification);
+    }
 
     /**
      * @param Specification $specification
-     * 
-     * @return Specification
+     * @return OrSpecification
      */
-    public function orSpecification(Specification $specification);
+    public function or(Specification $specification): OrSpecification
+    {
+        return new OrSpecification($this, $specification);
+    }
 
     /**
-     * @return Specification
+     * @return NotSpecification
      */
-    public function not();
+    public function not(): NotSpecification
+    {
+        return new NotSpecification($this);
+    }
 }

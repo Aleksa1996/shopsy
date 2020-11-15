@@ -19,8 +19,8 @@ class ArrayUserDataTransformer implements UserDataTransformer
     {
         $this->data = [
             'id' => $user->getId()->getId(),
-            'firstName' => $user->getFirstName()->getFirstName(),
-            'lastName' => $user->getLastName()->getLastName(),
+            'fullName' => $user->getFullName()->getFullName(),
+            'username' => $user->getUsername()->getUsername(),
             'email' => $user->getEmail()->getEmail()
         ];
     }

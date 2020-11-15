@@ -7,13 +7,13 @@ App\Shopsy\Users\Domain\Model\User:
   table: sh_users
   repositoryClass: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\DoctrineUserRepository
   fields:
-    firstName:
-      column: first_name
-      type: user_first_name
+    fullName:
+      column: full_name
+      type: user_full_name
       length: 220
-    lastName:
-      column: last_name
-      type: user_last_name
+    username:
+      column: username
+      type: user_username
       length: 220
     email:
       column: email

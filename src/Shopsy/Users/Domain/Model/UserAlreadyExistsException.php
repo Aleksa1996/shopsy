@@ -4,7 +4,9 @@
 namespace App\Shopsy\Users\Domain\Model;
 
 
-class UserAlreadyExistsException extends \Exception
+use App\Shared\Domain\DomainException;
+
+class UserAlreadyExistsException extends DomainException
 {
 
 }

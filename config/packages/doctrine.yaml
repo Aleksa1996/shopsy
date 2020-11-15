@@ -7,8 +7,8 @@ doctrine:
         #server_version: '5.7'
         types:
             user_id: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserId
-            user_first_name: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserFirstName
-            user_last_name: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserLastName
+            user_full_name: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserFullName
+            user_username: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserUsername
             user_email: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserEmail
             user_password: App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types\UserPassword
     orm:

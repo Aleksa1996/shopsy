@@ -2,12 +2,7 @@
 
 namespace App\Shared\Domain\Specification;
 
-/**
- * Class AndSpecification
- *
- * @package Ddd\Domain\Specification
- */
-class AndSpecification extends AbstractSpecification
+class AndSpecification extends Specification
 {
     /**
      * @var Specification
@@ -30,12 +25,40 @@ class AndSpecification extends AbstractSpecification
     }
 
     /**
-     * @param mixed $object
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isSatisfiedBy($object)
+    public function isSatisfiedBy($object): bool
     {
         return $this->one->isSatisfiedBy($object) && $this->other->isSatisfiedBy($object);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function whereExpression(string $alias): string
+    {
+        return sprintf(
+            sprintf(
+                '(%s) AND (%s)',
+                $this->one()->whereExpression($alias),
+                $this->other()->whereExpression($alias)
+            )
+        );
+    }
+
+    /**
+     * @return Specification
+     */
+    public function one(): Specification
+    {
+        return $this->one;
+    }
+
+    /**
+     * @return Specification
+     */
+    public function other(): Specification
+    {
+        return $this->other;
     }
 }

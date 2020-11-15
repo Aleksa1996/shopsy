@@ -11,12 +11,12 @@ class SignUpUserRequest implements ApplicationRequest
     /**
      * @var string
      */
-    public $firstName;
+    public $fullName;
 
     /**
      * @var string
      */
-    public $lastName;
+    public $username;
 
     /**
      * @var string
@@ -31,15 +31,15 @@ class SignUpUserRequest implements ApplicationRequest
     /**
      * SignUpUserRequest constructor.
      *
-     * @param $firstName
-     * @param $lastName
+     * @param $fullName
+     * @param $username
      * @param $email
      * @param $password
      */
-    public function __construct($firstName, $lastName, $email, $password)
+    public function __construct($fullName, $username, $email, $password)
     {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
+        $this->fullName = $fullName;
+        $this->username = $username;
         $this->email = $email;
         $this->password = $password;
     }

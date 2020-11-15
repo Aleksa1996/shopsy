@@ -2,12 +2,7 @@
 
 namespace App\Shared\Domain\Specification;
 
-/**
- * Class NotSpecification
- *
- * @package Ddd\Domain\Specification
- */
-class NotSpecification extends AbstractSpecification
+class NotSpecification extends Specification
 {
     /**
      * @var Specification
@@ -24,11 +19,18 @@ class NotSpecification extends AbstractSpecification
 
     /**
      * @param mixed $object
-     *
      * @return bool
      */
-    public function isSatisfiedBy($object)
+    public function isSatisfiedBy($object): bool
     {
         return !$this->specification->isSatisfiedBy($object);
+    }
+
+    /**
+     * @return Specification
+     */
+    public function specification(): Specification
+    {
+        return $this->specification;
     }
 }

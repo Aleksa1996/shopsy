@@ -15,18 +15,18 @@ class User
     protected $id;
 
     /**
-     * User First name
+     * User Full name
      *
-     * @var UserFirstName
+     * @var UserFullName
      */
-    protected $firstName;
+    protected $fullName;
 
     /**
-     * User Last name
+     * User name
      *
-     * @var UserLastName
+     * @var UserUsername
      */
-    protected $lastName;
+    protected $username;
 
     /**
      * User email
@@ -56,16 +56,16 @@ class User
      * User constructor.
      *
      * @param UserId $id
-     * @param UserFirstName $firstName
-     * @param UserLastName $lastName
+     * @param UserFullName $fullName
+     * @param UserUsername $username
      * @param UserEmail $email
      * @param UserPassword $password
      */
-    public function __construct(UserId $id, UserFirstName $firstName, UserLastName $lastName, UserEmail $email, UserPassword $password)
+    public function __construct(UserId $id, UserFullName $fullName, UserUsername $username, UserEmail $email, UserPassword $password)
     {
         $this->setId($id);
-        $this->setFirstName($firstName);
-        $this->setLastName($lastName);
+        $this->setFullName($fullName);
+        $this->setUsername($username);
         $this->setEmail($email);
         $this->setPassword($password);
         $this->setCreatedOn(new DateTime());
@@ -102,23 +102,23 @@ class User
     /**
      * Get user First name
      *
-     * @return  UserFirstName
+     * @return  UserFullName
      */
-    public function getFirstName()
+    public function getFullName()
     {
-        return $this->firstName;
+        return $this->fullName;
     }
 
     /**
      * Set user First name
      *
-     * @param UserFirstName $firstName
+     * @param UserFullName $fullName
      *
      * @return  self
      */
-    public function setFirstName(UserFirstName $firstName)
+    public function setFullName(UserFullName $fullName)
     {
-        $this->firstName = $firstName;
+        $this->fullName = $fullName;
 
         return $this;
     }
@@ -126,23 +126,23 @@ class User
     /**
      * Get user Last name
      *
-     * @return  UserLastName
+     * @return  UserUsername
      */
-    public function getLastName()
+    public function getUsername()
     {
-        return $this->lastName;
+        return $this->username;
     }
 
     /**
      * Set user Last name
      *
-     * @param UserLastName $lastName
+     * @param UserUsername $username
      *
      * @return  self
      */
-    public function setLastName(UserLastName $lastName)
+    public function setUsername(UserUsername $username)
     {
-        $this->lastName = $lastName;
+        $this->username = $username;
 
         return $this;
     }

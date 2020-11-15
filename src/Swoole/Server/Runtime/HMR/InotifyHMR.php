@@ -40,7 +40,7 @@ final class InotifyHMR implements HotModuleReloaderInterface, BootableInterface
         // '/var/www/html/src/DataPersister',
         // '/var/www/html/src/DataProvider',
         // '/var/www/html/src/DataTransformer',
-        // '/var/www/html/src/DTO',
+        // '/var/www/html/src/Dto',
         // '/var/www/html/src/Entity',
         // '/var/www/html/src/EventSubscriber',
         // '/var/www/html/src/Migrations',

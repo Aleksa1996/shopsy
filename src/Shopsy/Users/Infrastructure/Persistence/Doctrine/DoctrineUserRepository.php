@@ -8,6 +8,7 @@ use App\Shopsy\Users\Domain\Model\User;
 use App\Shopsy\Users\Domain\Model\UserEmail;
 use App\Shopsy\Users\Domain\Model\UserId;
 use App\Shopsy\Users\Domain\Model\UserRepository;
+use App\Shopsy\Users\Domain\Model\UserUsername;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,6 +31,14 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
     public function findById(UserId $userId)
     {
         return $this->find($userId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByUsername(UserUsername $username)
+    {
+        return $this->findOneBy(['username' => $username]);
     }
 
     /**

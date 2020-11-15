@@ -6,19 +6,19 @@ namespace App\Shopsy\Users\Infrastructure\Persistence\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
-use App\Shopsy\Users\Domain\Model\UserLastName as UserLastNameValueObject;
+use App\Shopsy\Users\Domain\Model\UserFullName as UserFullNameValueObject;
 
-class UserLastName extends StringType
+class UserFullName extends StringType
 {
     /**
      * @var string
      */
-    const name = 'user_last_name';
+    const name = 'user_full_name';
 
     /**
      * @var string
      */
-    const className = UserLastNameValueObject::class;
+    const className = UserFullNameValueObject::class;
 
     /**
      * @inheritDoc
@@ -35,7 +35,7 @@ class UserLastName extends StringType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $value->getLastName();
+        return $value->getFullName();
     }
 
     /**
