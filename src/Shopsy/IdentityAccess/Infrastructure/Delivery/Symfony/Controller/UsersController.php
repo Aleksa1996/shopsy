@@ -2,16 +2,20 @@
 
 namespace App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Common\Application\Bus\QueryBus;
 use App\Common\Application\Bus\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Shopsy\IdentityAccess\Application\Query\UserQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Shopsy\IdentityAccess\Application\Command\CreateUserCommand;
-use App\Shopsy\IdentityAccess\Application\Query\UserQuery;
+use App\Shopsy\IdentityAccess\Application\Command\DestroyUserCommand;
+use App\Shopsy\IdentityAccess\Application\Command\UpdateUserCommand;
+use App\Shopsy\IdentityAccess\Application\Query\UserCollectionQuery;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Dto\CreateUserDto;
+use App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto;
 
 class UsersController extends AbstractController
 {
@@ -32,45 +36,49 @@ class UsersController extends AbstractController
         $this->commandBus = $commandBus;
     }
 
-    // /**
-    //  * @Route("/users", name="users_index", methods={"GET"})
-    //  *
-    //  * @param Request $request
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function index(Request $request)
-    // {
-    //     $userQuery = new UsersQueryRequest(
-    //         $request->query->get('page') ? (int)$request->query->get('page') : 1,
-    //         $request->query->get('limit') ? (int)$request->query->get('limit') : 10
-    //     );
+    /**
+     * @Route("/users", name="users_index", methods={"GET"})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function index(Request $request)
+    {
+        $userQuery = new UserCollectionQuery(
+            $request->query->get('page') ? (int)$request->query->get('page') : 1,
+            $request->query->get('limit') ? (int)$request->query->get('limit') : 10
+        );
 
-    //     $users = $this->usersQueryService->execute($usersQueryRequest);
+        $users = $this->queryBus->handle($userQuery);
 
-    //     $users = $this->serializer->serialize($users, 'json', [
-    //         'jsonld' => true,
-    //         'url' => '/users'
-    //     ]);
-    //     return new JsonResponse($users, JsonResponse::HTTP_OK, [], true);
-    //     // return new JsonResponse($users, JsonResponse::HTTP_OK);
-    // }
+        dd($users);
 
-    // /**
-    //  * @Route("/users/{id}", name="users_show", methods={"GET"})
-    //  *
-    //  * @param Request $request
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function show($id, Request $request)
-    // {
-    //     $userQueryRequest = new UserQueryRequest($id);
+        $users = $this->serializer->serialize($users, 'json', [
+            'jsonld' => true,
+            'url' => '/users'
+        ]);
+        return new JsonResponse($users, JsonResponse::HTTP_OK, [], true);
+        // return new JsonResponse($users, JsonResponse::HTTP_OK);
+    }
 
-    //     $users = $this->userQueryService->execute($userQueryRequest);
+    /**
+     * @Route("/users/{id}", name="users_show", methods={"GET"})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function show($id, Request $request)
+    {
+        $userQuery = new UserQuery($id);
 
-    //     return new JsonResponse($users, JsonResponse::HTTP_OK);
-    // }
+        $user = $this->queryBus->handle($userQuery);
+
+        dd($user);
+
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
+    }
 
     /**
      * @Route("/users", name="users_create", methods={"POST"})
@@ -89,59 +97,71 @@ class UsersController extends AbstractController
             $userDto->password
         );
 
-        // $this->commandBus->handle($createUserCommand);
+        $this->commandBus->handle($createUserCommand);
 
-        $getUserQuery = new UserQuery(
+        $userQuery = new UserQuery(
+            null,
             null,
             $userDto->username
         );
 
-        $user = $this->queryBus->handle($getUserQuery);
+        $user = $this->queryBus->handle($userQuery);
 
         dd($user);
 
         return new JsonResponse($user, JsonResponse::HTTP_CREATED);
     }
 
-    // /**
-    //  * @Route("/users/{id}", name="users_update", methods={"PUT","PATCH"})
-    //  * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto")
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function update($id, UpdateUserDto $userDto)
-    // {
-    //     $updateUserRequest = new UpdateUserRequest(
-    //         $id,
-    //         $userDto->fullName,
-    //         $userDto->username,
-    //         $userDto->email,
-    //         $userDto->password,
-    //         $userDto->active
-    //     );
+    /**
+     * @Route("/users/{id}", name="users_update", methods={"PUT","PATCH"})
+     * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto")
+     *
+     * @return JsonResponse
+     */
+    public function update($id, UpdateUserDto $userDto)
+    {
+        $updateUserCommand = new UpdateUserCommand(
+            $id,
+            $userDto->fullName,
+            $userDto->username,
+            $userDto->email,
+            $userDto->password
+        );
 
-    //     $user = $this->withExceptionHandling(
-    //         $this->withTransaction($this->updateUserService),
-    //         new DummyExceptionHandler()
-    //     )->execute($updateUserRequest);
+        $this->commandBus->handle($updateUserCommand);
 
-    //     return new JsonResponse($user, JsonResponse::HTTP_OK);
-    // }
+        $userQuery = new UserQuery(
+            $id
+        );
 
-    // /**
-    //  * @Route("/users/{id}", name="users_destroy", methods={"DELETE"})
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function destroy($id)
-    // {
-    //     $destroyUserRequest = new DestroyUserRequest($id);
+        $user = $this->queryBus->handle($userQuery);
 
-    //     $user = $this->withExceptionHandling(
-    //         $this->withTransaction($this->destroyUserService),
-    //         new DummyExceptionHandler()
-    //     )->execute($destroyUserRequest);
+        dd($user);
 
-    //     return new JsonResponse($user, JsonResponse::HTTP_OK);
-    // }
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route("/users/{id}", name="users_destroy", methods={"DELETE"})
+     *
+     * @return JsonResponse
+     */
+    public function destroy($id)
+    {
+        $userQuery = new UserQuery(
+            $id
+        );
+
+        $user = $this->queryBus->handle($userQuery);
+
+        $destroyUserCommand = new DestroyUserCommand(
+            $id
+        );
+
+        $this->commandBus->handle($destroyUserCommand);
+
+        dd($user);
+
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
+    }
 }

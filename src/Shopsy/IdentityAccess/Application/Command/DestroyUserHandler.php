@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Application\Service;
+namespace App\Shopsy\IdentityAccess\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
 use App\Shopsy\IdentityAccess\Application\Command\DestroyUserCommand;
 use App\Shopsy\IdentityAccess\Domain\Model\User\UserId;
 use App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository;
 
-class DestoryUserCommand implements CommandHandler
+class DestroyUserHandler implements CommandHandler
 {
     /**
      * @var UserRepository
@@ -15,7 +15,7 @@ class DestoryUserCommand implements CommandHandler
     private $userRepository;
 
     /**
-     * DestoryUserCommand constructor.
+     * DestroyUserHandler constructor.
      *
      * @param UserRepository $userRepository
      */

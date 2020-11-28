@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Application\Command;
+namespace App\Shopsy\IdentityAccess\Application\Query;
 
-use App\Common\Application\Command\Command;
+use App\Common\Application\Query\Query;
 
-class UpdateUserCommand implements Command
+class UserCollectionQuery implements Query
 {
     /**
-     * @var string|int
+     * @var int
      */
-    private $id;
+    private $page;
+
+    /**
+     * @var int
+     */
+    private $limit;
 
     /**
      * @var string
@@ -27,35 +32,38 @@ class UpdateUserCommand implements Command
     private $email;
 
     /**
-     * @var string
-     */
-    private $password;
-
-    /**
-     * UpdateUserCommand constructor.
+     * UserQuery constructor.
      *
      * @param $fullName
      * @param $username
      * @param $email
-     * @param $password
      */
-    public function __construct($id, $fullName, $username, $email, $password)
+    public function __construct($page, $limit, $fullName = null, $username = null, $email = null)
     {
-        $this->id = $id;
+        $this->page = $page;
+        $this->limit = $limit;
         $this->fullName = $fullName;
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password;
+    }
+    /**
+     * Get the value of page
+     *
+     * @return  int
+     */
+    public function getPage()
+    {
+        return $this->page;
     }
 
     /**
-     * Get the value of id
+     * Get the value of limit
      *
-     * @return  string|int
+     * @return  int
      */
-    public function getId()
+    public function getLimit()
     {
-        return $this->id;
+        return $this->limit;
     }
 
     /**
@@ -86,15 +94,5 @@ class UpdateUserCommand implements Command
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Get the value of password
-     *
-     * @return  string
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 }

@@ -7,6 +7,11 @@ use App\Common\Application\Query\Query;
 class UserQuery implements Query
 {
     /**
+     * @var int|string
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $fullName;
@@ -28,11 +33,22 @@ class UserQuery implements Query
      * @param $username
      * @param $email
      */
-    public function __construct($fullName, $username = null, $email = null)
+    public function __construct($id, $fullName = null, $username = null, $email = null)
     {
+        $this->id = $id;
         $this->fullName = $fullName;
         $this->username = $username;
         $this->email = $email;
+    }
+
+    /**
+     * Get the value of id
+     *
+     * @return  int|string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

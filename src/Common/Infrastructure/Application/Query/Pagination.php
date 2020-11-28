@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Application\Query;
+namespace App\Common\Infrastructure\Application\Query;
 
 
 class Pagination

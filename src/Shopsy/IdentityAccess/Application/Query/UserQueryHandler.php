@@ -44,10 +44,17 @@ class UserQueryHandler implements QueryHandler
      */
     public function execute(UserQuery $query = null)
     {
+        $user = null;
+
+        if ($query->getId()) {
+            $user = $this->userRepository->query(
+                $this->userQueryFactory->id($query->getId())
+            );
+        }
+
         if ($query->getFullName()) {
         }
 
-        $user = null;
         if ($query->getUsername()) {
             $user = $this->userRepository->query(
                 $this->userQueryFactory->username($query->getUsername())

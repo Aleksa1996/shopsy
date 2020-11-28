@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Application\Service;
+namespace App\Shopsy\IdentityAccess\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
 use App\Shopsy\IdentityAccess\Domain\Model\User\UserEmail;
@@ -13,7 +13,7 @@ use App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository;
 use App\Shopsy\IdentityAccess\Domain\Service\PasswordHasher;
 use App\Shopsy\IdentityAccess\Domain\Model\User\UserId;
 
-class UpdateUserService implements CommandHandler
+class UpdateUserHandler implements CommandHandler
 {
     /**
      * @var UserRepository
@@ -26,7 +26,7 @@ class UpdateUserService implements CommandHandler
     private $passwordHasher;
 
     /**
-     * UpdateUserService constructor.
+     * UpdateUserHandler constructor.
      *
      * @param UserRepository $userRepository
      * @param PasswordHasher $passwordHasher

@@ -87,14 +87,17 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
      */
     public function query($query)
     {
+        $queryBuilder = $this->createQueryBuilder('User');
+        $queryBuilder->addCriteria($query->toCriteria());
+
         if ($query instanceof DoctrineUserQuery) {
-            return $this->matching($query->toCriteria())->first();
+            return $queryBuilder->getQuery()->getSingleResult();
         }
 
         if ($query instanceof DoctrineUserCollectionQuery && $query->getPagination()) {
-            return new Paginator($this->createQueryBuilder('User')->addCriteria($query->toCriteria()));
+            return new Paginator($queryBuilder);
         }
 
-        return $this->matching($query->toCriteria());
+        return $queryBuilder->getQuery()->getResult();
     }
 }

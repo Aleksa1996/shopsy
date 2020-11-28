@@ -23,6 +23,9 @@ services:
   App\Shopsy\IdentityAccess\Application\Transformer\DtoUserTransformer: ~
   App\Shopsy\IdentityAccess\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\DtoUserTransformer'
 
+  App\Shopsy\IdentityAccess\Application\Transformer\DtoUserCollectionTransformer: ~
+  App\Shopsy\IdentityAccess\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\DtoUserCollectionTransformer'
+
   App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory: ~
   App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory: '@App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory'
 
@@ -38,6 +41,24 @@ services:
       $userQueryFactory: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory'
       $userTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\UserTransformer'
     tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Application\Query\UserCollectionQueryHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory'
+      $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\UserCollectionTransformer'
+    tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Application\Command\UpdateUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
+      $passwordHasher: '@App\Shopsy\IdentityAccess\Domain\Service\PasswordHasher'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Application\Command\DestroyUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
+    tags: [ 'app.command.handler' ]
 
   # League OAuth 2
   PrivateCryptKey:
