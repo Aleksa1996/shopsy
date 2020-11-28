@@ -2,7 +2,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="App\Shopsy\IdentityAccess\Domain\Model\User" table="sh_users"
+    <entity name="App\Shopsy\IdentityAccess\Domain\Model\User\User" table="sh_users"
             repository-class="App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\DoctrineUserRepository">
         <id name="id" column="id" type="user_id">
             <generator strategy="NONE"/>

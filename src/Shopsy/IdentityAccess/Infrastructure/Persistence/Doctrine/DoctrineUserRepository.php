@@ -4,14 +4,17 @@
 namespace App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine;
 
 
-use App\Shopsy\IdentityAccess\Domain\Model\User;
-use App\Shopsy\IdentityAccess\Domain\Model\UserEmail;
-use App\Shopsy\IdentityAccess\Domain\Model\UserId;
-use App\Shopsy\IdentityAccess\Domain\Model\UserRepository;
-use App\Shopsy\IdentityAccess\Domain\Model\UserUsername;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use App\Shopsy\IdentityAccess\Domain\Model\User\User;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserId;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserEmail;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserUsername;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQuery;
+use App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserCollectionQuery;
 
 class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
 {
@@ -61,9 +64,37 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     /**
      * @inheritDoc
+     *
+     * @throws ORMException
+     */
+    public function remove(User $user)
+    {
+        $this->getEntityManager()->remove($user);
+    }
+
+    /**
+     * @inheritDoc
      */
     public function nextIdentity()
     {
         return new UserId();
+    }
+
+    /**
+     * @param mixed $query
+     *
+     * @return array
+     */
+    public function query($query)
+    {
+        if ($query instanceof DoctrineUserQuery) {
+            return $this->matching($query->toCriteria())->first();
+        }
+
+        if ($query instanceof DoctrineUserCollectionQuery && $query->getPagination()) {
+            return new Paginator($this->createQueryBuilder('User')->addCriteria($query->toCriteria()));
+        }
+
+        return $this->matching($query->toCriteria());
     }
 }

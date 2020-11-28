@@ -2,9 +2,9 @@
 
 namespace App\Shopsy\IdentityAccess\Domain\Event;
 
-use App\Common\Domain\DomainEvent;
-use App\Shopsy\IdentityAccess\Domain\Model\UserId;
 use DateTimeImmutable;
+use App\Common\Domain\Event\DomainEvent;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserId;
 
 class UserRegistered implements DomainEvent
 {

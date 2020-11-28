@@ -4,9 +4,9 @@
 namespace App\Common\Domain;
 
 
-use Exception;
+use RuntimeException;
 
-class DomainException extends Exception
+class DomainException extends RuntimeException
 {
 
 }

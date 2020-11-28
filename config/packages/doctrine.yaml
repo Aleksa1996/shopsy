@@ -20,5 +20,5 @@ doctrine:
                 type: xml
                 dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Infrastructure/Persistence/Doctrine/Mapping'
                 is_bundle: false
-                prefix: App\Shopsy\IdentityAccess\Domain\Model
+                prefix: App\Shopsy\IdentityAccess\Domain\Model\User
                 alias: User

@@ -28,7 +28,8 @@ class QueryBus
         }
 
         $queryHandler = $this->queryHandlers[$queryClass];
-        $queryHandler->execute($query);
+
+        return $queryHandler->execute($query);
     }
 
     /**
@@ -39,6 +40,10 @@ class QueryBus
     public function register(QueryHandler $queryHandler)
     {
         $queryClass = $this->getQueryType($queryHandler);
+
+        if (is_null($queryClass)) {
+            throw new QueryNotFoundException($queryClass);
+        }
 
         $this->queryHandlers[$queryClass] = $queryHandler;
     }
@@ -59,6 +64,6 @@ class QueryBus
             return $queryHandler;
         }
 
-        return $queryParameter->getClass()->getNamespaceName();
+        return $queryParameter->getClass()->getName();
     }
 }

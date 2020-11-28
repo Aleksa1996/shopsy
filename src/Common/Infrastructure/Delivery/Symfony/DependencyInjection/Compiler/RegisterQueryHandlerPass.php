@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler;
+
+use App\Common\Application\Bus\QueryBus;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
+
+class RegisterQueryHandlerPass implements CompilerPassInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function process(ContainerBuilder $container)
+    {
+        // always first check if the primary service is defined
+        if (!$container->has(QueryBus::class)) {
+            return;
+        }
+
+        $definition = $container->findDefinition(QueryBus::class);
+
+        $taggedServices = $container->findTaggedServiceIds('app.query.handler');
+
+        foreach ($taggedServices as $id => $tags) {
+            $definition->addMethodCall('register', [new Reference($id)]);
+        }
+    }
+}

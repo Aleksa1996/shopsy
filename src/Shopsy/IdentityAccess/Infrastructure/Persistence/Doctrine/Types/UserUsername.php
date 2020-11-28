@@ -6,7 +6,7 @@ namespace App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
-use App\Shopsy\IdentityAccess\Domain\Model\UserUsername as UserUsernameValueObject;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserUsername as UserUsernameValueObject;
 
 class UserUsername extends StringType
 {
@@ -35,7 +35,11 @@ class UserUsername extends StringType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $value->getUsername();
+        if ($value instanceof UserUsernameValueObject) {
+            return $value->getUsername();
+        }
+
+        return $value;
     }
 
     /**

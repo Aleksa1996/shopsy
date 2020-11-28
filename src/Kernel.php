@@ -2,12 +2,13 @@
 
 namespace App;
 
-use App\DependencyInjection\Compiler\RegisterCommandHandlersPass;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterQueryHandlerPass;
+use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterCommandHandlerPass;
 
 class Kernel extends BaseKernel
 {
@@ -40,6 +41,7 @@ class Kernel extends BaseKernel
 
     protected function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new RegisterCommandHandlersPass());
+        $container->addCompilerPass(new RegisterCommandHandlerPass());
+        $container->addCompilerPass(new RegisterQueryHandlerPass());
     }
 }

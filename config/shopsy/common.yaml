@@ -1,0 +1,29 @@
+services:
+
+  # Default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # Command Bus
+  App\Common\Application\Bus\CommandBus:
+    arguments:
+      $transactionalSession: '@App\Common\Infrastructure\Application\Command\TransactionalSession'
+
+  App\Common\Application\Bus\QueryBus: ~
+
+  # Transactional session
+  App\Common\Infrastructure\Application\Command\DoctrineSession:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+  App\Common\Infrastructure\Application\Command\TransactionalSession: '@App\Common\Infrastructure\Application\Command\DoctrineSession'
+
+  # Param Converter
+  App\Common\Infrastructure\Delivery\Symfony\ParamConverter\:
+    resource: '%kernel.project_dir%/src/Common/Infrastructure/Delivery/Symfony/ParamConverter'
+    tags: [ 'request.param_converter' ]
+
+  # Serializer
+  App\Common\Infrastructure\Delivery\Symfony\Serializer\:
+    resource: '%kernel.project_dir%/src/Common/Infrastructure/Delivery/Symfony/Serializer'
+    tags: [ 'serializer.normalizer' ]

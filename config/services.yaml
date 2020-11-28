@@ -6,22 +6,11 @@
 
 imports:
   - { resource: './parameters.yaml' }
+  - { resource: 'shopsy/common.yaml' }
   - { resource: 'shopsy/identity_access.yaml' }
 
 services:
-
-  # Command buses
-  App\Common\Application\Bus\CommandBus:
-    arguments:
-      $transactionalSession: '@App\Common\Infrastructure\Application\Command\TransactionalSession'
-  App\Common\Application\Bus\QueryBus: ~
-
-  # Transactional sessions
-  App\Common\Infrastructure\Application\Command\DoctrineSession:
-    arguments:
-      $entityManager: '@doctrine.orm.entity_manager'
-  App\Common\Infrastructure\Application\Command\TransactionalSession: '@App\Common\Infrastructure\Application\Command\DoctrineSession'
-
-    # php bin/console config:dump-reference debug
-    # php bin/console debug:config debug
-    # bin/console swoole:server:run
+  # Default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

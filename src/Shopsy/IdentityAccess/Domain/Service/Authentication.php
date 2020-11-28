@@ -5,9 +5,9 @@ namespace App\Shopsy\IdentityAccess\Domain\Service;
 
 
 use App\Shopsy\IdentityAccess\Domain\Exception\UserNotExistsException;
-use App\Shopsy\IdentityAccess\Domain\Model\User;
-use App\Shopsy\IdentityAccess\Domain\Model\UserPassword;
-use App\Shopsy\IdentityAccess\Domain\Model\UserRepository;
+use App\Shopsy\IdentityAccess\Domain\Model\User\User;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserPassword;
+use App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository;
 
 abstract class Authentication
 {
