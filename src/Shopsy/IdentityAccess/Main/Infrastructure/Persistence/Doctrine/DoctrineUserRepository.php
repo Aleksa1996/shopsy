@@ -6,6 +6,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Common\Domain\RepositoryQueryResult;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserId;
@@ -81,23 +82,24 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
     }
 
     /**
-     * @param mixed $query
-     *
-     * @return array
+     * @inheritDoc
      */
     public function query($query)
     {
-        $queryBuilder = $this->createQueryBuilder('User');
+        $queryBuilder = $this->createQueryBuilder('u');
         $queryBuilder->addCriteria($query->toCriteria());
 
         if ($query instanceof DoctrineUserQuery) {
-            return $queryBuilder->getQuery()->getSingleResult();
+            $result = $queryBuilder->getQuery()->getSingleResult();
+            return new RepositoryQueryResult($result, $result ? 1 : 0);
         }
 
-        if ($query instanceof DoctrineUserCollectionQuery && $query->getPagination()) {
-            return new Paginator($queryBuilder);
+        if ($query instanceof DoctrineUserCollectionQuery && !is_null($query->getPagination())) {
+            $paginator = new Paginator($queryBuilder);
+            return new RepositoryQueryResult($paginator, count($paginator));
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        $result = $queryBuilder->getQuery()->getResult();
+        return new RepositoryQueryResult($result, count($result));
     }
 }

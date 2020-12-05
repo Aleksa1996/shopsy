@@ -15,7 +15,7 @@ class DtoUserTransformer implements UserTransformer
     /**
      * @inheritDoc
      */
-    public function write(User $user)
+    public function write($user)
     {
         $this->data = new UserDto(
             $user->getId()->getId(),

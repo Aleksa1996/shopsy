@@ -2,6 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query;
 
+use Doctrine\Common\Collections\Expr\Comparison;
 
 abstract class DoctrineUserCollectionQuery
 {
@@ -9,6 +10,23 @@ abstract class DoctrineUserCollectionQuery
      * @var Pagination
      */
     protected $pagination;
+
+    /**
+     * @var array
+     */
+    protected $supportedOperators = [
+        'in' => Comparison::IN,
+        'nin' => Comparison::NIN,
+        'ct' => Comparison::CONTAINS,
+        'bw' => Comparison::STARTS_WITH,
+        'ew' => Comparison::ENDS_WITH,
+        'eq' => Comparison::EQ,
+        'neq' => Comparison::NEQ,
+        'gt' => Comparison::GT,
+        'gte' => Comparison::GTE,
+        'lt' => Comparison::LT,
+        'lte' => Comparison::LTE
+    ];
 
     /**
      * DoctrineActiveUserQuery constructor
@@ -30,6 +48,10 @@ abstract class DoctrineUserCollectionQuery
      */
     public function toCriteria()
     {
+        if (is_null($this->pagination)) {
+            return $this->criteria();
+        }
+
         return $this->criteria()
             ->setFirstResult($this->pagination->getOffset())
             ->setMaxResults($this->pagination->getLimit());

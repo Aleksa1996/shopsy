@@ -5,8 +5,7 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-  App\Common\Infrastructure\ServerConfiguration:
-    class: App\Common\Infrastructure\ServerConfiguration
+  App\Common\Infrastructure\ServerConfiguration: ~
 
   # Command Bus
   App\Common\Application\Bus\CommandBus:
@@ -27,6 +26,16 @@ services:
     tags: [ 'request.param_converter' ]
 
   # Serializer
-  App\Common\Infrastructure\Delivery\Symfony\Serializer\:
-    resource: '%kernel.project_dir%/src/Common/Infrastructure/Delivery/Symfony/Serializer'
-    tags: [ 'serializer.normalizer' ]
+  App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer:
+    arguments:
+      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
+      $objectNormalizer: '@serializer.normalizer.object'
+    tags:
+      - {name: 'serializer.normalizer', priority: 20}
+
+  App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiNormalizer:
+    arguments:
+      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
+      $jsonApiDtoNormalizer: '@App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer'
+    tags:
+      - {name: 'serializer.normalizer', priority: 21}

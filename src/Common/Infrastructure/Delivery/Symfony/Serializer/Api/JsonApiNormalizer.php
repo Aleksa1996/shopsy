@@ -2,10 +2,11 @@
 
 namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
-use App\Common\Application\Dto\DtoCollection;
 use App\Common\Infrastructure\ServerConfiguration;
+use App\Common\Infrastructure\Application\Query\Dto\Dto;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
+use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
@@ -23,27 +24,40 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     private $serverConfiguration;
 
     /**
+     * @var JsonApiDtoNormalizer
+     */
+    private $jsonApiDtoNormalizer;
+
+    /**
      * JsonApiNormalizer Constructor
      *
      * @param ServerConfiguration $serverConfiguration
+     * @param JsonApiDtoNormalizer $jsonApiDtoNormalizer
      */
-    public function __construct(ServerConfiguration $serverConfiguration)
+    public function __construct(ServerConfiguration $serverConfiguration, JsonApiDtoNormalizer $jsonApiDtoNormalizer)
     {
         $this->serverConfiguration = $serverConfiguration;
+        $this->jsonApiDtoNormalizer = $jsonApiDtoNormalizer;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param DtoCollection $object
+     * @param DtoCollection|Dto $dtoCollection
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        $data = [
-            'meta' => $this->generateMeta($object, $context),
-            'data' => empty($object->getData()) ? [] : $this->normalizer->normalize($object->getData(), $format, $context),
-            'links' => $this->generateLinks($object, $context)
-        ];
+        $data = [];
+        if ($object instanceof Dto) {
+            $data['data'] = $this->jsonApiDtoNormalizer->normalize($object, $format, $context);
+        }
+
+        if ($object instanceof DtoCollection) {
+            $context['jsonApiNormalizer'] = true;
+            $data['data'] = empty($object->getData()) ? [] : $this->normalizer->normalize($object->getData(), $format, $context);
+            $data['meta'] = $this->generateMeta($object, $context);
+            $data['links'] = $this->generateLinks($object, $context);
+        }
 
         return $data;
     }
@@ -53,7 +67,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
      */
     public function supportsNormalization($data, $format = null, $context = [])
     {
-        return self::FORMAT === $format && $data instanceof DtoCollection && !empty($context[self::CONTEXT_FORMAT]);
+        return self::FORMAT === $format && ($data instanceof DtoCollection || ($data instanceof Dto && !isset($context['jsonApiNormalizer']))) && !empty($context[self::CONTEXT_FORMAT]);
     }
 
     /**
@@ -72,12 +86,17 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
      */
     private function generateLinks($dtoCollection, $context)
     {
-        return [
-            'self' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPage()]),
-            'first' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getfirstPage()]),
-            'next' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getNextPage()]),
-            'last' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getLastPage()]),
-        ];
+        if ($dtoCollection->getPagination()) {
+            return [
+                'self' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getPage()]),
+                'first' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getfirstPage()]),
+                'last' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getLastPage()]),
+                'prev' => null,
+                'next' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getNextPage()]),
+            ];
+        }
+
+        return null;
     }
 
     /**
@@ -88,9 +107,8 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
      */
     private function generateMeta($dtoCollection, $context)
     {
-        return [
-            'totalPages' => $dtoCollection->getTotalPages(),
-            'totalItems' => $dtoCollection->getTotalItems()
-        ];
+        $meta = $dtoCollection->getMeta() + $dtoCollection->getPaginationMeta();
+
+        return empty($meta) ? null : $meta;
     }
 }

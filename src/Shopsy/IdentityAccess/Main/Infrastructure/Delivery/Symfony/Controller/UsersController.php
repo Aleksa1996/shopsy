@@ -4,20 +4,21 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Control
 
 use App\Common\Application\Bus\QueryBus;
 use App\Common\Application\Bus\CommandBus;
+use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserCommand;
-use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\CreateUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto;
+use Symfony\Component\Serializer\SerializerInterface;
 
-class UsersController extends AbstractController
+class UsersController extends BaseController
 {
     /**
      * @var QueryBus
@@ -29,11 +30,17 @@ class UsersController extends AbstractController
      */
     private $commandBus;
 
-
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus)
+    /**
+     * UsersController Constructor
+     *
+     * @param QueryBus $queryBus
+     * @param CommandBus $commandBus
+     */
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus, SerializerInterface $serializer)
     {
         $this->queryBus = $queryBus;
         $this->commandBus = $commandBus;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -45,21 +52,26 @@ class UsersController extends AbstractController
      */
     public function index(Request $request)
     {
+        $page = $request->query->get('page');
+        $filter = $request->query->get('filter');
+
         $userQuery = new UserCollectionQuery(
-            $request->query->get('page') ? (int)$request->query->get('page') : 1,
-            $request->query->get('limit') ? (int)$request->query->get('limit') : 10
+            empty($page['number']) ? 1 : (int)$page['number'],
+            empty($page['size']) ? 10 : (int)$page['size'],
+            $filter
         );
 
-        $users = $this->queryBus->handle($userQuery);
+        $userCollection = $this->queryBus->handle($userQuery);
 
-        dd($users);
+        // dd($userCollection->getData());
+        // dd($request->get('_route'));
 
-        $users = $this->serializer->serialize($users, 'json', [
-            'jsonld' => true,
-            'url' => '/users'
+        $users = $this->serializer->serialize($userCollection, 'json', [
+            'jsonApi' => true,
+            'routeName' => $request->get('_route')
         ]);
+
         return new JsonResponse($users, JsonResponse::HTTP_OK, [], true);
-        // return new JsonResponse($users, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -75,9 +87,16 @@ class UsersController extends AbstractController
 
         $user = $this->queryBus->handle($userQuery);
 
-        dd($user);
+        // dd($user);
 
-        return new JsonResponse($user, JsonResponse::HTTP_OK);
+        $user = $this->serializer->serialize($user, 'json', [
+            'jsonApi' => true,
+            'routeName' => $request->get('_route')
+        ]);
+
+        return new JsonResponse($user, JsonResponse::HTTP_OK, [], true);
+
+        // return new JsonResponse($user, JsonResponse::HTTP_OK);
     }
 
     /**

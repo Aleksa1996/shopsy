@@ -3,6 +3,8 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Domain\Model\User;
 
+use App\Common\Domain\RepositoryQueryResult;
+
 
 interface UserRepository
 {
@@ -45,7 +47,7 @@ interface UserRepository
     /**
      * @param mixed $query
      *
-     * @return User[]|User|Paginator
+     * @return RepositoryQueryResult
      */
     public function query($query);
 }

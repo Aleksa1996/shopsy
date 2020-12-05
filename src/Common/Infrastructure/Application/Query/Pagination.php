@@ -35,13 +35,11 @@ class Pagination
     public function __construct($page = 1, $limit = 10)
     {
         $this->page = $page <= 0 ? 1 : $page;
-        $this->limit = $limit > 500 ? 500 : $limit;
+        $this->limit = $limit > 100 ? 100 : $limit;
         $this->offset = ($this->page - 1) * $limit;
     }
 
     /**
-     * Get page
-     *
      * @return  int
      */
     public function getPage()
@@ -50,8 +48,6 @@ class Pagination
     }
 
     /**
-     * Get limit
-     *
      * @return  int
      */
     public function getLimit()
@@ -60,8 +56,6 @@ class Pagination
     }
 
     /**
-     * Get offset
-     *
      * @return  int
      */
     public function getOffset()

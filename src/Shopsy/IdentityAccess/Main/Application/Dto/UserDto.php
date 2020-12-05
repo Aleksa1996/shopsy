@@ -2,7 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Dto;
 
-use App\Common\Application\Dto\Dto;
+use App\Common\Infrastructure\Application\Query\Dto\Dto;
 
 class UserDto extends Dto
 {
@@ -60,8 +60,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of id
-     *
      * @return  int|string
      */
     public function getId()
@@ -70,8 +68,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of fullName
-     *
      * @return  string
      */
     public function getFullName()
@@ -80,8 +76,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of username
-     *
      * @return  string
      */
     public function getUsername()
@@ -90,8 +84,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of email
-     *
      * @return  string
      */
     public function getEmail()
@@ -100,8 +92,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of createdOn
-     *
      * @return  string
      */
     public function getCreatedOn()
@@ -110,8 +100,6 @@ class UserDto extends Dto
     }
 
     /**
-     * Get the value of updatedOn
-     *
      * @return  string
      */
     public function getUpdatedOn()

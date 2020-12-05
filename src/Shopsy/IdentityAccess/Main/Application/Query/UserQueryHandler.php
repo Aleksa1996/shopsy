@@ -44,31 +44,31 @@ class UserQueryHandler implements QueryHandler
      */
     public function execute(UserQuery $query = null)
     {
-        $user = null;
+        $repositoryQueryResult = null;
 
         if ($query->getId()) {
-            $user = $this->userRepository->query(
+            $repositoryQueryResult = $this->userRepository->query(
                 $this->userQueryFactory->id($query->getId())
             );
         }
 
-        if ($query->getFullName()) {
-        }
+        // if ($query->getFullName()) {
+        // }
 
-        if ($query->getUsername()) {
-            $user = $this->userRepository->query(
-                $this->userQueryFactory->username($query->getUsername())
-            );
-        }
+        // if ($query->getUsername()) {
+        //     $user = $this->userRepository->query(
+        //         $this->userQueryFactory->username($query->getUsername())
+        //     );
+        // }
 
-        if ($query->getFullName()) {
-        }
+        // if ($query->getFullName()) {
+        // }
 
-        if (empty($user)) {
+        if (empty($repositoryQueryResult->getData())) {
             //TODO: throw not found
         }
 
-        $this->userTransformer->write($user);
+        $this->userTransformer->write($repositoryQueryResult->getData());
         return $this->userTransformer->read();
     }
 }

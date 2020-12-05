@@ -17,19 +17,9 @@ class UserCollectionQuery implements Query
     private $limit;
 
     /**
-     * @var string
+     * @var array
      */
-    private $fullName;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $email;
+    private $filter;
 
     /**
      * UserQuery constructor.
@@ -38,17 +28,14 @@ class UserCollectionQuery implements Query
      * @param $username
      * @param $email
      */
-    public function __construct($page, $limit, $fullName = null, $username = null, $email = null)
+    public function __construct($page, $limit, $filter = [])
     {
         $this->page = $page;
         $this->limit = $limit;
-        $this->fullName = $fullName;
-        $this->username = $username;
-        $this->email = $email;
+        $this->filter = $filter;
     }
+
     /**
-     * Get the value of page
-     *
      * @return  int
      */
     public function getPage()
@@ -57,8 +44,6 @@ class UserCollectionQuery implements Query
     }
 
     /**
-     * Get the value of limit
-     *
      * @return  int
      */
     public function getLimit()
@@ -67,32 +52,10 @@ class UserCollectionQuery implements Query
     }
 
     /**
-     * Get the value of fullName
-     *
-     * @return  string
+     * @return  array
      */
-    public function getFullName()
+    public function getFilter()
     {
-        return $this->fullName;
-    }
-
-    /**
-     * Get the value of username
-     *
-     * @return  string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Get the value of email
-     *
-     * @return  string
-     */
-    public function getEmail()
-    {
-        return $this->email;
+        return $this->filter;
     }
 }

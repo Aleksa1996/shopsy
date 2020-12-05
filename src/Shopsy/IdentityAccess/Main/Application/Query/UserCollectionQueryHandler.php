@@ -3,8 +3,9 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
 use App\Common\Infrastructure\Application\Query\Pagination;
-use App\Common\Application\Dto\DtoCollection;
+use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
 use App\Common\Application\Query\QueryHandler;
+use App\Common\Infrastructure\Application\Query\TraversablePagination;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer;
@@ -47,27 +48,17 @@ class UserCollectionQueryHandler implements QueryHandler
     {
         $pagination = new Pagination($query->getPage(), $query->getLimit());
 
-        if ($query->getFullName()) {
-        }
-
-
-        if ($query->getUsername()) {
-        }
-
-        if ($query->getFullName()) {
-        }
-
-        $users = $this->userRepository->query(
-            $this->userQueryFactory->all($pagination)
+        $repositoryQueryResult = $this->userRepository->query(
+            $this->userQueryFactory->filter($query->getFilter() ?? [], $pagination)
         );
 
-        $this->userCollectionTransformer->write($users);
+        $this->userCollectionTransformer->write(
+            $repositoryQueryResult->getData()
+        );
 
         return new DtoCollection(
             $this->userCollectionTransformer->read(),
-            count($users),
-            $pagination->getPage(),
-            $pagination->getLimit()
+            new TraversablePagination($repositoryQueryResult->getCount(), $pagination->getPage(), $pagination->getLimit())
         );
     }
 }

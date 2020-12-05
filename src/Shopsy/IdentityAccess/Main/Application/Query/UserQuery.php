@@ -42,8 +42,6 @@ class UserQuery implements Query
     }
 
     /**
-     * Get the value of id
-     *
      * @return  int|string
      */
     public function getId()
@@ -52,8 +50,6 @@ class UserQuery implements Query
     }
 
     /**
-     * Get the value of fullName
-     *
      * @return  string
      */
     public function getFullName()
@@ -62,8 +58,6 @@ class UserQuery implements Query
     }
 
     /**
-     * Get the value of username
-     *
      * @return  string
      */
     public function getUsername()
@@ -72,8 +66,6 @@ class UserQuery implements Query
     }
 
     /**
-     * Get the value of email
-     *
      * @return  string
      */
     public function getEmail()

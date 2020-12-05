@@ -29,4 +29,12 @@ class DoctrineUserQueryFactory implements UserQueryFactory
     {
         return new DoctrineUserUsernameQuery($username);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function filter($filter, $pagination = null)
+    {
+        return new DoctrineUserFilterQuery($filter, $pagination);
+    }
 }

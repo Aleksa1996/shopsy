@@ -12,7 +12,7 @@ interface UserTransformer
      *
      * @return mixed
      */
-    public function write(User $user);
+    public function write($user);
 
     /**
      * @return mixed

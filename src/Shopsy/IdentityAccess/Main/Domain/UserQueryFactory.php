@@ -31,4 +31,13 @@ interface UserQueryFactory
      * @return mixed
      */
     public function username($username);
+
+    /**
+     * Create filter query
+     *
+     * @param string $username
+     *
+     * @return mixed
+     */
+    public function filter($filter);
 }
