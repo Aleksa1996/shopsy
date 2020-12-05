@@ -6,58 +6,58 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   # Controller
-  App\Shopsy\IdentityAccess\Infrastructure\Delivery\Symfony\Controller\:
-    resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Infrastructure/Delivery/Symfony/Controller'
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller\:
+    resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Delivery/Symfony/Controller'
     tags: [ 'controller.service_arguments' ]
 
   # Repository
-  App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\DoctrineUserRepository:
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\DoctrineUserRepository:
     arguments:
       $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\DoctrineUserRepository'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\DoctrineUserRepository'
 
   # Services
-  App\Shopsy\IdentityAccess\Infrastructure\Domain\Service\BcryptPasswordHasher: ~
-  App\Shopsy\IdentityAccess\Domain\Service\PasswordHasher: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Service\BcryptPasswordHasher'
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\BcryptPasswordHasher: ~
+  App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\BcryptPasswordHasher'
 
-  App\Shopsy\IdentityAccess\Application\Transformer\DtoUserTransformer: ~
-  App\Shopsy\IdentityAccess\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\DtoUserTransformer'
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer'
 
-  App\Shopsy\IdentityAccess\Application\Transformer\DtoUserCollectionTransformer: ~
-  App\Shopsy\IdentityAccess\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\DtoUserCollectionTransformer'
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer'
 
-  App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory: ~
-  App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory: '@App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory'
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory: ~
+  App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory'
 
-  App\Shopsy\IdentityAccess\Application\Command\CreateUserHandler:
+  App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Domain\Service\PasswordHasher'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
     tags: [ 'app.command.handler' ]
 
-  App\Shopsy\IdentityAccess\Application\Query\UserQueryHandler:
+  App\Shopsy\IdentityAccess\Main\Application\Query\UserQueryHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory'
-      $userTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\UserTransformer'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory'
+      $userTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer'
     tags: [ 'app.query.handler' ]
 
-  App\Shopsy\IdentityAccess\Application\Query\UserCollectionQueryHandler:
+  App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQueryHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserQueryFactory'
-      $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Application\Transformer\UserCollectionTransformer'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory'
+      $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer'
     tags: [ 'app.query.handler' ]
 
-  App\Shopsy\IdentityAccess\Application\Command\UpdateUserHandler:
+  App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Domain\Service\PasswordHasher'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
     tags: [ 'app.command.handler' ]
 
-  App\Shopsy\IdentityAccess\Application\Command\DestroyUserHandler:
+  App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Domain\Model\User\UserRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
     tags: [ 'app.command.handler' ]
 
   # League OAuth 2
@@ -77,9 +77,9 @@ services:
 
   League\OAuth2\Server\AuthorizationServer:
     arguments:
-      $clientRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Authentication\OAuth2\Repository\ClientRepository'
-      $accessTokenRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Authentication\OAuth2\Repository\AccessTokenRepository'
-      $scopeRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Authentication\OAuth2\Repository\ScopeRepository'
+      $clientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\ClientRepository'
+      $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\AccessTokenRepository'
+      $scopeRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\ScopeRepository'
       $privateKey: '@PrivateCryptKey'
       $encryptionKey: '%env(OAUTH2_ENCRYPTION_KEY)%'
     calls:
@@ -87,5 +87,12 @@ services:
 
   League\OAuth2\Server\Grant\PasswordGrant:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Authentication\OAuth2\Repository\UserRepository'
-      $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Infrastructure\Domain\Authentication\OAuth2\Repository\RefreshTokenRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\UserRepository'
+      $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\RefreshTokenRepository'
+
+# Test
+  App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\DataFixtures\UserFixtures:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+    tags: [ 'doctrine.fixture.orm' ]

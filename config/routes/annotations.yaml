@@ -1,5 +1,5 @@
 controllers:
-    resource: ../../src/Shopsy/IdentityAccess/Infrastructure/Delivery/Symfony/Controller/
+    resource: ../../src/Shopsy/IdentityAccess/Main/Infrastructure/Delivery/Symfony/Controller/
     type: annotation
 
 kernel:

@@ -4,7 +4,7 @@ namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use App\Common\Infrastructure\Delivery\Symfony\Exception\RequestValidationException;
+use App\DBP\IdentityAccess\Infrastructure\Delivery\Symfony\Exception\RequestValidationException;
 
 class ErrorNormalizer implements NormalizerInterface
 {

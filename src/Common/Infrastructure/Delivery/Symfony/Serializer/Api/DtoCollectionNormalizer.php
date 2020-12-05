@@ -3,6 +3,8 @@
 namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
 use App\Common\Application\Dto\DtoCollection;
+use App\Common\Infrastructure\ServerConfiguration;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
@@ -14,7 +16,22 @@ class DtoCollectionNormalizer implements NormalizerInterface, ContextAwareNormal
     use NormalizerAwareTrait;
 
     public const FORMAT = 'json';
-    public const CONTEXT_FORMAT = 'jsonld';
+    public const CONTEXT_FORMAT = 'jsonApi';
+
+    /**
+     * @var ServerConfiguration
+     */
+    private $serverConfiguration;
+
+    /**
+     * DtoCollectionNormalizer Constructor
+     *
+     * @param RouterInterface $params
+     */
+    public function __construct(ServerConfiguration $serverConfiguration)
+    {
+        $this->serverConfiguration = $serverConfiguration;
+    }
 
     /**
      * {@inheritdoc}
@@ -23,18 +40,11 @@ class DtoCollectionNormalizer implements NormalizerInterface, ContextAwareNormal
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        if (isset($context[self::CONTEXT_FORMAT])) {
-            unset($context[self::CONTEXT_FORMAT]);
-        }
-// TODO: REKURZIJA ZAJEBAVA ALI SVAKAKO TREBA POZVATI DtoNormalizer
-        $data = [];
-        $data['@context'] = '/contexts/User';
-        $data['@id'] = '/users';
-        $data['@type'] = 'hydra:Collection';
-        $data['hydra:member'] = empty($object->getData()) ? [] : $this->normalizer->normalize($object->getData(), $format, $context);
-        $data['hydra:totalItems'] = $object->getTotal();
-        $data['hydra:view'] = $this->generateView($object, $context);
-        $data['hydra:search'] = $this->generateSearch($object, $context);
+        $data = [
+            'meta' => $this->generateMeta($object, $context),
+            'data' => empty($object->getData()) ? [] : $this->normalizer->normalize($object->getData(), $format, $context),
+            'links' => $this->generateLinks($object, $context)
+        ];
 
         return $data;
     }
@@ -44,7 +54,7 @@ class DtoCollectionNormalizer implements NormalizerInterface, ContextAwareNormal
      */
     public function supportsNormalization($data, $format = null, $context = [])
     {
-        return self::FORMAT === $format && $data instanceof DtoCollection && isset($context[self::CONTEXT_FORMAT]);
+        return self::FORMAT === $format && $data instanceof DtoCollection && !empty($context[self::CONTEXT_FORMAT]);
     }
 
     /**
@@ -61,16 +71,13 @@ class DtoCollectionNormalizer implements NormalizerInterface, ContextAwareNormal
      *
      * @return array
      */
-    private function generateView($dtoCollection, $context)
+    private function generateLinks($dtoCollection, $context)
     {
-        $urlTemplate = $context['url'] . '?page=%s';
-
         return [
-            '@id' => sprintf($urlTemplate, $dtoCollection->getPage()),
-            '@type' => 'hydra:PartialCollectionView',
-            'hydra:first' => sprintf($urlTemplate, $dtoCollection->getfirstPage()),
-            'hydra:last' => sprintf($urlTemplate, $dtoCollection->getLastPage()),
-            'hydra:next' => sprintf($urlTemplate, $dtoCollection->getNextPage()),
+            'self' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPage()]),
+            'first' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getfirstPage()]),
+            'next' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getNextPage()]),
+            'last' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getLastPage()]),
         ];
     }
 
@@ -80,50 +87,11 @@ class DtoCollectionNormalizer implements NormalizerInterface, ContextAwareNormal
      *
      * @return array
      */
-    private function generateSearch($dtoCollection, $context)
+    private function generateMeta($dtoCollection, $context)
     {
         return [
-            '@type' => 'hydra:IriTemplate',
-            'hydra:template' => '/users{?properties[],order[id],order[fullName],order[username],order[email],order[active]}',
-            'hydra:variableRepresentation' => 'BasicRepresentation',
-            'hydra:mapping' => [
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'properties[]',
-                    'property' => null,
-                    'required' => false
-                ],
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'order[id]',
-                    'property' => 'id',
-                    'required' => false
-                ],
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'order[fullName]',
-                    'property' => 'fullName',
-                    'required' => false
-                ],
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'order[username]',
-                    'property' => 'username',
-                    'required' => false
-                ],
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'order[email]',
-                    'property' => 'email',
-                    'required' => false
-                ],
-                [
-                    '@type' => 'IriTemplateMapping',
-                    'variable' => 'order[active]',
-                    'property' => 'active',
-                    'required' => false
-                ],
-            ]
+            'totalPages' => $dtoCollection->getTotalPages(),
+            'totalItems' => $dtoCollection->getTotalItems()
         ];
     }
 }

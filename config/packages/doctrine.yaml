@@ -6,11 +6,11 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '5.7'
         types:
-            user_id: App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types\UserId
-            user_full_name: App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types\UserFullName
-            user_username: App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types\UserUsername
-            user_email: App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types\UserEmail
-            user_password: App\Shopsy\IdentityAccess\Infrastructure\Persistence\Doctrine\Types\UserPassword
+            user_id: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Types\UserId
+            user_full_name: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Types\UserFullName
+            user_username: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Types\UserUsername
+            user_email: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Types\UserEmail
+            user_password: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Types\UserPassword
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
@@ -18,7 +18,7 @@ doctrine:
         mappings:
             UserModule:
                 type: xml
-                dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Infrastructure/Persistence/Doctrine/Mapping'
+                dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Persistence/Doctrine/Mapping'
                 is_bundle: false
-                prefix: App\Shopsy\IdentityAccess\Domain\Model\User
+                prefix: App\Shopsy\IdentityAccess\Main\Domain\Model\User
                 alias: User

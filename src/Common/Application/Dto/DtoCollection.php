@@ -23,20 +23,20 @@ class DtoCollection
     /**
      * @var int
      */
-    private $total;
+    private $totalItems;
 
     /**
      * DtoCollection Constructor
      *
      * @param array $data
-     * @param int $total
+     * @param int $totalItems
      * @param int $page
      * @param int $limit
      */
-    public function __construct($data, $total, $page, $limit)
+    public function __construct($data, $totalItems, $page, $limit)
     {
         $this->data = $data;
-        $this->total = $total;
+        $this->totalItems = $totalItems;
         $this->page = $page;
         $this->limit = $limit;
     }
@@ -88,7 +88,7 @@ class DtoCollection
      */
     public function getLastPage()
     {
-        return ceil($this->total / $this->limit);
+        return ceil($this->totalItems / $this->limit);
     }
 
     /**
@@ -102,12 +102,22 @@ class DtoCollection
     }
 
     /**
-     * Get the value of total
+     * Get the value of totalItems
      *
      * @return  int
      */
-    public function getTotal()
+    public function getTotalItems()
     {
-        return $this->total;
+        return $this->totalItems;
+    }
+
+    /**
+     * Get the value of totalPages
+     *
+     * @return  int
+     */
+    public function getTotalPages()
+    {
+        return ceil($this->totalItems / $this->limit);
     }
 }
