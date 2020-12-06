@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Que
 
 use Doctrine\Common\Collections\Criteria;
 
-class DoctrineUserFilterQuery extends DoctrineUserQuery
+class DoctrineUserFilterCollectionQuery extends DoctrineUserCollectionQuery
 {
     /**
      * @var array
@@ -24,14 +24,15 @@ class DoctrineUserFilterQuery extends DoctrineUserQuery
     ];
 
     /**
-     * DoctrineUserFilterQuery Constructor
+     * DoctrineUserFilterCollectionQuery Constructor
      *
      * @param array $filter
+     * @param Pagination $pagination
      * @param Sort $sort
      */
-    public function __construct($filter, $sort = null)
+    public function __construct($filter, $pagination = null, $sort = null)
     {
-        parent::__construct($sort);
+        parent::__construct($pagination, $sort);
         $this->filter = $filter;
     }
 

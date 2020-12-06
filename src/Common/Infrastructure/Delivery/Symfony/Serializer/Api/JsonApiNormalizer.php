@@ -55,8 +55,8 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
         if ($object instanceof DtoCollection) {
             $context['jsonApiNormalizer'] = true;
             $data['data'] = empty($object->getData()) ? [] : $this->normalizer->normalize($object->getData(), $format, $context);
-            $data['meta'] = $this->generateMeta($object, $context);
-            $data['links'] = $this->generateLinks($object, $context);
+            $data['meta'] = $this->generateMeta($object->getFullMeta(), $context);
+            $data['links'] = $this->generateLinks($object->getPagination(), $context);
         }
 
         return $data;
@@ -79,36 +79,37 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * @param DtoCollection $dtoCollection
+     * @param TraversablePagination $pagination
      * @param array $context
      *
      * @return array
      */
-    private function generateLinks($dtoCollection, $context)
+    private function generateLinks($pagination = null, $context = [])
     {
-        if ($dtoCollection->getPagination()) {
-            return [
-                'self' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getPage()]),
-                'first' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getfirstPage()]),
-                'last' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getLastPage()]),
-                'prev' => null,
-                'next' => $this->serverConfiguration->generateUrl($context['routeName'], ['page' =>  $dtoCollection->getPagination()->getNextPage()]),
-            ];
+        if (!$pagination) {
+            return null;
         }
 
-        return null;
+        $route = $context['request']->get('_route');
+        $params = $context['request']->request->all() + $context['request']->query->all();
+
+        return [
+            'self' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getPage()]])),
+            'first' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getfirstPage()]])),
+            'last' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getLastPage()]])),
+            'prev' => null,
+            'next' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getNextPage()]])),
+        ];
     }
 
     /**
-     * @param DtoCollection $dtoCollection
+     * @param array $meta
      * @param array $context
      *
      * @return array
      */
-    private function generateMeta($dtoCollection, $context)
+    private function generateMeta($meta, $context)
     {
-        $meta = $dtoCollection->getMeta() + $dtoCollection->getPaginationMeta();
-
         return empty($meta) ? null : $meta;
     }
 }

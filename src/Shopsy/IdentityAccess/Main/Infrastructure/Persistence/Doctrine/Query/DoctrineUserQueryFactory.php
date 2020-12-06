@@ -9,14 +9,6 @@ class DoctrineUserQueryFactory implements UserQueryFactory
     /**
      * @inheritDoc
      */
-    public function all($pagination = null)
-    {
-        return new DoctrineUserAllCollectionQuery($pagination);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function id($id)
     {
         return new DoctrineUserIdQuery($id);
@@ -25,16 +17,16 @@ class DoctrineUserQueryFactory implements UserQueryFactory
     /**
      * @inheritDoc
      */
-    public function username($username)
+    public function filter($filter, $pagination = null, $sort = null)
     {
-        return new DoctrineUserUsernameQuery($username);
+        return new DoctrineUserFilterQuery($filter, $sort);
     }
 
     /**
      * @inheritDoc
      */
-    public function filter($filter, $pagination = null, $sort = [])
+    public function filterCollection($filter, $pagination = null, $sort = null)
     {
-        return new DoctrineUserFilterQuery($filter, $pagination, $sort);
+        return new DoctrineUserFilterCollectionQuery($filter, $pagination, $sort);
     }
 }

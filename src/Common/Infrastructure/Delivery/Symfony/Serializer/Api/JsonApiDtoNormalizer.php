@@ -45,12 +45,15 @@ class JsonApiDtoNormalizer implements NormalizerInterface, ContextAwareNormalize
      */
     public function normalize($object, $format = null, array $context = [])
     {
+        $route = $context['request']->get('_route');
+        $params = $context['request']->request->all() + $context['request']->query->all();
+
         $data = [
             'type' => self::TYPES[get_class($object)],
             'id' => $object->getId(),
             'attributes' => $this->objectNormalizer->normalize($object, $format, $context),
             'links' => [
-                'self' => $this->serverConfiguration->generateUrl($context['routeName'], ['id' =>  $object->getId()])
+                'self' => $this->serverConfiguration->generateUrl($route, array_merge($params, ['id' =>  $object->getId()]))
             ],
             'relationships' => []
         ];

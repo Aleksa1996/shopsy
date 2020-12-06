@@ -3,7 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query;
 
 
-abstract class DoctrineUserQuery
+abstract class DoctrineUserQuery extends DoctrineQuery
 {
     /**
      * @return mixed
@@ -15,7 +15,7 @@ abstract class DoctrineUserQuery
      */
     public function toCriteria()
     {
-        return $this->criteria()
+        return parent::toCriteria()
             ->setMaxResults(1);
     }
 }

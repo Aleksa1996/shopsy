@@ -73,4 +73,12 @@ class DtoCollection
 
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getFullMeta()
+    {
+        return $this->getMeta() + $this->getPaginationMeta();
+    }
 }

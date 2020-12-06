@@ -52,27 +52,24 @@ class UsersController extends BaseController
      */
     public function index(Request $request)
     {
-        $query = $this->getQueryParams($request, [
+        $queryParams = $this->getQueryParams($request, [
             'page' => ['number' => 1, 'size' => 10],
             'filter' => [],
             'sort' => []
         ]);
 
-        $userQuery = new UserCollectionQuery(
-            empty($query['page']['number']) ? 1 : (int)$query['page']['number'],
-            empty($query['page']['size']) ? 10 : (int)$query['page']['size'],
-            $query['filter'],
-            $query['sort']
+        $query = new UserCollectionQuery(
+            empty($queryParams['page']['number']) ? 1 : (int)$queryParams['page']['number'],
+            empty($queryParams['page']['size']) ? 10 : (int)$queryParams['page']['size'],
+            $queryParams['filter'],
+            $queryParams['sort']
         );
+        $response = $this->queryBus->handle($query);
 
-        $userCollection = $this->queryBus->handle($userQuery);
-
-        $users = $this->serializer->serialize($userCollection, 'json', [
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
             'jsonApi' => true,
-            'routeName' => $request->get('_route')
+            'request' => $request
         ]);
-
-        return new JsonResponse($users, JsonResponse::HTTP_OK, [], true);
     }
 
     /**
@@ -84,20 +81,13 @@ class UsersController extends BaseController
      */
     public function show($id, Request $request)
     {
-        $userQuery = new UserQuery($id);
+        $query = new UserQuery(['id' => $id]);
+        $response = $this->queryBus->handle($query);
 
-        $user = $this->queryBus->handle($userQuery);
-
-        // dd($user);
-
-        $user = $this->serializer->serialize($user, 'json', [
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
             'jsonApi' => true,
-            'routeName' => $request->get('_route')
+            'request' => $request
         ]);
-
-        return new JsonResponse($user, JsonResponse::HTTP_OK, [], true);
-
-        // return new JsonResponse($user, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -108,28 +98,26 @@ class UsersController extends BaseController
      *
      * @return JsonResponse
      */
-    public function create(CreateUserDto $userDto)
+    public function create(Request $request, CreateUserDto $userDto)
     {
-        $createUserCommand = new CreateUserCommand(
+        $command = new CreateUserCommand(
             $userDto->fullName,
             $userDto->username,
             $userDto->email,
             $userDto->password
         );
+        $this->commandBus->handle($command);
 
-        $this->commandBus->handle($createUserCommand);
+        $query = new UserQuery([
+            'username' => $userDto->username,
+            'email' => $userDto->email
+        ]);
+        $response = $this->queryBus->handle($query);
 
-        $userQuery = new UserQuery(
-            null,
-            null,
-            $userDto->username
-        );
-
-        $user = $this->queryBus->handle($userQuery);
-
-        dd($user);
-
-        return new JsonResponse($user, JsonResponse::HTTP_CREATED);
+        return $this->json($response, JsonResponse::HTTP_CREATED, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
     }
 
     /**
@@ -138,27 +126,24 @@ class UsersController extends BaseController
      *
      * @return JsonResponse
      */
-    public function update($id, UpdateUserDto $userDto)
+    public function update($id, UpdateUserDto $userDto, Request $request)
     {
-        $updateUserCommand = new UpdateUserCommand(
+        $command = new UpdateUserCommand(
             $id,
             $userDto->fullName,
             $userDto->username,
             $userDto->email,
             $userDto->password
         );
+        $this->commandBus->handle($command);
 
-        $this->commandBus->handle($updateUserCommand);
+        $query = new UserQuery(['id' => $id]);
+        $response = $this->queryBus->handle($query);
 
-        $userQuery = new UserQuery(
-            $id
-        );
-
-        $user = $this->queryBus->handle($userQuery);
-
-        dd($user);
-
-        return new JsonResponse($user, JsonResponse::HTTP_OK);
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
     }
 
     /**
@@ -166,22 +151,17 @@ class UsersController extends BaseController
      *
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $userQuery = new UserQuery(
-            $id
-        );
+        $query = new UserQuery(['id' => $id]);
+        $response = $this->queryBus->handle($query);
 
-        $user = $this->queryBus->handle($userQuery);
+        $command = new DestroyUserCommand($id);
+        $this->commandBus->handle($command);
 
-        $destroyUserCommand = new DestroyUserCommand(
-            $id
-        );
-
-        $this->commandBus->handle($destroyUserCommand);
-
-        dd($user);
-
-        return new JsonResponse($user, JsonResponse::HTTP_OK);
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
     }
 }

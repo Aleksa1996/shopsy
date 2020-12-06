@@ -22,7 +22,7 @@ class UserCollectionQuery implements Query
     private $filter;
 
     /**
-     * @var array
+     * @var mixed
      */
     private $sort;
 
@@ -66,7 +66,7 @@ class UserCollectionQuery implements Query
     }
 
     /**
-     * @return  array
+     * @return  mixed
      */
     public function getSort()
     {

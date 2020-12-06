@@ -2,41 +2,12 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query;
 
-use Doctrine\Common\Collections\Expr\Comparison;
-
-abstract class DoctrineUserCollectionQuery
+abstract class DoctrineUserCollectionQuery extends DoctrineQuery
 {
     /**
      * @var Pagination
      */
     protected $pagination;
-
-    /**
-     * @var Sort
-     */
-    protected $sort;
-
-    /**
-     * @var array
-     */
-    public const SUPPORTED_OPERATORS = [
-        'in' => Comparison::IN,
-        'nin' => Comparison::NIN,
-        'ct' => Comparison::CONTAINS,
-        'bw' => Comparison::STARTS_WITH,
-        'ew' => Comparison::ENDS_WITH,
-        'eq' => Comparison::EQ,
-        'neq' => Comparison::NEQ,
-        'gt' => Comparison::GT,
-        'gte' => Comparison::GTE,
-        'lt' => Comparison::LT,
-        'lte' => Comparison::LTE
-    ];
-
-    /**
-     * @var array
-     */
-    protected $supportedFields = [];
 
     /**
      * DoctrineActiveUserQuery constructor
@@ -46,25 +17,16 @@ abstract class DoctrineUserCollectionQuery
      */
     public function __construct($pagination = null, $sort = null)
     {
+        parent::__construct($sort);
         $this->pagination = $pagination;
-        $this->sort = $sort;
     }
-
-    /**
-     * @return mixed
-     */
-    public abstract function criteria();
 
     /**
      * @return mixed
      */
     public function toCriteria()
     {
-        $criteria = $this->criteria();
-
-        if (!is_null($this->sort)) {
-            $criteria->orderBy(array_intersect_key($this->sort->getFields(), array_flip($this->supportedFields)));
-        }
+        $criteria = parent::toCriteria();
 
         if (!is_null($this->pagination)) {
             $criteria
@@ -81,13 +43,5 @@ abstract class DoctrineUserCollectionQuery
     public function getPagination()
     {
         return $this->pagination;
-    }
-
-    /**
-     * @return Sort
-     */
-    public function getSort()
-    {
-        return $this->sort;
     }
 }

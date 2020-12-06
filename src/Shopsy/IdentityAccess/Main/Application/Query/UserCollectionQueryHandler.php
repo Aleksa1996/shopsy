@@ -51,7 +51,7 @@ class UserCollectionQueryHandler implements QueryHandler
         $sort = Sort::create($query->getSort());
 
         $repositoryQueryResult = $this->userRepository->query(
-            $this->userQueryFactory->filter($query->getFilter() ?? [], $pagination, $sort)
+            $this->userQueryFactory->filterCollection($query->getFilter() ?? [], $pagination, $sort)
         );
 
         $this->userCollectionTransformer->write(

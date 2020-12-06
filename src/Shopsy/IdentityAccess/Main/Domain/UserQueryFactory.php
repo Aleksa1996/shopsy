@@ -6,15 +6,6 @@ namespace App\Shopsy\IdentityAccess\Main\Domain;
 interface UserQueryFactory
 {
     /**
-     * Create all query
-     *
-     * @param Pagination $pagination
-     *
-     * @return mixed
-     */
-    public function all($pagination = null);
-
-    /**
      * Create id query
      *
      * @param int $id
@@ -24,22 +15,23 @@ interface UserQueryFactory
     public function id($id);
 
     /**
-     * Create username query
-     *
-     * @param string $username
-     *
-     * @return mixed
-     */
-    public function username($username);
-
-    /**
      * Create filter query
      *
      * @param array $filter
-     * @param Pagination $pagination
-     * @param array $sort
+     * @param Sort $sort
      *
      * @return mixed
      */
-    public function filter($filter, $pagination = null, $sort = []);
+    public function filter($filter, $sort = null);
+
+    /**
+     * Create filter collection query
+     *
+     * @param array $filter
+     * @param Pagination $pagination
+     * @param Sort $sort
+     *
+     * @return mixed
+     */
+    public function filterCollection($filter, $pagination = null, $sort = null);
 }

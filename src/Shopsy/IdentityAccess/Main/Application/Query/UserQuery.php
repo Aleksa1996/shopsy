@@ -9,67 +9,38 @@ class UserQuery implements Query
     /**
      * @var int|string
      */
-    private $id;
+    private $filter;
 
     /**
-     * @var string
+     * @var mixed
      */
-    private $fullName;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $email;
+    private $sort;
 
     /**
      * UserQuery constructor.
      *
-     * @param $fullName
-     * @param $username
-     * @param $email
+     * @param array $filter
+     * @param mixed $sort
      */
-    public function __construct($id, $fullName = null, $username = null, $email = null)
+    public function __construct($filter, $sort = [])
     {
-        $this->id = $id;
-        $this->fullName = $fullName;
-        $this->username = $username;
-        $this->email = $email;
+        $this->filter = $filter;
+        $this->sort = $sort;
     }
 
     /**
-     * @return  int|string
+     * @return  array
      */
-    public function getId()
+    public function getFilter()
     {
-        return $this->id;
+        return $this->filter;
     }
 
     /**
-     * @return  string
+     * @return  mixed
      */
-    public function getFullName()
+    public function getSort()
     {
-        return $this->fullName;
-    }
-
-    /**
-     * @return  string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @return  string
-     */
-    public function getEmail()
-    {
-        return $this->email;
+        return $this->sort;
     }
 }

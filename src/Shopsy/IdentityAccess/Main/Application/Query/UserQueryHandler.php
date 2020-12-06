@@ -3,6 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
 use App\Common\Application\Query\QueryHandler;
+use App\Common\Infrastructure\Application\Query\Sort;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
@@ -44,27 +45,13 @@ class UserQueryHandler implements QueryHandler
      */
     public function execute(UserQuery $query = null)
     {
-        $repositoryQueryResult = null;
+        $sort = Sort::create($query->getSort());
 
-        if ($query->getId()) {
-            $repositoryQueryResult = $this->userRepository->query(
-                $this->userQueryFactory->id($query->getId())
-            );
-        }
+        $repositoryQueryResult = $this->userRepository->query(
+            $this->userQueryFactory->filter($query->getFilter() ?? [], $sort)
+        );
 
-        // if ($query->getFullName()) {
-        // }
-
-        // if ($query->getUsername()) {
-        //     $user = $this->userRepository->query(
-        //         $this->userQueryFactory->username($query->getUsername())
-        //     );
-        // }
-
-        // if ($query->getFullName()) {
-        // }
-
-        if (empty($repositoryQueryResult->getData())) {
+        if (!$repositoryQueryResult || empty($repositoryQueryResult->getData())) {
             //TODO: throw not found
         }
 
