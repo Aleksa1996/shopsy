@@ -2,12 +2,13 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
-use App\Common\Infrastructure\Application\Query\Pagination;
-use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
 use App\Common\Application\Query\QueryHandler;
-use App\Common\Infrastructure\Application\Query\TraversablePagination;
+use App\Common\Infrastructure\Application\Query\Sort;
+use App\Common\Infrastructure\Application\Query\Pagination;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
+use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Common\Infrastructure\Application\Query\TraversablePagination;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer;
 
 class UserCollectionQueryHandler implements QueryHandler
@@ -47,9 +48,10 @@ class UserCollectionQueryHandler implements QueryHandler
     public function execute(UserCollectionQuery $query = null)
     {
         $pagination = new Pagination($query->getPage(), $query->getLimit());
+        $sort = Sort::create($query->getSort());
 
         $repositoryQueryResult = $this->userRepository->query(
-            $this->userQueryFactory->filter($query->getFilter() ?? [], $pagination)
+            $this->userQueryFactory->filter($query->getFilter() ?? [], $pagination, $sort)
         );
 
         $this->userCollectionTransformer->write(

@@ -22,17 +22,23 @@ class UserCollectionQuery implements Query
     private $filter;
 
     /**
+     * @var array
+     */
+    private $sort;
+
+    /**
      * UserQuery constructor.
      *
      * @param $fullName
      * @param $username
      * @param $email
      */
-    public function __construct($page, $limit, $filter = [])
+    public function __construct($page, $limit, $filter = [], $sort = [])
     {
         $this->page = $page;
         $this->limit = $limit;
         $this->filter = $filter;
+        $this->sort = $sort;
     }
 
     /**
@@ -57,5 +63,13 @@ class UserCollectionQuery implements Query
     public function getFilter()
     {
         return $this->filter;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getSort()
+    {
+        return $this->sort;
     }
 }

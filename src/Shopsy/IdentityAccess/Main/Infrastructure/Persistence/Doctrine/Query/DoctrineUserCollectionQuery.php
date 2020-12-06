@@ -12,9 +12,14 @@ abstract class DoctrineUserCollectionQuery
     protected $pagination;
 
     /**
+     * @var Sort
+     */
+    protected $sort;
+
+    /**
      * @var array
      */
-    protected $supportedOperators = [
+    public const SUPPORTED_OPERATORS = [
         'in' => Comparison::IN,
         'nin' => Comparison::NIN,
         'ct' => Comparison::CONTAINS,
@@ -29,13 +34,20 @@ abstract class DoctrineUserCollectionQuery
     ];
 
     /**
+     * @var array
+     */
+    protected $supportedFields = [];
+
+    /**
      * DoctrineActiveUserQuery constructor
      *
      * @param Pagination $pagination
+     * @param Sort $sort
      */
-    public function __construct($pagination = null)
+    public function __construct($pagination = null, $sort = null)
     {
         $this->pagination = $pagination;
+        $this->sort = $sort;
     }
 
     /**
@@ -48,13 +60,19 @@ abstract class DoctrineUserCollectionQuery
      */
     public function toCriteria()
     {
-        if (is_null($this->pagination)) {
-            return $this->criteria();
+        $criteria = $this->criteria();
+
+        if (!is_null($this->sort)) {
+            $criteria->orderBy(array_intersect_key($this->sort->getFields(), array_flip($this->supportedFields)));
         }
 
-        return $this->criteria()
-            ->setFirstResult($this->pagination->getOffset())
-            ->setMaxResults($this->pagination->getLimit());
+        if (!is_null($this->pagination)) {
+            $criteria
+                ->setFirstResult($this->pagination->getOffset())
+                ->setMaxResults($this->pagination->getLimit());
+        }
+
+        return $criteria;
     }
 
     /**
@@ -63,5 +81,13 @@ abstract class DoctrineUserCollectionQuery
     public function getPagination()
     {
         return $this->pagination;
+    }
+
+    /**
+     * @return Sort
+     */
+    public function getSort()
+    {
+        return $this->sort;
     }
 }

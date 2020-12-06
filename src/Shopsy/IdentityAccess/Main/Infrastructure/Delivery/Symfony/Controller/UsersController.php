@@ -52,19 +52,20 @@ class UsersController extends BaseController
      */
     public function index(Request $request)
     {
-        $page = $request->query->get('page');
-        $filter = $request->query->get('filter');
+        $query = $this->getQueryParams($request, [
+            'page' => ['number' => 1, 'size' => 10],
+            'filter' => [],
+            'sort' => []
+        ]);
 
         $userQuery = new UserCollectionQuery(
-            empty($page['number']) ? 1 : (int)$page['number'],
-            empty($page['size']) ? 10 : (int)$page['size'],
-            $filter
+            empty($query['page']['number']) ? 1 : (int)$query['page']['number'],
+            empty($query['page']['size']) ? 10 : (int)$query['page']['size'],
+            $query['filter'],
+            $query['sort']
         );
 
         $userCollection = $this->queryBus->handle($userQuery);
-
-        // dd($userCollection->getData());
-        // dd($request->get('_route'));
 
         $users = $this->serializer->serialize($userCollection, 'json', [
             'jsonApi' => true,

@@ -35,9 +35,11 @@ interface UserQueryFactory
     /**
      * Create filter query
      *
-     * @param string $username
+     * @param array $filter
+     * @param Pagination $pagination
+     * @param array $sort
      *
      * @return mixed
      */
-    public function filter($filter);
+    public function filter($filter, $pagination = null, $sort = []);
 }

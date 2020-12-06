@@ -4,7 +4,6 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Que
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
-use Doctrine\Common\Collections\Expr\Expression;
 
 class DoctrineUserFilterQuery extends DoctrineUserCollectionQuery
 {
@@ -16,7 +15,7 @@ class DoctrineUserFilterQuery extends DoctrineUserCollectionQuery
     /**
      * @var array
      */
-    private $supportedFields = [
+    protected $supportedFields = [
         'id',
         'email',
         'created_on',
@@ -29,10 +28,12 @@ class DoctrineUserFilterQuery extends DoctrineUserCollectionQuery
      * DoctrineUserFilterQuery Constructor
      *
      * @param array $filter
+     * @param Pagination $pagination
+     * @param Sort $sort
      */
-    public function __construct($filter, $pagination = null)
+    public function __construct($filter, $pagination = null, $sort = null)
     {
-        parent::__construct($pagination);
+        parent::__construct($pagination, $sort);
         $this->filter = $filter;
     }
 
@@ -51,8 +52,7 @@ class DoctrineUserFilterQuery extends DoctrineUserCollectionQuery
     /**
      * @param Criteria $criteria
      * @param array $filter
-     *
-     * @return Expression
+     * @param string $expression
      */
     private function addExpressions(Criteria $criteria, array $filter, $expression = 'and')
     {
@@ -67,7 +67,7 @@ class DoctrineUserFilterQuery extends DoctrineUserCollectionQuery
                 } else if (in_array($filterKey, $this->supportedFields, true)) {
                     if (is_array($filterValue)) {
                         foreach ($filterValue as $o => $value) {
-                            $criteria->$method(new Comparison($filterKey, $this->supportedOperators[$o] ?? Comparison::EQ, $value));
+                            $criteria->$method(new Comparison($filterKey, self::SUPPORTED_OPERATORS[$o] ?? Comparison::EQ, $value));
                         }
                     } else {
                         $criteria->$method(new Comparison($filterKey, Comparison::EQ, $filterValue));

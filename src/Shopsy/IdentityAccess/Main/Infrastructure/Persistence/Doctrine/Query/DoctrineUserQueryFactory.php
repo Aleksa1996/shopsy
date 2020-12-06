@@ -33,8 +33,8 @@ class DoctrineUserQueryFactory implements UserQueryFactory
     /**
      * @inheritDoc
      */
-    public function filter($filter, $pagination = null)
+    public function filter($filter, $pagination = null, $sort = [])
     {
-        return new DoctrineUserFilterQuery($filter, $pagination);
+        return new DoctrineUserFilterQuery($filter, $pagination, $sort);
     }
 }
