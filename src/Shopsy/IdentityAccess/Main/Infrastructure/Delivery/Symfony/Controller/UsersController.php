@@ -14,8 +14,8 @@ use App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQuery;
 use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\CreateUserDto;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class UsersController extends BaseController
@@ -92,7 +92,7 @@ class UsersController extends BaseController
 
     /**
      * @Route("/users", name="users_create", methods={"POST"})
-     * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\CreateUserDto")
+     * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto")
      *
      * @param Request $request
      *
@@ -122,7 +122,7 @@ class UsersController extends BaseController
 
     /**
      * @Route("/users/{id}", name="users_update", methods={"PUT","PATCH"})
-     * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto\UpdateUserDto")
+     * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto")
      *
      * @return JsonResponse
      */

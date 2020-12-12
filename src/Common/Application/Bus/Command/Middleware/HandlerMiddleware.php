@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Common\Application\Bus\Command;
+namespace App\Common\Application\Bus\Command\Middleware;
 
 
 use ReflectionMethod;
 use ReflectionException;
+use App\Common\Application\Bus\Command\Middleware;
 use App\Common\Application\Command\CommandHandler;
 use App\Common\Application\Bus\HandlerNotFoundException;
 

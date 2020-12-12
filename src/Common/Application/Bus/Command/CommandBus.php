@@ -17,7 +17,7 @@ class CommandBus
      */
     public function __construct($middlewares)
     {
-        $this->middlewareChain = $this->createExecutionChain(iterator_to_array($middlewares));
+        $this->middlewareChain = $this->createExecutionChain($middlewares);
     }
 
     /**
@@ -35,6 +35,10 @@ class CommandBus
      */
     private function createExecutionChain($middlewareList)
     {
+        if (is_object($middlewareList) && ($middlewareList instanceof \Traversable)) {
+            $middlewareList = iterator_to_array($middlewareList);
+        }
+
         $lastCallable = static fn () => null;
 
         while ($middleware = array_pop($middlewareList)) {

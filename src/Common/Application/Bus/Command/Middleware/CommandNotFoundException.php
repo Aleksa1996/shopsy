@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Common\Application\Bus\Command;
+namespace App\Common\Application\Bus\Command\Middleware;
 
 
 use Exception;
@@ -17,5 +17,4 @@ class CommandNotFoundException extends Exception
     {
         parent::__construct(sprintf('Unable to find a command for "%s"', $command), 0, null);
     }
-
 }

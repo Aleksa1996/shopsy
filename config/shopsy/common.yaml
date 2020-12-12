@@ -8,19 +8,17 @@ services:
   App\Common\Infrastructure\ServerConfiguration: ~
 
   # Command Bus
-  App\Common\Application\Bus\Command\HandlerMiddleware:
+  App\Common\Application\Bus\Command\Middleware\HandlerMiddleware:
     tags:
       - { name: 'app.command.middleware', priority: 1 }
 
-  App\Common\Application\Bus\Command\TransactionalMiddleware:
+  App\Common\Application\Bus\Command\Middleware\TransactionalMiddleware:
     arguments:
       $transactionalSession: '@App\Common\Infrastructure\Application\Command\TransactionalSession'
     tags:
       - { name: 'app.command.middleware', priority: 2 }
 
-  App\Common\Application\Bus\Command\LoggingMiddleware:
-    # arguments:
-    #   $transactionalSession: '@App\Common\Infrastructure\Application\Command\LoggingMiddleware'
+  App\Common\Application\Bus\Command\Middleware\LoggingMiddleware:
     tags:
       - { name: 'app.command.middleware', priority: 3 }
 

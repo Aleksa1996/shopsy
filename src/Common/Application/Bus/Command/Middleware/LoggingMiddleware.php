@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Common\Application\Bus\Command;
+namespace App\Common\Application\Bus\Command\Middleware;
 
 use Psr\Log\LoggerInterface;
+use App\Common\Application\Bus\Command\Middleware;
 
 
 class LoggingMiddleware implements Middleware

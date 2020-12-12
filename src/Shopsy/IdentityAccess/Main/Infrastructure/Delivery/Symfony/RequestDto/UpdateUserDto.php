@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Dto;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto;
 
 
 use Symfony\Component\Validator\Constraints as Assert;

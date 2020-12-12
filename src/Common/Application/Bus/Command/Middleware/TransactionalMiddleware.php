@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Common\Application\Bus\Command;
+namespace App\Common\Application\Bus\Command\Middleware;
 
 use App\Common\Application\Command\TransactionalSession;
+use App\Common\Application\Bus\Command\Middleware;
 
 
 class TransactionalMiddleware implements Middleware
