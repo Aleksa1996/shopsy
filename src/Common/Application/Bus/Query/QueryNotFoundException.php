@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Common\Application\Bus;
+namespace App\Common\Application\Bus\Query;
 
 
 use Exception;

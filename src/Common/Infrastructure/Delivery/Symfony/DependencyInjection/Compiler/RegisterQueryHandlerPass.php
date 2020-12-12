@@ -2,7 +2,7 @@
 
 namespace App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler;
 
-use App\Common\Application\Bus\QueryBus;
+use App\Common\Application\Bus\Query\QueryBus;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

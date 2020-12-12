@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Common\Application\Bus;
+namespace App\Common\Application\Bus\Query;
 
 
-use App\Common\Application\Query\QueryHandler;
-use ReflectionException;
 use ReflectionMethod;
+use ReflectionException;
+use App\Common\Application\Query\QueryHandler;
+use App\Common\Application\Bus\HandlerNotFoundException;
 
 class QueryBus
 {
@@ -22,7 +23,6 @@ class QueryBus
     public function handle($query)
     {
         $queryClass = get_class($query);
-
         if (!isset($this->queryHandlers[$queryClass])) {
             throw new HandlerNotFoundException($queryClass);
         }

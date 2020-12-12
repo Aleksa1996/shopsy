@@ -2,7 +2,7 @@
 
 namespace App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler;
 
-use App\Common\Application\Bus\CommandBus;
+use App\Common\Application\Bus\Command\HandlerMiddleware;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -15,11 +15,11 @@ class RegisterCommandHandlerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined
-        if (!$container->has(CommandBus::class)) {
+        if (!$container->has(HandlerMiddleware::class)) {
             return;
         }
 
-        $definition = $container->findDefinition(CommandBus::class);
+        $definition = $container->findDefinition(HandlerMiddleware::class);
 
         $taggedServices = $container->findTaggedServiceIds('app.command.handler');
 

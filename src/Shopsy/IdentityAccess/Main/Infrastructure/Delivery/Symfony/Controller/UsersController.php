@@ -2,8 +2,8 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
-use App\Common\Application\Bus\QueryBus;
-use App\Common\Application\Bus\CommandBus;
+use App\Common\Application\Bus\Query\QueryBus;
+use App\Common\Application\Bus\Command\CommandBus;
 use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
