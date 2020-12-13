@@ -54,7 +54,7 @@ class CreateUserHandler implements CommandHandler
         $user->validate($validationHandler, $this->userRepository);
 
         if ($validationHandler->hasErrors()) {
-            throw CommandException::fromValidationNotificationHandler($validationHandler);
+            throw CommandException::createFromValidationNotificationHandler($validationHandler);
         }
 
         $this->userRepository->add($user);

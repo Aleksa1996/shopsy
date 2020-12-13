@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Common\Application\Bus\Command\Middleware;
+namespace App\Common\Application\Query;
 
 use App\Common\Application\ExceptionHandler;
-use App\Common\Application\Bus\Command\Middleware;
+use App\Common\Application\Query\QueryHandler;
 
-
-class ExceptionHandlingMiddleware implements Middleware
+class ExceptionHandlingQueryHandler implements QueryHandler
 {
+    /**
+     * @var QueryHandler
+     */
+    private $queryHandler;
+
     /**
      * @var ExceptionHandler
      */
@@ -18,21 +22,21 @@ class ExceptionHandlingMiddleware implements Middleware
      *
      * @param ExceptionHandler  $exceptionHandler
      */
-    public function __construct(ExceptionHandler $exceptionHandler)
+    public function __construct(QueryHandler $queryHandler, ExceptionHandler $exceptionHandler)
     {
+        $this->queryHandler = $queryHandler;
         $this->exceptionHandler = $exceptionHandler;
     }
 
     /**
-     * @param object $command
-     * @param callable $next
+     * @param mixed $query
      *
      * @return void
      */
-    public function execute(object $command, callable $next)
+    public function execute($query)
     {
         try {
-            return $next($command);
+            return $this->queryHandler->execute($query);
         } catch (\Exception $e) {
             $this->exceptionHandler->handle($e);
         }

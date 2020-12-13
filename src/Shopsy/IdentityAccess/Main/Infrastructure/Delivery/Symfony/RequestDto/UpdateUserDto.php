@@ -4,8 +4,12 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Request
 
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Common\Infrastructure\Delivery\Symfony\Validator as CustomAssert;
 use App\Common\Infrastructure\Delivery\Symfony\ParamConverter\JsonBodySerializableInterface;
 
+/**
+ * @CustomAssert\AtLeastOneValidField
+ */
 class UpdateUserDto implements JsonBodySerializableInterface
 {
     /**

@@ -90,7 +90,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         $queryBuilder->addCriteria($query->toCriteria());
 
         if ($query instanceof DoctrineUserQuery) {
-            $result = $queryBuilder->getQuery()->getSingleResult();
+            $result = $queryBuilder->getQuery()->getOneOrNullResult();
             return new RepositoryQueryResult($result, $result ? 1 : 0);
         }
 

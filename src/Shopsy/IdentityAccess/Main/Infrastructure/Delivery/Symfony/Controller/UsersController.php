@@ -2,21 +2,24 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
-use App\Common\Application\Bus\Query\QueryBus;
-use App\Common\Application\Bus\Command\CommandBus;
-use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
+use App\Common\Application\Bus\Query\QueryBus;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Common\Application\Bus\Command\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQuery;
 use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
+use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
+use App\Common\Infrastructure\Delivery\Symfony\Decorator\QueryBusExceptionDecorator;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto;
-use Symfony\Component\Serializer\SerializerInterface;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessCommandExceptionHandler;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessQueryExceptionHandler;
 
 class UsersController extends BaseController
 {
@@ -38,8 +41,8 @@ class UsersController extends BaseController
      */
     public function __construct(QueryBus $queryBus, CommandBus $commandBus)
     {
-        $this->queryBus = $queryBus;
-        $this->commandBus = $commandBus;
+        $this->queryBus = new QueryBusExceptionDecorator($queryBus, new IdentityAccessQueryExceptionHandler());
+        $this->commandBus = new CommandBusExceptionDecorator($commandBus, new IdentityAccessCommandExceptionHandler());
     }
 
     /**

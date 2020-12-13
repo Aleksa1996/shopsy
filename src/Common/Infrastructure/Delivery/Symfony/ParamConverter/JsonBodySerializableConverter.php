@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use App\Common\Infrastructure\Delivery\Symfony\Exception\BaseHttpException;
 use App\Common\Infrastructure\Delivery\Symfony\Exception\RequestValidationException;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 
@@ -56,7 +57,7 @@ class JsonBodySerializableConverter implements ParamConverterInterface
             try {
                 $obj = $this->serializer->deserialize($body, $configuration->getClass(), 'json');
             } catch (NotEncodableValueException $e) {
-                throw new BadRequestHttpException('json syntax error', $e);
+                throw new BadRequestHttpException(sprintf('JSON parse error - %s', $e->getMessage()), $e);
             }
         }
 
@@ -88,11 +89,11 @@ class JsonBodySerializableConverter implements ParamConverterInterface
      */
     private function handleRequestValidation($request, $obj)
     {
-        $violationList = $this->validator->validate($obj);
-        $request->attributes->set('_violations', $violationList);
+        $constraintViolationList = $this->validator->validate($obj);
+        $request->attributes->set('_violations', $constraintViolationList);
 
-        if ($violationList->count() >= 1) {
-            throw new RequestValidationException($violationList);
+        if ($constraintViolationList->count() >= 1) {
+            throw BaseHttpException::createFromConstraintViolationList($constraintViolationList);
         }
     }
 }

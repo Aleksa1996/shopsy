@@ -6,6 +6,7 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use App\Common\Infrastructure\Delivery\Symfony\Exception\BaseHttpException;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 
@@ -35,7 +36,8 @@ class JsonApiErrorNormalizer implements NormalizerInterface, ContextAwareNormali
     {
         return $data instanceof FlattenException &&
             !empty($context['exception']) &&
-            is_object($context['exception']);
+            is_object($context['exception']) &&
+            $context['exception'] instanceof BaseHttpException;
     }
 
     /**

@@ -2,12 +2,13 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
-use App\Common\Application\Query\QueryHandler;
 use App\Common\Application\Query\Sort;
+use App\Common\Application\Query\QueryHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UserNotFoundQueryException;
 
 class UserQueryHandler implements QueryHandler
 {
@@ -52,7 +53,7 @@ class UserQueryHandler implements QueryHandler
         );
 
         if (!$repositoryQueryResult || empty($repositoryQueryResult->getData())) {
-            //TODO: throw not found
+            throw new UserNotFoundQueryException();
         }
 
         $this->userTransformer->write($repositoryQueryResult->getData());

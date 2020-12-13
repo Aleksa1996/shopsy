@@ -69,11 +69,11 @@ class CommandException extends \Exception
      *
      * @return self
      */
-    public static function fromValidationNotificationHandler(ValidationNotificationHandler $validationNotificationHandler)
+    public static function createFromValidationNotificationHandler(ValidationNotificationHandler $validationNotificationHandler)
     {
         $title = 'Validation error';
         $message = 'Provided data is not valid';
 
-        return new self($title, $message, $validationNotificationHandler->getErrors(), sprintf('%s. %s', $title, $message));
+        return new static($title, $message, $validationNotificationHandler->getErrors(), sprintf('%s. %s', $title, $message));
     }
 }

@@ -5,10 +5,13 @@ namespace App\Common\Application\Bus\Query;
 
 use ReflectionMethod;
 use ReflectionException;
+use App\Common\Application\Bus\Bus;
 use App\Common\Application\Query\QueryHandler;
 use App\Common\Application\Bus\HandlerNotFoundException;
+use App\Common\Application\Query\ExceptionHandlingQueryHandler;
+use App\Common\Application\Query\QueryExceptionHandler;
 
-class QueryBus
+class QueryBus implements Bus
 {
     /**
      * @var array
@@ -20,16 +23,16 @@ class QueryBus
      *
      * @throws HandlerNotFoundException
      */
-    public function handle($query)
+    public function handle($command)
     {
-        $queryClass = get_class($query);
+        $queryClass = get_class($command);
         if (!isset($this->queryHandlers[$queryClass])) {
             throw new HandlerNotFoundException($queryClass);
         }
 
-        $queryHandler = $this->queryHandlers[$queryClass];
+        $queryHandler = new ExceptionHandlingQueryHandler($this->queryHandlers[$queryClass], new QueryExceptionHandler());
 
-        return $queryHandler->execute($query);
+        return $queryHandler->execute($command);
     }
 
     /**

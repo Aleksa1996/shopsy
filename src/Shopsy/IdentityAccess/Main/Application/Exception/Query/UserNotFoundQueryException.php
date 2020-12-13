@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Application\Exception\Command;
+namespace App\Shopsy\IdentityAccess\Main\Application\Exception\Query;
+
 
 use Throwable;
-use App\Common\Application\Command\CommandException;
+use App\Common\Application\Query\QueryException;
 
-class UserNotFoundCommandException extends CommandException
+class UserNotFoundQueryException extends QueryException
 {
     /**
-     * UserNotFoundCommandException Constructor
+     * UserNotFoundQueryException Constructor
      *
      * @param string $userFriendlyTitle
      * @param string $userFriendlyMessage

@@ -13,6 +13,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserUsername;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserNotFoundCommandException;
 
 class UpdateUserHandler implements CommandHandler
 {
@@ -45,6 +46,10 @@ class UpdateUserHandler implements CommandHandler
     {
         $user = $this->userRepository->findById(new UserId($command->getId()));
 
+        if (!$user) {
+            throw new UserNotFoundCommandException();
+        }
+
         if ($command->getFullName())
             $user->setFullName(new UserFullName($command->getFullName()));
 
@@ -64,7 +69,7 @@ class UpdateUserHandler implements CommandHandler
         );
 
         if ($validationHandler->hasErrors()) {
-            throw CommandException::fromValidationNotificationHandler($validationHandler);
+            throw CommandException::createFromValidationNotificationHandler($validationHandler);
         }
     }
 }

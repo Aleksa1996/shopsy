@@ -2,10 +2,10 @@
 
 namespace App\Common\Application\Bus\Command;
 
-
+use App\Common\Application\Bus\Bus;
 use App\Common\Application\Bus\HandlerNotFoundException;
 
-class CommandBus
+class CommandBus implements Bus
 {
     /**
      * @var Middleware
