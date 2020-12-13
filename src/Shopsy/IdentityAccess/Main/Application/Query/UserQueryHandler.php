@@ -3,7 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
 use App\Common\Application\Query\QueryHandler;
-use App\Common\Infrastructure\Application\Query\Sort;
+use App\Common\Application\Query\Sort;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;

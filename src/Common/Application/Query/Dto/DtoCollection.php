@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Common\Infrastructure\Application\Query\Dto;
+namespace App\Common\Application\Query\Dto;
 
-use App\Common\Infrastructure\Application\Query\TraversablePagination;
+use App\Common\Application\Query\PaginationResponse;
 
 class DtoCollection
 {
@@ -12,7 +12,7 @@ class DtoCollection
     protected $data;
 
     /**
-     * @var TraversablePagination
+     * @var PaginationResponse
      */
     protected $pagination;
 
@@ -25,7 +25,7 @@ class DtoCollection
      * DtoCollection Constructor
      *
      * @param array $data
-     * @param TraversablePagination $pagination
+     * @param PaginationResponse $pagination
      * @param array $meta
      */
     public function __construct($data, $pagination = null, $meta = [])
@@ -44,7 +44,7 @@ class DtoCollection
     }
 
     /**
-     * @return TraversablePagination
+     * @return PaginationResponse
      */
     public function getPagination()
     {
@@ -64,7 +64,7 @@ class DtoCollection
      */
     public function getPaginationMeta()
     {
-        if ($this->pagination && $this->pagination instanceof TraversablePagination) {
+        if ($this->pagination && $this->pagination instanceof PaginationResponse) {
             return [
                 'totalPages' => $this->pagination->getLastPage(),
                 'totalItems' => $this->pagination->geTotalItems()

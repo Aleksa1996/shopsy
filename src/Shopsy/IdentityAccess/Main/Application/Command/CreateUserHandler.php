@@ -2,6 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
+use App\Common\Application\Command\CommandException;
 use App\Common\Application\Command\CommandHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserEmail;
@@ -53,9 +54,7 @@ class CreateUserHandler implements CommandHandler
         $user->validate($validationHandler, $this->userRepository);
 
         if ($validationHandler->hasErrors()) {
-            // TODO: odavde treba da se throwuje greska sa ovim
-            \var_dump($validationHandler->getErrors());
-            exit;
+            throw CommandException::fromValidationNotificationHandler($validationHandler);
         }
 
         $this->userRepository->add($user);

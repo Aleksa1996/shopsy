@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Infrastructure\Application\Query\Dto;
+namespace App\Common\Application\Query\Dto;
 
 
 abstract class Dto

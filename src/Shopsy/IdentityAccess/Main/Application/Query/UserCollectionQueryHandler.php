@@ -3,12 +3,12 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Query;
 
 use App\Common\Application\Query\QueryHandler;
-use App\Common\Infrastructure\Application\Query\Sort;
-use App\Common\Infrastructure\Application\Query\Pagination;
+use App\Common\Application\Query\Sort;
+use App\Common\Application\Query\Pagination;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
-use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
+use App\Common\Application\Query\Dto\DtoCollection;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
-use App\Common\Infrastructure\Application\Query\TraversablePagination;
+use App\Common\Application\Query\PaginationResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer;
 
 class UserCollectionQueryHandler implements QueryHandler
@@ -60,7 +60,7 @@ class UserCollectionQueryHandler implements QueryHandler
 
         return new DtoCollection(
             $this->userCollectionTransformer->read(),
-            new TraversablePagination($repositoryQueryResult->getCount(), $pagination->getPage(), $pagination->getLimit())
+            new PaginationResponse($repositoryQueryResult->getCount(), $pagination->getPage(), $pagination->getLimit())
         );
     }
 }

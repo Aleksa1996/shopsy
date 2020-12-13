@@ -22,10 +22,20 @@ services:
     tags:
       - { name: 'app.command.middleware', priority: 3 }
 
+  App\Common\Application\Bus\Command\Middleware\ExceptionHandlingMiddleware:
+    arguments:
+      $exceptionHandler: '@App\Common\Application\Command\CommandExceptionHandler'
+    tags:
+      - { name: 'app.command.middleware', priority: 4 }
+
+  App\Common\Application\Command\CommandExceptionHandler:
+    public: false
+
   App\Common\Application\Bus\Command\CommandBus:
     arguments:
       - !tagged_iterator app.command.middleware
 
+  # Query Bus
   App\Common\Application\Bus\Query\QueryBus: ~
 
   # Transactional session
@@ -53,3 +63,6 @@ services:
       $jsonApiDtoNormalizer: '@App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer'
     tags:
       - {name: 'serializer.normalizer', priority: 21}
+
+  App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiErrorNormalizer:
+    tags: [ 'serializer.normalizer' ]

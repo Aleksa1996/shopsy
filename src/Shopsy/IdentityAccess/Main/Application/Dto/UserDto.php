@@ -2,7 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Dto;
 
-use App\Common\Infrastructure\Application\Query\Dto\Dto;
+use App\Common\Application\Query\Dto\Dto;
 
 class UserDto extends Dto
 {

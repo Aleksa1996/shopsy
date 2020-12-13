@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Infrastructure\Application\Query;
+namespace App\Common\Application\Query;
 
 
 class Sort

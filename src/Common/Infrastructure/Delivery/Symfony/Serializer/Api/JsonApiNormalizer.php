@@ -3,10 +3,10 @@
 namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
 use App\Common\Infrastructure\ServerConfiguration;
-use App\Common\Infrastructure\Application\Query\Dto\Dto;
+use App\Common\Application\Query\Dto\Dto;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use App\Common\Infrastructure\Application\Query\Dto\DtoCollection;
+use App\Common\Application\Query\Dto\DtoCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
@@ -79,7 +79,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * @param TraversablePagination $pagination
+     * @param PaginationResponse $pagination
      * @param array $context
      *
      * @return array
@@ -91,14 +91,16 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
         }
 
         $route = $context['request']->get('_route');
-        $params = $context['request']->request->all() + $context['request']->query->all();
+        $requestParams = $context['request']->request->all() + $context['request']->query->all();
+
+        $generateUrl = fn ($params) => $this->serverConfiguration->generateUrl($route, array_replace_recursive($requestParams, $params));
 
         return [
-            'self' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getPage()]])),
-            'first' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getfirstPage()]])),
-            'last' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getLastPage()]])),
+            'self' => $generateUrl(['page' => ['number' => $pagination->getPage()]]),
+            'first' => $generateUrl(['page' => ['number' => $pagination->getfirstPage()]]),
+            'last' => $generateUrl(['page' => ['number' => $pagination->getLastPage()]]),
             'prev' => null,
-            'next' => $this->serverConfiguration->generateUrl($route, array_replace_recursive($params, ['page' => ['number' => $pagination->getNextPage()]])),
+            'next' => $generateUrl(['page' => ['number' => $pagination->getNextPage()]]),
         ];
     }
 

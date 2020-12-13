@@ -3,15 +3,16 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
+use App\Common\Application\Command\CommandException;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserId;
+use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserUsername;
-use App\Common\Domain\Validator\ValidationNotificationHandler;
-use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserId;
+use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 
 class UpdateUserHandler implements CommandHandler
 {
@@ -63,9 +64,7 @@ class UpdateUserHandler implements CommandHandler
         );
 
         if ($validationHandler->hasErrors()) {
-            // TODO: odavde treba da se throwuje greska sa ovim
-            \var_dump($validationHandler->getErrors());
-            exit;
+            throw CommandException::fromValidationNotificationHandler($validationHandler);
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
 use App\Common\Infrastructure\ServerConfiguration;
-use App\Common\Infrastructure\Application\Query\Dto\Dto;
+use App\Common\Application\Query\Dto\Dto;
 use App\Shopsy\IdentityAccess\Main\Application\Dto\UserDto;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

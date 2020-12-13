@@ -36,11 +36,10 @@ class UsersController extends BaseController
      * @param QueryBus $queryBus
      * @param CommandBus $commandBus
      */
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus, SerializerInterface $serializer)
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus)
     {
         $this->queryBus = $queryBus;
         $this->commandBus = $commandBus;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -151,17 +150,11 @@ class UsersController extends BaseController
      *
      * @return JsonResponse
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        $query = new UserQuery(['id' => $id]);
-        $response = $this->queryBus->handle($query);
-
         $command = new DestroyUserCommand($id);
         $this->commandBus->handle($command);
 
-        return $this->json($response, JsonResponse::HTTP_OK, [], [
-            'jsonApi' => true,
-            'request' => $request
-        ]);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

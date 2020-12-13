@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Common\Infrastructure\Application\Query;
+namespace App\Common\Application\Query;
 
 
-class TraversablePagination extends Pagination
+class PaginationResponse extends Pagination
 {
     /**
      * @var int
