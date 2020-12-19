@@ -3,8 +3,8 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserId;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserNotFoundCommandException;
 

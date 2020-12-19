@@ -4,8 +4,15 @@ services:
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
 
-  App\Common\Infrastructure\ServerConfiguration: ~
+  App\Common\Infrastructure\ServerConfiguration:
+    arguments:
+      $kernelProjectDir: '%kernel.project_dir%'
+      $appSecret: '%env(APP_SECRET)%'
+      $appHostname: '%env(APP_HOSTNAME)%'
+      $appSSLEnabled: '%env(bool:APP_SSL_ENABLED)%'
+    public: true
 
   # Command Bus
   App\Common\Application\Bus\Command\Middleware\HandlerMiddleware:

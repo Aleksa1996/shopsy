@@ -4,13 +4,13 @@ namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandException;
 use App\Common\Application\Command\CommandHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserEmail;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserFullName;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserPassword;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserUsername;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
 
 class CreateUserHandler implements CommandHandler

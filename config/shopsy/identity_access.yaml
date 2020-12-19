@@ -4,6 +4,7 @@ services:
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
 
   # Controller
   App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller\:
@@ -11,10 +12,25 @@ services:
     tags: [ 'controller.service_arguments' ]
 
   # Repository
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\DoctrineUserRepository:
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository:
     arguments:
       $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\DoctrineUserRepository'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository'
 
   # Services
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\BcryptPasswordHasher: ~
@@ -26,38 +42,38 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer: ~
   App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer'
 
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory: ~
-  App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Query\DoctrineUserQueryFactory'
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory: ~
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory'
 
   App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
       $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
     tags: [ 'app.command.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Query\UserQueryHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
       $userTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer'
     tags: [ 'app.query.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQueryHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserQueryFactory'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
       $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer'
     tags: [ 'app.query.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
       $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
     tags: [ 'app.command.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserHandler:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
     tags: [ 'app.command.handler' ]
 
   # League OAuth 2
@@ -91,8 +107,15 @@ services:
       $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\RefreshTokenRepository'
 
 # Test
-  App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\DataFixtures\UserFixtures:
+  App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
       $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+    tags: [ 'doctrine.fixture.orm' ]
+
+  App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Auth\DataFixtures\ClientFixtures:
+    arguments:
+      $clientRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository'
+      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
     tags: [ 'doctrine.fixture.orm' ]

@@ -2,7 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Transformer;
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Shopsy\IdentityAccess\Main\Application\Dto\UserDto;
 
 class DtoUserTransformer implements UserTransformer

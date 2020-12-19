@@ -6,7 +6,7 @@ use App\Common\Application\Query\Sort;
 use App\Common\Application\Query\QueryHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UserNotFoundQueryException;
 

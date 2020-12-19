@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 
 class UserRegistered implements DomainEvent
 {
@@ -19,7 +19,7 @@ class UserRegistered implements DomainEvent
     private $occurredOn;
 
     /**
-     * UserRegistered constructor.
+     * UserRegistered Constructor.
      *
      * @param UserId $userId
      */
@@ -30,21 +30,17 @@ class UserRegistered implements DomainEvent
     }
 
     /**
-     * Get user Id
-     *
      * @return UserId
      */
-    public function userId()
+    public function getUserId()
     {
         return $this->userId;
     }
 
     /**
-     * Get occurred on timestamp
-     *
      * @return DateTimeImmutable
      */
-    public function occurredOn()
+    public function getOccurredOn()
     {
         return $this->occurredOn;
     }

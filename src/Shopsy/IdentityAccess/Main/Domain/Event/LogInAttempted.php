@@ -6,14 +6,14 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 
 class LogInAttempted implements DomainEvent
 {
     /**
-     * @var UserEmail
+     * @var UserId|UserEmail|UserUsername
      */
-    private $email;
+    private $identity;
 
     /**
      * @var DateTimeImmutable
@@ -21,32 +21,28 @@ class LogInAttempted implements DomainEvent
     private $occurredOn;
 
     /**
-     * LogInAttempted constructor.
+     * LogInAttempted Constructor.
      *
-     * @param UserEmail $email
+     * @param UserId|UserEmail|UserUsername $identity
      */
-    public function __construct(UserEmail $email)
+    public function __construct($identity)
     {
-        $this->email = $email;
+        $this->identity = $identity;
         $this->occurredOn = new DateTimeImmutable();
     }
 
     /**
-     * Get user email
-     *
      * @return UserEmail
      */
-    public function email()
+    public function getIdentity()
     {
-        return $this->email;
+        return $this->identity;
     }
 
     /**
-     * Get occurred on timestamp
-     *
      * @return DateTimeImmutable
      */
-    public function occurredOn()
+    public function getOccurredOn()
     {
         return $this->occurredOn;
     }

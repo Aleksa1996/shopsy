@@ -7,7 +7,7 @@ use App\Common\Application\Query\Sort;
 use App\Common\Application\Query\Pagination;
 use App\Shopsy\IdentityAccess\Main\Domain\UserQueryFactory;
 use App\Common\Application\Query\Dto\DtoCollection;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Common\Application\Query\PaginationResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer;
 

@@ -3,86 +3,74 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
 
-
-use App\Shopsy\IdentityAccess\Main\Domain\Exception\UserNotExistsException;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserPassword;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Common\Domain\Event\DomainEventPublisher;
+use App\Shopsy\IdentityAccess\Main\Domain\Event\LogInAttempted;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 
 abstract class Authentication
 {
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * Authentication constructor.
-     *
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
-    /**
-     *
-     * @param $usernameOrEmail
+     * @param mixed $identity
      * @param UserPassword $password
      *
-     * @return bool
-     *
-     * @throws UserNotExistsException
+     * @return AuthenticateResponse
      */
-    public function authenticate($usernameOrEmail, UserPassword $password)
+    public function authenticate($identity, UserPassword $userPassword = null)
     {
-//        DomainEventPublisher::instance()
-//            ->publish(
-//                new LogInAttempted($usernameOrEmail)
-//            );
+        DomainEventPublisher::instance()
+            ->publish(
+                new LogInAttempted($identity)
+            );
 
-        if ($this->isAlreadyAuthenticated()) {
-            return true;
+        $response = null;
+
+        if ($identity instanceof UserUsername && $userPassword) {
+            $response = $this->authenticateByUsername($identity, $userPassword);
         }
 
-        $user = $this->userRepository->findByEmail($usernameOrEmail);
-        if (!$user) {
-            throw new UserNotExistsException();
+        if ($identity instanceof UserEmail && $userPassword) {
+            $response = $this->authenticateByEmail($identity, $userPassword);
         }
 
-        if (!$this->auth($usernameOrEmail, $password, $user)) {
-            return false;
+        if ($identity instanceof UserId && !$userPassword) {
+            $response = $this->authenticateById($identity);
         }
 
-        $this->persistAuthentication($user);
+        $event = null;
+        if ($response->success()) {
+            $event = new LogInAttempted($identity);
+        } else {
+            $event = new LogInAttempted($identity);
+        }
 
-        return true;
+        DomainEventPublisher::instance()->publish($event);
+
+        return $response;
     }
 
     /**
-     * @return mixed
-     */
-    abstract protected function isAlreadyAuthenticated();
-
-    /**
-     * @param $email
-     * @param $password
-     * @param $user
+     * @param UserUsername $userUsername
+     * @param UserPassword $userPassword
      *
-     * @return bool
+     * @return AuthenticateResponse
      */
-    abstract protected function auth($email, $password, $user);
+    abstract protected function authenticateByUsername(UserUsername $userUsername, UserPassword $userPassword);
 
     /**
-     * @return mixed
-     */
-    abstract public function logout();
-
-    /**
-     * @param User $user
+     * @param UserEmail $userEmail
+     * @param UserPassword $userPassword
      *
-     * @return mixed
+     * @return AuthenticateResponse
      */
-    abstract protected function persistAuthentication(User $user);
+    abstract protected function authenticateByEmail(UserEmail $userEmail, UserPassword $userPassword);
+
+    /**
+     * @param UserId $userId
+     *
+     * @return AuthenticateResponse
+     */
+    abstract protected function authenticateById(UserId $userId);
 }

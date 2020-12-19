@@ -4,9 +4,9 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Request
 
 
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Common\Infrastructure\Delivery\Symfony\ParamConverter\JsonBodySerializableInterface;
+use App\Common\Infrastructure\Delivery\Symfony\RequestDto\RequestDto;
 
-class CreateUserDto implements JsonBodySerializableInterface
+class CreateUserDto implements RequestDto
 {
     /**
      * @Assert\NotBlank

@@ -2,7 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Specification;
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Common\Domain\Validator\Specification\Specification;
 
 class UniqueUsername extends Specification

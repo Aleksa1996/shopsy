@@ -2,13 +2,13 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\PasswordHasher;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\PasswordHasher;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Entity\User;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository as DomainUserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository as DomainUserRepository;
 
 class UserRepository implements UserRepositoryInterface
 {

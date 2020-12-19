@@ -35,7 +35,7 @@ class QueryBusExceptionDecorator implements Bus
     public function handle($query)
     {
         try {
-            $this->queryBus->handle($query);
+            return $this->queryBus->handle($query);
         } catch (\Exception $e) {
             $this->exceptionHandler->handle($e);
         }

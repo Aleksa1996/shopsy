@@ -3,9 +3,9 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
 
 use App\Common\Domain\Validator\Validator;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\User;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\User\UserRepository;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Domain\Service\Specification\UniqueEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Service\Specification\UniqueUsername;
 

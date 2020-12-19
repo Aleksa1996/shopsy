@@ -55,9 +55,9 @@ class UsersController extends BaseController
     public function index(Request $request)
     {
         $queryParams = $this->getQueryParams($request, [
-            'page' => ['number' => 1, 'size' => 10],
-            'filter' => [],
-            'sort' => []
+            'page',
+            'filter',
+            'sort'
         ]);
 
         $query = new UserCollectionQuery(

@@ -9,5 +9,5 @@ interface DomainEvent
     /**
      * @return DateTime
      */
-    public function occurredOn();
+    public function getOccurredOn();
 }
