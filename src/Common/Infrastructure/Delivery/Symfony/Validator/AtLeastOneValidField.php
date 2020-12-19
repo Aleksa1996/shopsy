@@ -15,7 +15,7 @@ class AtLeastOneValidField extends Constraint
     public $message = 'At least one field must be filled in.';
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getTargets()
     {

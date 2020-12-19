@@ -8,12 +8,12 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
-class Client implements ClientEntityInterface
+class ClientEntity implements ClientEntityInterface
 {
     use EntityTrait, ClientTrait;
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -21,7 +21,7 @@ class Client implements ClientEntityInterface
     }
 
     /**
-     * @param $uri
+     * @param string $uri
      */
     public function setRedirectUri($uri)
     {
@@ -29,7 +29,7 @@ class Client implements ClientEntityInterface
     }
 
     /**
-     *
+     * @return void
      */
     public function setConfidential()
     {

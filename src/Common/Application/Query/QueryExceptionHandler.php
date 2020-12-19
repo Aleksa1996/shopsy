@@ -8,7 +8,7 @@ use App\Common\Application\ExceptionHandler;
 class QueryExceptionHandler implements ExceptionHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(\Exception $e)
     {

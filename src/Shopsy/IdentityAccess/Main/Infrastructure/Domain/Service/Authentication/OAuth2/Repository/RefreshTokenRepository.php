@@ -4,35 +4,28 @@
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
 
 
-
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Entity\RefreshToken;
+use App\Common\Domain\Id;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshToken;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\RefreshTokenEntity;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository as AppRefreshTokenRepository;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * @var AppRefreshTokenRepository $appRefreshTokenRepository
      */
-    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
-    {
-        // Some logic to persist the refresh token in a database
-    }
+    private $appRefreshTokenRepository;
 
     /**
-     * {@inheritdoc}
+     * RefreshTokenRepository Constructor
+     *
+     * @param AppRefreshTokenRepository $userRepository
      */
-    public function revokeRefreshToken($tokenId)
+    public function __construct(AppRefreshTokenRepository $appRefreshTokenRepository)
     {
-        // Some logic to revoke the refresh token in a database
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isRefreshTokenRevoked($tokenId)
-    {
-        return false; // The refresh token has not been revoked
+        $this->appRefreshTokenRepository = $appRefreshTokenRepository;
     }
 
     /**
@@ -40,6 +33,47 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function getNewRefreshToken()
     {
-        return new RefreshToken();
+        return new RefreshTokenEntity();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
+    {
+        $appRefreshToken = new RefreshToken(
+            $this->appRefreshTokenRepository->nextIdentity(),
+            new Id($refreshTokenEntity->getAccessToken()->getIdentifier()),
+            false,
+            $refreshTokenEntity->getExpiryDateTime()
+        );
+
+        $this->appRefreshTokenRepository->add($appRefreshToken);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function revokeRefreshToken($tokenId)
+    {
+        $appRefreshToken = $this->appRefreshTokenRepository->findById(new Id($tokenId));
+
+        if ($appRefreshToken) {
+            $appRefreshToken->revoke();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRefreshTokenRevoked($tokenId)
+    {
+        $appRefreshToken = $this->appRefreshTokenRepository->findById(new Id($tokenId));
+
+        if (!$appRefreshToken) {
+            return true;
+        }
+
+        return $appRefreshToken->getRevoked();
     }
 }

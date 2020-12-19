@@ -9,7 +9,7 @@ use App\Common\Domain\DomainException;
 class CommandExceptionHandler implements ExceptionHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(\Exception $e)
     {

@@ -4,19 +4,32 @@
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2;
 
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication;
-use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response as Psr7Response;
-use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\ServerRequestInterface;
-
+use League\OAuth2\Server\AuthorizationServer;
+use Symfony\Component\HttpFoundation\Request;
+use App\Common\Infrastructure\ServerConfiguration;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 
 class OAuth2Authentication extends Authentication
 {
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var ServerConfiguration
+     */
+    private $serverConfiguration;
 
     /**
      * @var AuthorizationServer
@@ -29,87 +42,91 @@ class OAuth2Authentication extends Authentication
      * @param UserRepository $userRepository
      * @param AuthorizationServer $authorizationServer
      */
-    public function __construct(UserRepository $userRepository, AuthorizationServer $authorizationServer)
+    public function __construct(UserRepository $userRepository, ServerConfiguration $serverConfiguration, AuthorizationServer $authorizationServer)
     {
-        parent::__construct($userRepository);
+        $this->userRepository = $userRepository;
+        $this->serverConfiguration = $serverConfiguration;
         $this->authorizationServer = $authorizationServer;
     }
 
     /**
      * @inheritDoc
      */
-    protected function isAlreadyAuthenticated()
+    protected function authenticateByUsername(UserUsername $userUsername, UserPassword $userPassword)
     {
-        // TODO: Implement isAlreadyAuthenticated() method.
+        $user = $this->userRepository->findByUsername($userUsername);
+        // TODO: handle user not found
+        $response = $this->respondToAccessTokenRequest($user->getUsername(), $userPassword);
     }
 
     /**
      * @inheritDoc
-     *
-     * @throws OAuthServerException
      */
-    protected function auth($usernameOrEmail, $password, $user)
+    protected function authenticateByEmail(UserEmail $userEmail, UserPassword $userPassword)
     {
-        $response = $this->authorizationServer->respondToAccessTokenRequest(
-            $this->makeServerRequest((string)$usernameOrEmail, (string)$password),
-            new Psr7Response()
-        );
+        $user = $this->userRepository->findByEmail($userEmail);
+        // TODO: handle user not found
+        $response = $this->respondToAccessTokenRequest($user->getUsername(), $userPassword);
+    }
 
+    /**
+     * @inheritDoc
+     */
+    protected function authenticateById(UserId $userId)
+    {
+        $user = $this->userRepository->findById($userId);
+        // TODO: handle user not found
+
+        // TODO: this will not work because we are passing already encrypted pw
+        $response = $this->respondToAccessTokenRequest($user->getUsername(), $user->getPassword());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    private function respondToAccessTokenRequest($username, $password)
+    {
+        try {
+            $response = $this
+                ->authorizationServer
+                ->respondToAccessTokenRequest(
+                    $this->makeAccessTokenRequest($username, $password),
+                    new Psr7Response()
+                );
+        } catch (OAuthServerException $e) {
+            var_dump($e->getMessage());
+
+            $response = $e->generateHttpResponse(new Psr7Response());
+        }
+        //TODO: convert psr7 response from League Oauth2 server to AuthResponse
         var_dump((string)$response->getBody());
-
-        return true;
+        dd($response);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function logout()
-    {
-        // TODO: Implement logout() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function persistAuthentication(User $user)
-    {
-        // TODO: Implement persistAuthentication() method.
-    }
-
-    /**
-     * @param $usernameOrEmail
-     * @param $password
+     * @param Request $request
+     * @param string $username
+     * @param string $password
      * @param string $scope
      *
      * @return ServerRequestInterface
      */
-    private function makeServerRequest($usernameOrEmail, $password, $scope = '*')
+    private function makeAccessTokenRequest($username, $password, $scope = '*')
     {
-        $post = [
+        // TODO: Get active password credentials client
+        $postData = [
             'grant_type' => 'password',
-            'client_id' => 'resource_owner_password_credentials_grant',
-            'client_secret' => 'resource_owner_password_credentials_grant',
+            'client_id' => 'f00512e0-60f2-4585-aaad-db8b07f42248',
+            'client_secret' => $this->serverConfiguration->getAppSecret(),
             'scope' => $scope,
-            'username' => $usernameOrEmail,
+            'username' => $username,
             'password' => $password
         ];
 
         $psr17Factory = new Psr17Factory();
-        $serverRequestCreator = new ServerRequestCreator(
-            $psr17Factory, // ServerRequestFactory
-            $psr17Factory, // UriFactory
-            $psr17Factory, // UploadedFileFactory
-            $psr17Factory  // StreamFactory
-        );
+        $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+        $symfonyRequest = new Request([], $postData, [], [], [], $_SERVER);
 
-        return $serverRequestCreator
-            ->fromArrays(
-                ['REQUEST_METHOD' => 'POST'],
-                ['Content-Type' => 'application/json'],
-                [],
-                [],
-                $post,
-                []
-            );
+        return $psrHttpFactory->createRequest($symfonyRequest);
     }
 }

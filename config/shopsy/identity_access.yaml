@@ -11,6 +11,9 @@ services:
     resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Delivery/Symfony/Controller'
     tags: [ 'controller.service_arguments' ]
 
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\:
+    resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Domain/Service/Authentication/OAuth2/Repository'
+
   # Repository
   App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository:
     arguments:
@@ -93,9 +96,9 @@ services:
 
   League\OAuth2\Server\AuthorizationServer:
     arguments:
-      $clientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\ClientRepository'
-      $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\AccessTokenRepository'
-      $scopeRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\ScopeRepository'
+      $clientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\ClientRepository'
+      $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\AccessTokenRepository'
+      $scopeRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\ScopeRepository'
       $privateKey: '@PrivateCryptKey'
       $encryptionKey: '%env(OAUTH2_ENCRYPTION_KEY)%'
     calls:
@@ -103,8 +106,15 @@ services:
 
   League\OAuth2\Server\Grant\PasswordGrant:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\UserRepository'
-      $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Repository\RefreshTokenRepository'
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\UserRepository'
+      $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository\RefreshTokenRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\OAuth2Authentication:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
+      $authorizationServer: '@League\OAuth2\Server\AuthorizationServer'
+  App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\OAuth2Authentication'
 
 # Test
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:

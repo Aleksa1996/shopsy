@@ -30,7 +30,7 @@ class QueryBusExceptionDecorator implements Bus
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle($query)
     {

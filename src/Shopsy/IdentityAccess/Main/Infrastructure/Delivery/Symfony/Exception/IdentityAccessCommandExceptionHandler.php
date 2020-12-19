@@ -9,7 +9,7 @@ use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserNotFoundCom
 class IdentityAccessCommandExceptionHandler implements ExceptionHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(\Exception $e)
     {

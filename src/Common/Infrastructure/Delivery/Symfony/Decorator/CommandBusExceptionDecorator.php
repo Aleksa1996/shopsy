@@ -30,7 +30,7 @@ class CommandBusExceptionDecorator implements Bus
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle($command)
     {

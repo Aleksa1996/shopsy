@@ -9,7 +9,7 @@ use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UserNotFoundQuery
 class IdentityAccessQueryExceptionHandler implements ExceptionHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(\Exception $e)
     {

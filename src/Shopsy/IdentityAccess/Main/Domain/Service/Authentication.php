@@ -18,14 +18,17 @@ abstract class Authentication
      *
      * @return AuthenticateResponse
      */
-    public function authenticate($identity, UserPassword $userPassword = null)
+    public function authenticate($identity, $userPassword = null)
     {
         DomainEventPublisher::instance()
             ->publish(
                 new LogInAttempted($identity)
             );
 
+        // TODO: remove manually created value objects for password and username
         $response = null;
+        $identity = new UserUsername($identity);
+        $userPassword = new UserPassword($userPassword);
 
         if ($identity instanceof UserUsername && $userPassword) {
             $response = $this->authenticateByUsername($identity, $userPassword);

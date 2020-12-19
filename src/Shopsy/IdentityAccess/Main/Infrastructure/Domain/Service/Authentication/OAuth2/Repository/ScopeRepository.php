@@ -4,35 +4,35 @@
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
 
 
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Entity\Scope;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\ScopeEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
+    public const SCOPES = [
+        '*' => [
+            'description' => 'All',
+        ],
+        'basic' => [
+            'description' => 'Basic details',
+        ],
+        'email' => [
+            'description' => 'Email address',
+        ],
+    ];
+
     /**
      * {@inheritdoc}
      */
-    public function getScopeEntityByIdentifier($identifier)
+    public function getScopeEntityByIdentifier($scopeIdentifier)
     {
-        $scopes = [
-            '*' => [
-                'description' => 'All',
-            ],
-            'basic' => [
-                'description' => 'Basic details about you',
-            ],
-            'email' => [
-                'description' => 'Your email address',
-            ],
-        ];
-
-        if (\array_key_exists($identifier, $scopes) === false) {
+        if (array_key_exists($scopeIdentifier, self::SCOPES) === false) {
             return null;
         }
 
-        $scope = new Scope();
-        $scope->setIdentifier($identifier);
+        $scope = new ScopeEntity();
+        $scope->setIdentifier($scopeIdentifier);
 
         return $scope;
     }
@@ -44,7 +44,6 @@ class ScopeRepository implements ScopeRepositoryInterface
     {
         $filteredScopes = [];
 
-        /** @var Scope $scope */
         foreach ($scopes as $scope) {
             $filteredScopes[] = $scope;
         }

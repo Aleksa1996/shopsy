@@ -2,26 +2,51 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
 
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Authentication\OAuth2\Entity\Client;
+use App\Common\Domain\Id;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\ClientEntity;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository as AppClientRepository;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-    const DEFAULT_CLIENT_NAME = 'Resource owner password credentials grant';
-    const DEFAULT_CLIENT_ID = 'resource_owner_password_credentials_grant';
-    const DEFAULT_CLIENT_SECRET = 'resource_owner_password_credentials_grant';
+    /**
+     * @var AppClientRepository
+     */
+    private $appClientRepository;
+
+    /**
+     * @var PasswordHasher
+     */
+    private $passwordHasher;
+
+    /**
+     * ClientRepository Constructor
+     *
+     * @param AppClientRepository $appClientRepository
+     * @param PasswordHasher $passwordHasher
+     */
+    public function __construct(AppClientRepository $appClientRepository, PasswordHasher $passwordHasher)
+    {
+        $this->appClientRepository = $appClientRepository;
+        $this->passwordHasher = $passwordHasher;
+    }
 
     /**
      * @inheritDoc
      */
     public function getClientEntity($clientIdentifier)
     {
-        $client = new Client();
+        $appClient = $this->appClientRepository->findById(new Id($clientIdentifier));
 
-        $client->setIdentifier($clientIdentifier);
-        $client->setName(self::DEFAULT_CLIENT_NAME);
-        $client->setRedirectUri('');
-        $client->setConfidential();
+        $client = new ClientEntity();
+        $client->setIdentifier($appClient->getId());
+        $client->setName($appClient->getName());
+        $client->setRedirectUri($appClient->getRedirectUri());
+
+        if ($appClient->getConfidential()) {
+            $client->setConfidential();
+        }
 
         return $client;
     }
@@ -31,20 +56,13 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function validateClient($clientIdentifier, $clientSecret, $grantType)
     {
-        $clients = [
-            self::DEFAULT_CLIENT_ID => [
-                'secret' => password_hash(self::DEFAULT_CLIENT_SECRET, PASSWORD_BCRYPT),
-                'name' => self::DEFAULT_CLIENT_NAME,
-                'redirect_uri' => '',
-                'is_confidential' => true,
-            ],
-        ];
+        $appClient = $this->appClientRepository->findById(new Id($clientIdentifier));
 
-        if (array_key_exists($clientIdentifier, $clients) === false) {
+        if (!$appClient) {
             return false;
         }
 
-        if ($clients[$clientIdentifier]['is_confidential'] === true && password_verify($clientSecret, $clients[$clientIdentifier]['secret']) === false) {
+        if ($appClient->getConfidential() === true && $this->passwordHasher->verify($clientSecret, $appClient->getSecret())  === false) {
             return false;
         }
 
