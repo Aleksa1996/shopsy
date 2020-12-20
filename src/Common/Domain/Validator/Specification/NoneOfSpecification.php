@@ -18,7 +18,7 @@ class NoneOfSpecification extends Specification
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isSatisfiedBy($object)
     {

@@ -25,7 +25,7 @@ class AndSpecification extends Specification
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isSatisfiedBy($object)
     {

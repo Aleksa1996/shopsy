@@ -45,6 +45,9 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer: ~
   App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer'
 
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthenticationResponseTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthenticationResponseTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthenticationResponseTransformer'
+
   App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory: ~
   App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory'
 
@@ -79,6 +82,12 @@ services:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
     tags: [ 'app.command.handler' ]
 
+  App\Shopsy\IdentityAccess\Main\Application\Command\LoginUserHandler:
+    arguments:
+      $authenticationResponseTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthenticationResponseTransformer'
+      $authentication: '@App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication'
+    tags: [ 'app.command.handler' ]
+
   # League OAuth 2
   PrivateCryptKey:
     class: League\OAuth2\Server\CryptKey
@@ -111,7 +120,7 @@ services:
 
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\OAuth2Authentication:
     arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $clientRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository'
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
       $authorizationServer: '@League\OAuth2\Server\AuthorizationServer'
   App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\OAuth2Authentication'

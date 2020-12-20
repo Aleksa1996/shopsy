@@ -10,7 +10,6 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessToken;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\AccessTokenEntity;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessTokenRepository as AppAccessTokenRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
@@ -20,19 +19,13 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     private $appAccessTokenRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * AccessTokenRepository Constructor
      *
      * @param AppAccessTokenRepository $userRepository
      */
-    public function __construct(AppAccessTokenRepository $appAccessTokenRepository, EntityManagerInterface $entityManager)
+    public function __construct(AppAccessTokenRepository $appAccessTokenRepository)
     {
         $this->appAccessTokenRepository = $appAccessTokenRepository;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -41,7 +34,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         $accessToken = new AccessTokenEntity();
-
+        $accessToken->setIdentifier($this->appAccessTokenRepository->nextIdentity()->getId());
         $accessToken->setClient($clientEntity);
         foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
@@ -57,7 +50,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         $appAccessToken = new AccessToken(
-            $this->appAccessTokenRepository->nextIdentity(),
+            new Id($accessTokenEntity->getIdentifier()),
             new UserId($accessTokenEntity->getUserIdentifier()),
             new Id($accessTokenEntity->getClient()->getIdentifier()),
             $accessTokenEntity->getScopes(),
@@ -65,10 +58,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
             $accessTokenEntity->getExpiryDateTime()
         );
 
-        //TODO: check how to persist via client app repository
-        $this->entityManager->persist($appAccessToken);
-        $this->entityManager->flush();
-        // $this->appAccessTokenRepository->add($appAccessToken);
+        $this->appAccessTokenRepository->add($appAccessToken);
     }
 
     /**

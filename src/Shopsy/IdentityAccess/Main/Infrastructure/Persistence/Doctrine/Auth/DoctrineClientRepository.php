@@ -30,6 +30,19 @@ class DoctrineClientRepository extends ServiceEntityRepository implements Client
 
     /**
      * @inheritDoc
+     */
+    public function findByGeneralPurposeAuthentication()
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->where('c.usedForGeneralPurposeAuthentication = true')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritDoc
      *
      * @throws ORMException
      */

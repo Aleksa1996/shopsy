@@ -6,9 +6,8 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 
-class LogInAttempted implements DomainEvent
+class LoginSucceed implements DomainEvent
 {
     /**
      * @var UserId|UserEmail|UserUsername
@@ -21,7 +20,7 @@ class LogInAttempted implements DomainEvent
     private $occurredOn;
 
     /**
-     * LogInAttempted Constructor.
+     * LoginSucceed Constructor.
      *
      * @param UserId|UserEmail|UserUsername $identity
      */
@@ -32,7 +31,7 @@ class LogInAttempted implements DomainEvent
     }
 
     /**
-     * @return UserEmail
+     * @return UserId|UserEmail|UserUsername $identity
      */
     public function getIdentity()
     {

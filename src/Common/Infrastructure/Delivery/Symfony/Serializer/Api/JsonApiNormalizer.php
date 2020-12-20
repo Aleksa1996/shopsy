@@ -41,7 +41,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @param DtoCollection|Dto $dtoCollection
      */
@@ -63,7 +63,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function supportsNormalization($data, $format = null, $context = [])
     {
@@ -71,7 +71,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasCacheableSupportsMethod(): bool
     {

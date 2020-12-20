@@ -22,7 +22,7 @@ class UserId extends UuidType
     const className = UserIdValueObject::class;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @param string|UuidInterface|null $value
      * @param AbstractPlatform $platform

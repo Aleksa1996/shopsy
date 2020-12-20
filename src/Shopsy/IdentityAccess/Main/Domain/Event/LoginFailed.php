@@ -1,17 +1,18 @@
 <?php
 
+
 namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
+
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 
-class UserRegistered implements DomainEvent
+class LoginFailed implements DomainEvent
 {
     /**
-     * @var UserId
+     * @var UserId|UserEmail|UserUsername
      */
-    private $userId;
+    private $identity;
 
     /**
      * @var DateTimeImmutable
@@ -19,22 +20,22 @@ class UserRegistered implements DomainEvent
     private $occurredOn;
 
     /**
-     * UserRegistered Constructor.
+     * LoginFailed Constructor.
      *
-     * @param UserId $userId
+     * @param UserId|UserEmail|UserUsername $identity
      */
-    public function __construct(UserId $userId)
+    public function __construct($identity)
     {
-        $this->userId = $userId;
+        $this->identity = $identity;
         $this->occurredOn = new DateTimeImmutable();
     }
 
     /**
-     * @return UserId
+     * @return UserId|UserEmail|UserUsername $identity
      */
-    public function getUserId()
+    public function getIdentity()
     {
-        return $this->userId;
+        return $this->identity;
     }
 
     /**

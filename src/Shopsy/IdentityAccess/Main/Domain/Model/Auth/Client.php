@@ -39,6 +39,11 @@ class Client
     protected $confidential;
 
     /**
+     * @var bool
+     */
+    protected $usedForGeneralPurposeAuthentication;
+
+    /**
      * @var DateTime
      */
     protected $createdOn;
@@ -56,8 +61,10 @@ class Client
      * @param string $secret
      * @param string $redirectUri
      * @param bool $active
+     * @param bool $confidential
+     * @param bool $usedForGeneralPurposeAuthentication
      */
-    public function __construct(Id $id, string $name, string $secret, string $redirectUri, bool $active, bool $confidential)
+    public function __construct(Id $id, string $name, string $secret, string $redirectUri, bool $active, bool $confidential, bool $usedForGeneralPurposeAuthentication = false)
     {
         $this->setId($id);
         $this->setName($name);
@@ -65,6 +72,7 @@ class Client
         $this->setRedirectUri($redirectUri);
         $this->setActive($active);
         $this->setConfidential($confidential);
+        $this->setUsedForGeneralPurposeAuthentication($usedForGeneralPurposeAuthentication);
         $this->setCreatedOn(new DateTime());
         $this->setUpdatedOn(new DateTime());
     }
@@ -185,6 +193,26 @@ class Client
     public function setConfidential(bool $confidential)
     {
         $this->confidential = $confidential;
+
+        return $this;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function getUsedForGeneralPurposeAuthentication()
+    {
+        return $this->usedForGeneralPurposeAuthentication;
+    }
+
+    /**
+     * @param  bool  $usedForGeneralPurposeAuthentication
+     *
+     * @return  self
+     */
+    public function setUsedForGeneralPurposeAuthentication($usedForGeneralPurposeAuthentication)
+    {
+        $this->usedForGeneralPurposeAuthentication = $usedForGeneralPurposeAuthentication;
 
         return $this;
     }

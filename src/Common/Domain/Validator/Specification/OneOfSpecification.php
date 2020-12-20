@@ -18,7 +18,7 @@ class OneOfSpecification extends Specification
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isSatisfiedBy($object)
     {

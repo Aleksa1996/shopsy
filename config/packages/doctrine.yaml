@@ -6,7 +6,7 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '5.7'
         types:
-            uuid: Ramsey\Uuid\Doctrine\UuidType
+            uuid: App\Common\Infrastructure\Persistence\Doctrine\Types\Id
             user_id: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserId
             user_full_name: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserFullName
             user_username: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserUsername

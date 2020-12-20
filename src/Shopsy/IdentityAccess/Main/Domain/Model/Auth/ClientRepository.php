@@ -14,6 +14,11 @@ interface ClientRepository
     public function findById(Id $id);
 
     /**
+     * @return Client
+     */
+    public function findByGeneralPurposeAuthentication();
+
+    /**
      * @param Client $client
      */
     public function add(Client $client);

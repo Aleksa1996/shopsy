@@ -30,31 +30,14 @@ class SecurityUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername(string $username)
     {
-        //TODO: Check for exceptions
-        $user = $this->userRepository->findByUsername(new UserUsername($username));
-
-        if (!$user) {
-            // TODO: THROW EXCEPTION
+        try {
+            $user = $this->userRepository->findById(new UserId($username));
+        } catch (\Exception $e) {
+            return null;
         }
 
-        return new SecurityUser(
-            $user->getId()->getId(),
-            $user->getUsername()->getUsername()
-        );
-    }
-
-    /**
-     * @param int|string $id
-     *
-     * @return void
-     */
-    public function loadUserById($id)
-    {
-        //TODO: Check for exceptions
-        $user = $this->userRepository->findById(new UserId($id));
-
         if (!$user) {
-            // TODO: THROW EXCEPTION
+            return null;
         }
 
         return new SecurityUser(
@@ -71,7 +54,7 @@ class SecurityUserProvider implements UserProviderInterface
         return $user;
     }
 
-   /**
+    /**
      * @inheritDoc
      */
     public function supportsClass(string $class)

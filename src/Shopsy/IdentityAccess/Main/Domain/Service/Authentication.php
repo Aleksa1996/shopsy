@@ -4,11 +4,11 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
 
 use App\Common\Domain\Event\DomainEventPublisher;
-use App\Shopsy\IdentityAccess\Main\Domain\Event\LogInAttempted;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginFailed;
+use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginSucceed;
+use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginAttempted;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthenticationResponse;
 
 abstract class Authentication
 {
@@ -16,37 +16,26 @@ abstract class Authentication
      * @param mixed $identity
      * @param UserPassword $password
      *
-     * @return AuthenticateResponse
+     * @return AuthenticationResponse
      */
-    public function authenticate($identity, $userPassword = null)
+    public function authenticate($identity, UserPassword $userPassword = null)
     {
         DomainEventPublisher::instance()
             ->publish(
-                new LogInAttempted($identity)
+                new LoginAttempted($identity)
             );
 
-        // TODO: remove manually created value objects for password and username
-        $response = null;
-        $identity = new UserUsername($identity);
-        $userPassword = new UserPassword($userPassword);
+        $response = $this->respondToAuthenticateCall($identity, $userPassword);
 
-        if ($identity instanceof UserUsername && $userPassword) {
-            $response = $this->authenticateByUsername($identity, $userPassword);
-        }
-
-        if ($identity instanceof UserEmail && $userPassword) {
-            $response = $this->authenticateByEmail($identity, $userPassword);
-        }
-
-        if ($identity instanceof UserId && !$userPassword) {
-            $response = $this->authenticateById($identity);
+        if (!$response) {
+            throw new \InvalidArgumentException('Empty authentication response. Probably because identity is not one of these instances: UserUsername, UserEmail, UserId');
         }
 
         $event = null;
-        if ($response->success()) {
-            $event = new LogInAttempted($identity);
+        if ($response->getSuccess()) {
+            $event = new LoginSucceed($identity);
         } else {
-            $event = new LogInAttempted($identity);
+            $event = new LoginFailed($identity);
         }
 
         DomainEventPublisher::instance()->publish($event);
@@ -55,25 +44,10 @@ abstract class Authentication
     }
 
     /**
-     * @param UserUsername $userUsername
-     * @param UserPassword $userPassword
+     * @param mixed $userUsername
+     * @param mixed $userPassword
      *
      * @return AuthenticateResponse
      */
-    abstract protected function authenticateByUsername(UserUsername $userUsername, UserPassword $userPassword);
-
-    /**
-     * @param UserEmail $userEmail
-     * @param UserPassword $userPassword
-     *
-     * @return AuthenticateResponse
-     */
-    abstract protected function authenticateByEmail(UserEmail $userEmail, UserPassword $userPassword);
-
-    /**
-     * @param UserId $userId
-     *
-     * @return AuthenticateResponse
-     */
-    abstract protected function authenticateById(UserId $userId);
+    abstract protected function respondToAuthenticateCall($identity, $password);
 }

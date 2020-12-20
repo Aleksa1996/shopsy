@@ -44,9 +44,10 @@ class ClientFixtures extends Fixture
         $manager->persist(
             new Client(
                 $this->clientRepository->nextIdentity(),
-                'Resource owner password credentials grant',
+                'Resource owner password credentials grant used for general purpose authentication',
                 $this->passwordHasher->hash($this->serverConfiguration->getAppSecret()),
                 '',
+                true,
                 true,
                 true
             )

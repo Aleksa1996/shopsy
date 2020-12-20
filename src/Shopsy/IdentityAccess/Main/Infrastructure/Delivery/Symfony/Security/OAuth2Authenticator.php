@@ -67,7 +67,7 @@ class OAuth2Authenticator extends AbstractGuardAuthenticator
          */
         $request = $this->validateAuthenticatedRequest($credentials);
 
-        return $userProvider->loadUserById($request->get('oauth_user_id'));
+        return $userProvider->loadUserByUsername((string)$request->get('oauth_user_id'));
     }
 
     /**

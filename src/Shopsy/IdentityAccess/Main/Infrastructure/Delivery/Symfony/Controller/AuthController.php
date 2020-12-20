@@ -2,29 +2,29 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
-use Nyholm\Psr7\Response as Psr7Response;
+use App\Common\Application\Bus\Command\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication;
+use App\Shopsy\IdentityAccess\Main\Application\Command\LoginUserCommand;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\LoginUserDto;
 
 class AuthController extends BaseController
 {
     /**
-     * @var Authentication
+     * @var CommandBus
      */
-    private $authentication;
+    private $commandBus;
 
     /**
      * AuthController Constructor
      *
-     * @param Authentication $serverConfiguration
+     * @param CommandBus $serverConfiguration
      */
-    public function __construct(Authentication $authentication)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->authentication = $authentication;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -38,10 +38,12 @@ class AuthController extends BaseController
      */
     public function accessToken(LoginUserDto $userDto, Request $request)
     {
-        $response = new Psr7Response();
         // TODO: inject service that handles authentication
         // try {
-            $this->authentication->authenticate($userDto->username, $userDto->password);
+        $commandResult = $this->commandBus->handle(new LoginUserCommand($userDto->username, $userDto->password));
+
+        dd($commandResult);
+        // $this->authentication->authenticate($userDto->username, $userDto->password);
         // } catch (OAuthServerException $e) {
         //     $response = $e->generateHttpResponse(new Psr7Response());
         // }

@@ -29,15 +29,18 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getNewRefreshToken()
     {
-        return new RefreshTokenEntity();
+        $refreshToken = new RefreshTokenEntity();
+        $refreshToken->setIdentifier($this->appRefreshTokenRepository->nextIdentity());
+
+        return $refreshToken;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
@@ -52,7 +55,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function revokeRefreshToken($tokenId)
     {
@@ -64,7 +67,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isRefreshTokenRevoked($tokenId)
     {

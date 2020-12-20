@@ -23,7 +23,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     ];
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getScopeEntityByIdentifier($scopeIdentifier)
     {
@@ -38,7 +38,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $clientEntity, $userIdentifier = null)
     {

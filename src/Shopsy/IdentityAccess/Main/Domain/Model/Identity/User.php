@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Model\Identity;
 
 use DateTime;
 use App\Common\Domain\Event\DomainEventPublisher;
-use App\Shopsy\IdentityAccess\Main\Domain\Event\UserRegistered;
+use App\Shopsy\IdentityAccess\Main\Domain\Event\UserCreated;
 use App\Shopsy\IdentityAccess\Main\Domain\Service\UserValidator;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 
@@ -75,7 +75,7 @@ class User
         $this->setUpdatedOn(new DateTime());
 
         DomainEventPublisher::instance()
-            ->publish(new UserRegistered($id));
+            ->publish(new UserCreated($id));
     }
 
     /**

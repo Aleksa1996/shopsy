@@ -8,6 +8,7 @@
         <field name="redirectUri" column="redirect_uri" type="string" nullable="true"/>
         <field name="active" column="active" type="boolean"/>
         <field name="confidential" column="confidential" type="boolean"/>
+        <field name="usedForGeneralPurposeAuthentication" column="used_for_general_purpose_authentication" type="boolean"/>
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>
     </entity>

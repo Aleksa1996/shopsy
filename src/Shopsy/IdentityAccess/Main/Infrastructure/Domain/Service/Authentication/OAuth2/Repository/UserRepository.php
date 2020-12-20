@@ -23,6 +23,12 @@ class UserRepository implements UserRepositoryInterface
      */
     private $userPasswordHasher;
 
+    /**
+     * UserRepository Constructor
+     *
+     * @param AppUserRepository $appUserRepository
+     * @param PasswordHasher $passwordHasher
+     */
     public function __construct(AppUserRepository $appUserRepository, PasswordHasher $passwordHasher)
     {
         $this->appUserRepository = $appUserRepository;
@@ -31,8 +37,6 @@ class UserRepository implements UserRepositoryInterface
 
     /**
      * @inheritDoc
-     *
-     * @throws OAuthServerException
      */
     public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $clientEntity)
     {
@@ -44,7 +48,7 @@ class UserRepository implements UserRepositoryInterface
         }
 
         if (!$appUser) {
-            return null;
+            throw OAuthServerException::invalidCredentials();
         }
 
         $isPasswordValid = $this->userPasswordHasher->verify($password, $appUser->getPassword()->getPassword());

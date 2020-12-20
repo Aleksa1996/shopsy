@@ -25,7 +25,7 @@ class OrSpecification extends Specification
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isSatisfiedBy($object)
     {

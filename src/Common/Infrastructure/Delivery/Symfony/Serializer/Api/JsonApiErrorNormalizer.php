@@ -41,7 +41,7 @@ class JsonApiErrorNormalizer implements NormalizerInterface, ContextAwareNormali
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasCacheableSupportsMethod(): bool
     {
