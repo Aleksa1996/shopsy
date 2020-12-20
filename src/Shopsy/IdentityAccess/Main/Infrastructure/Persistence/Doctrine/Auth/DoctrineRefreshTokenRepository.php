@@ -30,6 +30,20 @@ class DoctrineRefreshTokenRepository extends ServiceEntityRepository implements 
 
     /**
      * @inheritDoc
+     */
+    public function findByIdentifier(string $id)
+    {
+        return $this
+            ->createQueryBuilder('rt')
+            ->where('rt.identifier = :identifier')
+            ->setParameter('identifier', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritDoc
      *
      * @throws ORMException
      */

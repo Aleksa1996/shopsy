@@ -2,12 +2,13 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
-use App\Common\Application\Bus\Command\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Common\Application\Bus\Command\CommandBus;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use App\Shopsy\IdentityAccess\Main\Application\Command\LoginUserCommand;
+use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\LoginUserDto;
 
 class AuthController extends BaseController
@@ -32,20 +33,15 @@ class AuthController extends BaseController
      * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\LoginUserDto")
      *
      * @param LoginUserDto $userDto
-     * @param Request $request
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function accessToken(LoginUserDto $userDto, Request $request)
+    public function accessToken(LoginUserDto $userDto)
     {
-        // TODO: inject service that handles authentication
-        // try {
-        $commandResult = $this->commandBus->handle(new LoginUserCommand($userDto->username, $userDto->password));
+        $commandResult = $this->commandBus->handle(
+            new LoginUserCommand($userDto->username, $userDto->password)
+        );
 
-        dd($commandResult);
-        // $this->authentication->authenticate($userDto->username, $userDto->password);
-        // } catch (OAuthServerException $e) {
-        //     $response = $e->generateHttpResponse(new Psr7Response());
-        // }
+        return $this->json($commandResult, JsonResponse::HTTP_OK);
     }
 }

@@ -14,9 +14,14 @@ class RefreshToken
     protected $id;
 
     /**
-     * @var Id
+     * @var string
      */
-    protected $accessTokenId;
+    protected $identifier;
+
+    /**
+     * @var string
+     */
+    protected $accessTokenIdentifier;
 
     /**
      * @var bool
@@ -42,14 +47,15 @@ class RefreshToken
      * RefreshToken constructor.
      *
      * @param Id $id
-     * @param Id $accessTokenId
+     * @param string accessTokenIdentifier
      * @param bool $revoked
      * @param DateTimeImmutable $expiresOn
      */
-    public function __construct(Id $id, Id $accessTokenId, bool $revoked, DateTimeImmutable $expiresOn)
+    public function __construct(Id $id, string $identifier, string $accessTokenIdentifier, bool $revoked, DateTimeImmutable $expiresOn)
     {
         $this->setId($id);
-        $this->setAccessTokenId($accessTokenId);
+        $this->setIdentifier($identifier);
+        $this->setAccessTokenIdentifier($accessTokenIdentifier);
         $this->setRevoked($revoked);
         $this->setCreatedOn(new DateTimeImmutable());
         $this->setUpdatedOn(new DateTimeImmutable());
@@ -77,6 +83,26 @@ class RefreshToken
     }
 
     /**
+     * @return  string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     *
+     * @return  self
+     */
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
      * @return  Id
      */
     public function getAccessTokenId()
@@ -85,13 +111,13 @@ class RefreshToken
     }
 
     /**
-     * @param Id $accessTokenId
+     * @param string $accessTokenId
      *
      * @return  self
      */
-    public function setAccessTokenId(Id $accessTokenId)
+    public function setAccessTokenIdentifier(string $accessTokenIdentifier)
     {
-        $this->accessTokenId = $accessTokenId;
+        $this->accessTokenIdentifier = $accessTokenIdentifier;
 
         return $this;
     }

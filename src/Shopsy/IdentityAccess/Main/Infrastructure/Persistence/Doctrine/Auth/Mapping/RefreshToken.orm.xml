@@ -3,7 +3,8 @@
         <id name="id" column="id" type="uuid">
             <generator strategy="NONE"/>
         </id>
-        <field name="accessTokenId" column="access_token_id" type="uuid" />
+        <field name="identifier" column="identifier" type="string" />
+        <field name="accessTokenIdentifier" column="access_token_identifier" type="string" />
         <field name="revoked" column="revoked" type="boolean"/>
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>

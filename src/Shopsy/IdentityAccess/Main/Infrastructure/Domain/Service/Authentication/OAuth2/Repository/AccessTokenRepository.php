@@ -34,7 +34,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         $accessToken = new AccessTokenEntity();
-        $accessToken->setIdentifier($this->appAccessTokenRepository->nextIdentity()->getId());
         $accessToken->setClient($clientEntity);
         foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
@@ -50,7 +49,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         $appAccessToken = new AccessToken(
-            new Id($accessTokenEntity->getIdentifier()),
+            $this->appAccessTokenRepository->nextIdentity(),
+            $accessTokenEntity->getIdentifier(),
             new UserId($accessTokenEntity->getUserIdentifier()),
             new Id($accessTokenEntity->getClient()->getIdentifier()),
             $accessTokenEntity->getScopes(),
@@ -66,7 +66,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        $appAccessToken = $this->appAccessTokenRepository->findById(new Id($tokenId));
+        $appAccessToken = $this->appAccessTokenRepository->findByIdentifier($tokenId);
 
         if ($appAccessToken) {
             $appAccessToken->revoke();
@@ -78,7 +78,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        $appAccessToken = $this->appAccessTokenRepository->findById(new Id($tokenId));
+        $appAccessToken = $this->appAccessTokenRepository->findByIdentifier($tokenId);
 
         if (!$appAccessToken) {
             return true;

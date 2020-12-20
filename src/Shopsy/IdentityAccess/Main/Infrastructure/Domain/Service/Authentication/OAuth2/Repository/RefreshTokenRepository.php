@@ -46,7 +46,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     {
         $appRefreshToken = new RefreshToken(
             $this->appRefreshTokenRepository->nextIdentity(),
-            new Id($refreshTokenEntity->getAccessToken()->getIdentifier()),
+            $refreshTokenEntity->getIdentifier(),
+            $refreshTokenEntity->getAccessToken()->getIdentifier(),
             false,
             $refreshTokenEntity->getExpiryDateTime()
         );
@@ -59,7 +60,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-        $appRefreshToken = $this->appRefreshTokenRepository->findById(new Id($tokenId));
+        $appRefreshToken = $this->appRefreshTokenRepository->findByIdentifier($tokenId);
 
         if ($appRefreshToken) {
             $appRefreshToken->revoke();
@@ -71,7 +72,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        $appRefreshToken = $this->appRefreshTokenRepository->findById(new Id($tokenId));
+        $appRefreshToken = $this->appRefreshTokenRepository->findByIdentifier($tokenId);
 
         if (!$appRefreshToken) {
             return true;

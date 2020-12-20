@@ -15,6 +15,11 @@ class AccessToken
     protected $id;
 
     /**
+     * @var string
+     */
+    protected $identifier;
+
+    /**
      * @var UserId
      */
     protected $userId;
@@ -53,15 +58,17 @@ class AccessToken
      * AccessToken constructor.
      *
      * @param Id $id
+     * @param string $identifier
      * @param UserId $userId
      * @param Id $clientId
      * @param array $scopes
      * @param bool $revoked
      * @param DateTimeImmutable $expiresOn
      */
-    public function __construct(Id $id, UserId $userId, Id $clientId, array $scopes, bool $revoked, DateTimeImmutable $expiresOn)
+    public function __construct(Id $id, string $identifier, UserId $userId, Id $clientId, array $scopes, bool $revoked, DateTimeImmutable $expiresOn)
     {
         $this->setId($id);
+        $this->setIdentifier($identifier);
         $this->setUserId($userId);
         $this->setClientId($clientId);
         $this->setScopes($scopes);
@@ -87,6 +94,26 @@ class AccessToken
     public function setId(Id $id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     *
+     * @return  self
+     */
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

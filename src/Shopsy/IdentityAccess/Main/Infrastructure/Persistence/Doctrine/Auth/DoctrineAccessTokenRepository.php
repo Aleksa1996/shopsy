@@ -30,6 +30,20 @@ class DoctrineAccessTokenRepository extends ServiceEntityRepository implements A
 
     /**
      * @inheritDoc
+     */
+    public function findByIdentifier(string $id)
+    {
+        return $this
+            ->createQueryBuilder('at')
+            ->where('at.identifier = :identifier')
+            ->setParameter('identifier', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritDoc
      *
      * @throws ORMException
      */

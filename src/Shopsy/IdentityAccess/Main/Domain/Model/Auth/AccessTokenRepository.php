@@ -14,6 +14,13 @@ interface AccessTokenRepository
     public function findById(Id $id);
 
     /**
+     * @param string $id
+     *
+     * @return AccessToken
+     */
+    public function findByIdentifier(string $id);
+
+    /**
      * @param AccessToken $accessToken
      */
     public function add(AccessToken $accessToken);

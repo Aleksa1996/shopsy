@@ -14,6 +14,13 @@ interface RefreshTokenRepository
     public function findById(Id $id);
 
     /**
+     * @param string $id
+     *
+     * @return RefreshToken
+     */
+    public function findByIdentifier(string $id);
+
+    /**
      * @param RefreshToken $refreshToken
      */
     public function add(RefreshToken $refreshToken);

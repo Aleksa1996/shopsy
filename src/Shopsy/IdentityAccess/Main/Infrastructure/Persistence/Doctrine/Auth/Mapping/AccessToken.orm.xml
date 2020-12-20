@@ -3,6 +3,7 @@
         <id name="id" column="id" type="uuid">
             <generator strategy="NONE"/>
         </id>
+        <field name="identifier" column="identifier" type="string" />
         <field name="userId" column="user_id" type="uuid" />
         <field name="clientId" column="client_id" type="uuid" />
         <field name="scopes" column="scopes" type="array" nullable="true"/>
