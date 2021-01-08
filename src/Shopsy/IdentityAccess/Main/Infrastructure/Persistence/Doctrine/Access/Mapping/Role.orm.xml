@@ -1,0 +1,12 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role" table="identity_access_roles" repository-class="App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\DoctrineRoleRepository">
+        <id name="id" column="id" type="uuid">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="name" column="name" type="string" />
+        <field name="identifier" column="identifier" type="string" />
+        <field name="permissions" column="permissions" type="permissions" />
+        <field name="createdOn" column="created_on" type="datetime"/>
+        <field name="updatedOn" column="updated_on" type="datetime"/>
+    </entity>
+</doctrine-mapping>

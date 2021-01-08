@@ -12,6 +12,8 @@ doctrine:
             user_username: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserUsername
             user_email: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserEmail
             user_password: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserPassword
+            permissions: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Types\RolePermissions
+
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
@@ -22,6 +24,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Persistence/Doctrine/Identity/Mapping'
                 is_bundle: false
                 prefix: App\Shopsy\IdentityAccess\Main\Domain\Model\Identity
+            IdentityAccessAccess:
+                type: xml
+                dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Persistence/Doctrine/Access/Mapping'
+                is_bundle: false
+                prefix: App\Shopsy\IdentityAccess\Main\Domain\Model\Access
             IdentityAccessAuth:
                 type: xml
                 dir: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Persistence/Doctrine/Auth/Mapping'

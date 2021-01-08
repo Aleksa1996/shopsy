@@ -3,10 +3,12 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Model\Identity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Common\Domain\Event\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\UserCreated;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\UserValidator;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\UserValidator;
 
 class User
 {
@@ -46,6 +48,11 @@ class User
     protected $password;
 
     /**
+     * @var ArrayCollection<Role>
+     */
+    protected $roles;
+
+    /**
      * @var DateTime
      */
     protected $createdOn;
@@ -64,13 +71,14 @@ class User
      * @param UserEmail $email
      * @param UserPassword $password
      */
-    public function __construct(UserId $id, UserFullName $fullName, UserUsername $username, UserEmail $email, UserPassword $password)
+    public function __construct(UserId $id, UserFullName $fullName, UserUsername $username, UserEmail $email, UserPassword $password, array $roles = [])
     {
         $this->setId($id);
         $this->setFullName($fullName);
         $this->setUsername($username);
         $this->setEmail($email);
         $this->setPassword($password);
+        $this->setRoles($roles);
         $this->setCreatedOn(new DateTime());
         $this->setUpdatedOn(new DateTime());
 
@@ -199,6 +207,77 @@ class User
     }
 
     /**
+     * @return  Role[]
+     */
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+
+    /**
+     * @param  Role[]  $roles
+     *
+     * @return  self
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = new ArrayCollection($roles);
+
+        return $this;
+    }
+
+    /**
+     * @param Role $role
+     *
+     * @return  Role[]
+     */
+    public function attachRole(Role $role)
+    {
+        foreach ($this->roles as $r) {
+            if ($r->getId()->equals($role->getId())) {
+                return $this;
+            }
+        }
+
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * @param Role $role
+     *
+     * @return  Role[]
+     */
+    public function detachRole(Role $role)
+    {
+        foreach ($this->roles as $key => $r) {
+            if ($r->getId()->equals($role->getId())) {
+                unset($this->roles[$key]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $action
+     * @param string $resource
+     *
+     * @return bool
+     */
+    public function hasPermissionOnResource(string $action, string $resource)
+    {
+        foreach ($this->roles as $r) {
+            if ($r->hasPermission($action, $resource)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return DateTime
      */
     public function getCreatedOn(): DateTime
@@ -248,5 +327,4 @@ class User
     {
         (new UserValidator($validationNotificationHandler, $this, $userRepository))->validate();
     }
-
 }

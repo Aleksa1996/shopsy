@@ -13,5 +13,16 @@
         <field name="password" column="password" type="user_password" length="220"/>
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>
+
+        <many-to-many field="roles" target-entity="App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role">
+            <join-table name="identity_access_users_roles">
+                <join-columns>
+                    <join-column name="user_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="role_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
     </entity>
 </doctrine-mapping>
