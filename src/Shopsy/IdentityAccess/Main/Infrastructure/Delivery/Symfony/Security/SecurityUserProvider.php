@@ -2,11 +2,10 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security;
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 
 class SecurityUserProvider implements UserProviderInterface
 {
@@ -55,7 +54,7 @@ class SecurityUserProvider implements UserProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * Tells Symfony to use this provider for this User class.
      */
     public function supportsClass(string $class)
     {

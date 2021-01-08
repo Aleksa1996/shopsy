@@ -2,13 +2,13 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Exception\Command;
 
-use Throwable;
 use App\Common\Application\Command\CommandException;
+use Throwable;
 
-class UserLoginFailedException extends CommandException
+class UserAuthFailedCommandException extends CommandException
 {
     /**
-     * UserLoginFailedException Constructor
+     * UserAuthFailedCommandException Constructor
      *
      * @param string $userFriendlyTitle
      * @param string $userFriendlyMessage
@@ -17,7 +17,7 @@ class UserLoginFailedException extends CommandException
      * @param integer $code
      * @param Throwable $previous
      */
-    public function __construct($userFriendlyTitle = 'User login failed', $userFriendlyMessage = 'User login failed', $errors = [], $message = 'User login failed', $code = 0, Throwable $previous = null)
+    public function __construct($userFriendlyTitle = 'User auth failed', $userFriendlyMessage = 'User auth failed', $errors = [], $message = 'User auth failed', $code = 0, Throwable $previous = null)
     {
         parent::__construct($userFriendlyTitle, $userFriendlyMessage, $errors, $message, $code, $previous);
     }

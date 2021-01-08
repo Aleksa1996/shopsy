@@ -1,14 +1,14 @@
 <?php
 
+namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Auth;
 
-namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
 
 use App\Common\Domain\Event\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginFailed;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginSucceed;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginAttempted;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthenticationResponse;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthResponse;
 
 abstract class Authentication
 {
@@ -16,7 +16,7 @@ abstract class Authentication
      * @param mixed $identity
      * @param UserPassword $password
      *
-     * @return AuthenticationResponse
+     * @return AuthResponse
      */
     public function authenticate($identity, UserPassword $userPassword = null)
     {
@@ -44,8 +44,8 @@ abstract class Authentication
     }
 
     /**
-     * @param mixed $userUsername
-     * @param mixed $userPassword
+     * @param mixed $identity
+     * @param mixed $password
      *
      * @return AuthenticateResponse
      */

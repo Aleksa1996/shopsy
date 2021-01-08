@@ -3,14 +3,14 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserAuthFailedCommandException;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
-use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserLoginFailedException;
-use App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthenticationResponseTransformer;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication;
+use App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer;
 
-class LoginUserHandler implements CommandHandler
+class AuthUserHandler implements CommandHandler
 {
     /**
      * @var Authentication
@@ -18,16 +18,16 @@ class LoginUserHandler implements CommandHandler
     private $authentication;
 
     /**
-     * @var AuthenticationResponseTransformer
+     * @var AuthTransformer
      */
     private $authenticationResponseTransformer;
 
     /**
-     * LoginUserHandler Constructor.
+     * AuthUserHandler Constructor.
      *
      * @param Authentication $authentication
      */
-    public function __construct(Authentication $authentication, AuthenticationResponseTransformer $authenticationResponseTransformer)
+    public function __construct(Authentication $authentication, AuthTransformer $authenticationResponseTransformer)
     {
         $this->authentication = $authentication;
         $this->authenticationResponseTransformer = $authenticationResponseTransformer;
@@ -36,7 +36,7 @@ class LoginUserHandler implements CommandHandler
     /**
      * @inheritDoc
      */
-    public function execute(LoginUserCommand $command = null)
+    public function execute(AuthUserCommand $command = null)
     {
         $identity = null;
         try {
@@ -56,8 +56,8 @@ class LoginUserHandler implements CommandHandler
         );
 
         if (!$authenticationResponse->getSuccess()) {
-            throw new UserLoginFailedException(
-                'User login failed',
+            throw new UserAuthFailedCommandException(
+                'User auth failed',
                 $authenticationResponse->getMessage()
             );
         }

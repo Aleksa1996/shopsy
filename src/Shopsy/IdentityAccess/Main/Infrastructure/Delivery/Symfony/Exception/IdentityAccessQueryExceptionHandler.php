@@ -4,6 +4,8 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Excepti
 
 use App\Common\Application\ExceptionHandler;
 use App\Common\Application\Query\QueryException;
+use App\Common\Infrastructure\Delivery\Symfony\ResponseDto\ErrorDto;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\ValidationErrorQueryException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UserNotFoundQueryException;
 
 class IdentityAccessQueryExceptionHandler implements ExceptionHandler
@@ -17,10 +19,21 @@ class IdentityAccessQueryExceptionHandler implements ExceptionHandler
             throw IdentityAccessHttpException::createFromQueryException($e, 404);
         }
 
+        if ($e instanceof ValidationErrorQueryException) {
+            throw IdentityAccessHttpException::createFromQueryException($e, 400);
+        }
+
         if ($e instanceof QueryException) {
             throw IdentityAccessHttpException::createFromQueryException($e);
         }
 
-        throw $e;
+        throw new IdentityAccessHttpException(
+            new ErrorDto('Internal Server Error', 'The backend responded with an error'),
+            500,
+            $e->getMessage(),
+            $e->getCode(),
+            [],
+            $e->getPrevious()
+        );
     }
 }

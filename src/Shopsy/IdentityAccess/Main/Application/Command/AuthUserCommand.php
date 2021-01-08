@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\Command;
 
-class LoginUserCommand implements Command
+class AuthUserCommand implements Command
 {
     /**
      * @var int|string
@@ -17,7 +17,7 @@ class LoginUserCommand implements Command
     private $password;
 
     /**
-     * LoginUserCommand constructor.
+     * AuthUserCommand constructor.
      *
      * @param int|string $identity
      * @param string $password

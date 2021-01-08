@@ -2,10 +2,22 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         users_in_memory: { memory: null }
+        app_user_provider:
+            id: 'App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\SecurityUserProvider'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        oauth2_access_token:
+            pattern: ^/oauth2/access_token
+            anonymous: true
+        api:
+            pattern: ^/
+            provider: app_user_provider
+            stateless: true
+            guard:
+                authenticators:
+                    - 'App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\OAuth2Authenticator'
         main:
             anonymous: true
             lazy: true

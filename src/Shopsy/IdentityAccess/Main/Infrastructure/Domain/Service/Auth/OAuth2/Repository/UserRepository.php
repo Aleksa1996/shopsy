@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -9,7 +9,7 @@ use App\Common\Infrastructure\Service\Hasher\Hasher;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository as AppUserRepository;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\UserEntity;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Entity\UserEntity;
 
 class UserRepository implements UserRepositoryInterface
 {

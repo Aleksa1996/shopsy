@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Application\Dto;
 
 use App\Common\Application\Query\Dto\Dto;
 
-class AuthenticationResponseDto extends Dto
+class AuthResponseDto extends Dto
 {
     /**
      * @var string
@@ -27,17 +27,12 @@ class AuthenticationResponseDto extends Dto
     private $refreshToken;
 
     /**
-     * AuthDto Constructor
+     * AuthResponseDto Constructor
      *
-     * @param int|string $id
-     * @param string $fullName
-     * @param string $username
-     * @param string $email
-     * @param bool $active
-     * @param string $avatar
-     * @param string $signature
-     * @param string $createdOn
-     * @param string $updatedOn
+     * @param string $tokenType
+     * @param int $expiresIn
+     * @param string $accessToken
+     * @param string $refreshToken
      */
     public function __construct($tokenType, $expiresIn, $accessToken, $refreshToken)
     {

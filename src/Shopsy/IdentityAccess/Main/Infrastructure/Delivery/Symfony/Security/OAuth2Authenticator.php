@@ -12,10 +12,10 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use App\Common\Infrastructure\Delivery\Symfony\ResponseDto\ErrorDto;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\UnauthorizedHttpException;
-use App\Common\Infrastructure\Delivery\Symfony\ResponseDto\ErrorDto;
 
 class OAuth2Authenticator extends AbstractGuardAuthenticator
 {
@@ -67,7 +67,7 @@ class OAuth2Authenticator extends AbstractGuardAuthenticator
          */
         $request = $this->validateAuthenticatedRequest($credentials);
 
-        return $userProvider->loadUserByUsername((string)$request->get('oauth_user_id'));
+        return $userProvider->loadUserByUsername($request->get('oauth_user_id'));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository;
 
 use App\Common\Domain\Id;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -8,7 +8,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessToken;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\AccessTokenEntity;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Entity\AccessTokenEntity;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessTokenRepository as AppAccessTokenRepository;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface

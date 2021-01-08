@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository;
 
 
 use App\Common\Domain\Id;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshToken;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\RefreshTokenEntity;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Entity\RefreshTokenEntity;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository as AppRefreshTokenRepository;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
@@ -33,6 +33,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function getNewRefreshToken()
     {
+        return null;
+
         $refreshToken = new RefreshTokenEntity();
         $refreshToken->setIdentifier($this->appRefreshTokenRepository->nextIdentity());
 

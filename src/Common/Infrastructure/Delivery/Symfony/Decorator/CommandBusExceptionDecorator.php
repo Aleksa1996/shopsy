@@ -35,7 +35,7 @@ class CommandBusExceptionDecorator implements Bus
     public function handle($command)
     {
         try {
-            $this->commandBus->handle($command);
+            return $this->commandBus->handle($command);
         } catch (\Exception $e) {
             $this->exceptionHandler->handle($e);
         }

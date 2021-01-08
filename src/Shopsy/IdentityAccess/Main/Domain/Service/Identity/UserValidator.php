@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
+namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Identity;
 
 use App\Common\Domain\Validator\Validator;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Specification\UniqueEmail;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Specification\UniqueUsername;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Specification\UniqueEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Specification\UniqueUsername;
 
 class UserValidator extends Validator
 {

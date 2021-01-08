@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      description="User model",
  * )
  */
-class LoginUserDto implements RequestDto
+class AuthUserDto implements RequestDto
 {
     /**
      * @Assert\NotBlank

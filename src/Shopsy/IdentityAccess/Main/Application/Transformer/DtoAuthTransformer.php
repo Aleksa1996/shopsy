@@ -2,10 +2,10 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Transformer;
 
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthenticationResponse;
-use App\Shopsy\IdentityAccess\Main\Application\Dto\AuthenticationResponseDto;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthResponse;
+use App\Shopsy\IdentityAccess\Main\Application\Dto\AuthResponseDto;
 
-class DtoAuthenticationResponseTransformer implements AuthenticationResponseTransformer
+class DtoAuthTransformer implements AuthTransformer
 {
     /**
      * @var mixed
@@ -15,9 +15,9 @@ class DtoAuthenticationResponseTransformer implements AuthenticationResponseTran
     /**
      * @inheritDoc
      */
-    public function write(AuthenticationResponse $authenticationResponse)
+    public function write(AuthResponse $authenticationResponse)
     {
-        $this->data = new AuthenticationResponseDto(
+        $this->data = new AuthResponseDto(
             $authenticationResponse->getTokenType(),
             $authenticationResponse->getExpiresIn(),
             $authenticationResponse->getAccessToken(),

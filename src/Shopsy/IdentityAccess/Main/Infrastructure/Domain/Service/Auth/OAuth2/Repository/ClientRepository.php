@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository;
 
 use App\Common\Domain\Id;
 use App\Common\Infrastructure\Service\Hasher\Hasher;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\ClientEntity;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Entity\ClientEntity;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository as AppClientRepository;
 
 class ClientRepository implements ClientRepositoryInterface

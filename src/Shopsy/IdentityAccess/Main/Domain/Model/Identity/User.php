@@ -8,7 +8,7 @@ use App\Common\Domain\Event\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\UserCreated;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\UserValidator;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\UserValidator;
 
 class User
 {

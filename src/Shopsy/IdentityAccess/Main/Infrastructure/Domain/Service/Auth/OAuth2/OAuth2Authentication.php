@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2;
-
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response as Psr7Response;
@@ -12,10 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Common\Infrastructure\ServerConfiguration;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\Authentication;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthenticationResponse;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthResponse;
 
 class OAuth2Authentication extends Authentication
 {
@@ -38,7 +35,7 @@ class OAuth2Authentication extends Authentication
      * OAuth2Authentication Constructor.
      *
      * @param ClientRepository $clientRepository
-     * @param UserRepository $userRepository
+     * @param ServerConfiguration $serverConfiguration
      * @param AuthorizationServer $authorizationServer
      */
     public function __construct(ClientRepository $clientRepository, ServerConfiguration $serverConfiguration, AuthorizationServer $authorizationServer)
@@ -70,7 +67,6 @@ class OAuth2Authentication extends Authentication
     }
 
     /**
-     * @param Request $request
      * @param string $username
      * @param string $password
      * @param string $scope
@@ -104,7 +100,7 @@ class OAuth2Authentication extends Authentication
     /**
      * @param \Psr\Http\Message\ResponseInterface $response
      *
-     * @return AuthenticationResponse
+     * @return AuthResponse
      */
     private function translateAuthorizationServerResponse($response)
     {
@@ -116,16 +112,16 @@ class OAuth2Authentication extends Authentication
         $jsonDecodedResponseBody = json_decode($responseBody, true);
 
         if ($response->getStatusCode() === 200) {
-            return new AuthenticationResponse(
+            return new AuthResponse(
                 true,
                 'Success',
-                $jsonDecodedResponseBody['token_type'],
+                $jsonDecodedResponseBody['token_type'] ?? 'Bearer',
                 $jsonDecodedResponseBody['expires_in'],
                 $jsonDecodedResponseBody['access_token'],
-                $jsonDecodedResponseBody['refresh_token'],
+                $jsonDecodedResponseBody['refresh_token'] ?? null,
             );
         }
 
-        return new AuthenticationResponse(false, $jsonDecodedResponseBody['message'] ?? 'Invalid access token request.');
+        return new AuthResponse(false, $jsonDecodedResponseBody['message'] ?? 'Invalid access token request.');
     }
 }

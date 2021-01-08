@@ -1,4 +1,5 @@
 parameters:
   # the parameter name is an arbitrary string (the 'app.' prefix is recommended
   # to better differentiate your parameters from Symfony parameters).
-  app.shopsy_resource_directory: '%kernel.project_dir%/config/shopsy'
+  app.resources.common: '%kernel.project_dir%/src/Common'
+  app.resources.identity_access: '%kernel.project_dir%/src/Shopsy/IdentityAccess'

@@ -3,7 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Model\Auth;
 
 
-class AuthenticationResponse
+class AuthResponse
 {
     /**
      * @var bool
@@ -36,7 +36,7 @@ class AuthenticationResponse
     private $refreshToken;
 
     /**
-     * AuthenticationResponse Constructor
+     * AuthResponse Constructor
      *
      * @param bool $success
      * @param string $message

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Specification;
+namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Specification;
 
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Common\Domain\Validator\Specification\Specification;
 
-class UniqueEmail extends Specification
+class UniqueUsername extends Specification
 {
     /**
      * @var UserRepository
@@ -13,7 +13,7 @@ class UniqueEmail extends Specification
     private $userRepository;
 
     /**
-     * UniqueEmailSpecification Constructor
+     * UniqueUsernameSpecification Constructor
      *
      * @param UserRepository $userRepository
      */
@@ -29,8 +29,8 @@ class UniqueEmail extends Specification
      */
     public function isSatisfiedBy($object)
     {
-        $user = $this->userRepository->findByEmail(
-            $object->getEmail()
+        $user = $this->userRepository->findByUsername(
+            $object->getUsername()
         );
 
         return $user === null || $object->getId()->equals($user->getId());
