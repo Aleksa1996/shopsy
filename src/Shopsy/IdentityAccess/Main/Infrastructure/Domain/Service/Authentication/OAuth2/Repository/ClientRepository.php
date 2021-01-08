@@ -3,7 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Repository;
 
 use App\Common\Domain\Id;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentication\OAuth2\Entity\ClientEntity;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository as AppClientRepository;
@@ -16,20 +16,20 @@ class ClientRepository implements ClientRepositoryInterface
     private $appClientRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $passwordHasher;
+    private $hasher;
 
     /**
      * ClientRepository Constructor
      *
      * @param AppClientRepository $appClientRepository
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(AppClientRepository $appClientRepository, PasswordHasher $passwordHasher)
+    public function __construct(AppClientRepository $appClientRepository, Hasher $hasher)
     {
         $this->appClientRepository = $appClientRepository;
-        $this->passwordHasher = $passwordHasher;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -62,7 +62,7 @@ class ClientRepository implements ClientRepositoryInterface
             return false;
         }
 
-        if ($appClient->getConfidential() === true && $this->passwordHasher->verify($clientSecret, $appClient->getSecret())  === false) {
+        if ($appClient->getConfidential() === true && $this->hasher->verify($clientSecret, $appClient->getSecret())  === false) {
             return false;
         }
 

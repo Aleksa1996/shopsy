@@ -4,7 +4,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service;
 
 
-interface PasswordHasher
+interface Hasher
 {
     /**
      * @param $password

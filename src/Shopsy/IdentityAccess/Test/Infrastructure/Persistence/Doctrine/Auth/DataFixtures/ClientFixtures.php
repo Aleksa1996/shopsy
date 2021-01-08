@@ -6,7 +6,7 @@ use App\Common\Infrastructure\ServerConfiguration;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\Client;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository;
 
 class ClientFixtures extends Fixture
@@ -17,9 +17,9 @@ class ClientFixtures extends Fixture
     private $clientRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $passwordHasher;
+    private $hasher;
 
     /**
      * @var ServerConfiguration
@@ -30,12 +30,12 @@ class ClientFixtures extends Fixture
      * ClientFixtures Constructor
      *
      * @param ClientRepository $clientRepository
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(ClientRepository $clientRepository, PasswordHasher $passwordHasher, ServerConfiguration $serverConfiguration)
+    public function __construct(ClientRepository $clientRepository, Hasher $hasher, ServerConfiguration $serverConfiguration)
     {
         $this->clientRepository = $clientRepository;
-        $this->passwordHasher = $passwordHasher;
+        $this->hasher = $hasher;
         $this->serverConfiguration = $serverConfiguration;
     }
 
@@ -45,7 +45,7 @@ class ClientFixtures extends Fixture
             new Client(
                 $this->clientRepository->nextIdentity(),
                 'Resource owner password credentials grant used for general purpose authentication',
-                $this->passwordHasher->hash($this->serverConfiguration->getAppSecret()),
+                $this->hasher->hash($this->serverConfiguration->getAppSecret()),
                 '',
                 true,
                 true,

@@ -2,15 +2,16 @@
 
 namespace App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures;
 
+use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 
 class UserFixtures extends Fixture
 {
@@ -20,19 +21,20 @@ class UserFixtures extends Fixture
     private $userRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $passwordHasher;
+    private $hasher;
 
     /**
      * UserFixtures Constructor
      *
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(UserRepository $userRepository, PasswordHasher $passwordHasher)
+    public function __construct(UserRepository $userRepository, Hasher $hasher)
     {
         $this->userRepository = $userRepository;
-        $this->passwordHasher = $passwordHasher;
+        $this->hasher = $hasher;
+        $this->faker = Factory::create();
     }
 
     public function load(ObjectManager $manager)
@@ -41,13 +43,23 @@ class UserFixtures extends Fixture
             $manager->persist(
                 new User(
                     $this->userRepository->nextIdentity(),
-                    new UserFullName(sprintf('Aleksa Jovanovic - %s', $i)),
-                    new UserUsername(sprintf('aleksa.jovanovic.%s', $i)),
-                    new UserEmail(sprintf('aleksa.jovanovic.%s@gmail.com', $i)),
-                    new UserPassword($this->passwordHasher->hash(sprintf('aleksa.jovanovic.%s', $i)))
+                    new UserFullName($this->faker->name),
+                    new UserUsername($this->faker->username),
+                    new UserEmail($this->faker->email),
+                    new UserPassword($this->hasher->hash('pass123')),
                 )
             );
         }
+
+        $manager->persist(
+            new User(
+                $this->userRepository->nextIdentity(),
+                new UserFullName('Administrator'),
+                new UserUsername('admin'),
+                new UserEmail('admin@shopsy.com'),
+                new UserPassword($this->hasher->hash('admin123')),
+            )
+        );
 
         $manager->flush();
     }

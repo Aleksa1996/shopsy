@@ -5,7 +5,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Authentic
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository as AppUserRepository;
@@ -19,20 +19,20 @@ class UserRepository implements UserRepositoryInterface
     private $appUserRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $userPasswordHasher;
+    private $userHasher;
 
     /**
      * UserRepository Constructor
      *
      * @param AppUserRepository $appUserRepository
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(AppUserRepository $appUserRepository, PasswordHasher $passwordHasher)
+    public function __construct(AppUserRepository $appUserRepository, Hasher $hasher)
     {
         $this->appUserRepository = $appUserRepository;
-        $this->userPasswordHasher = $passwordHasher;
+        $this->userHasher = $hasher;
     }
 
     /**
@@ -51,7 +51,7 @@ class UserRepository implements UserRepositoryInterface
             throw OAuthServerException::invalidCredentials();
         }
 
-        $isPasswordValid = $this->userPasswordHasher->verify($password, $appUser->getPassword()->getPassword());
+        $isPasswordValid = $this->userHasher->verify($password, $appUser->getPassword()->getPassword());
         if (!$isPasswordValid) {
             throw OAuthServerException::invalidCredentials();
         }

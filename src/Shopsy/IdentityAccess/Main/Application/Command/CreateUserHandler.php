@@ -11,7 +11,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 
 class CreateUserHandler implements CommandHandler
 {
@@ -21,20 +21,20 @@ class CreateUserHandler implements CommandHandler
     private $userRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $passwordHasher;
+    private $hasher;
 
     /**
      * CreateUserHandler constructor.
      *
      * @param UserRepository $userRepository
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(UserRepository $userRepository, PasswordHasher $passwordHasher)
+    public function __construct(UserRepository $userRepository, Hasher $hasher)
     {
         $this->userRepository = $userRepository;
-        $this->passwordHasher = $passwordHasher;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -47,7 +47,7 @@ class CreateUserHandler implements CommandHandler
             new UserFullName($command->getFullName()),
             new UserUsername($command->getUsername()),
             new UserEmail($command->getEmail()),
-            new UserPassword($this->passwordHasher->hash($command->getPassword()))
+            new UserPassword($this->hasher->hash($command->getPassword()))
         );
 
         $validationHandler = new ValidationNotificationHandler();

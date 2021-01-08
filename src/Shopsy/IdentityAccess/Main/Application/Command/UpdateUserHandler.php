@@ -7,7 +7,7 @@ use App\Common\Application\Command\CommandException;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
-use App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
@@ -23,20 +23,20 @@ class UpdateUserHandler implements CommandHandler
     private $userRepository;
 
     /**
-     * @var PasswordHasher
+     * @var Hasher
      */
-    private $passwordHasher;
+    private $hasher;
 
     /**
      * UpdateUserHandler constructor.
      *
      * @param UserRepository $userRepository
-     * @param PasswordHasher $passwordHasher
+     * @param Hasher $hasher
      */
-    public function __construct(UserRepository $userRepository, PasswordHasher $passwordHasher)
+    public function __construct(UserRepository $userRepository, Hasher $hasher)
     {
         $this->userRepository = $userRepository;
-        $this->passwordHasher = $passwordHasher;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -60,7 +60,7 @@ class UpdateUserHandler implements CommandHandler
             $user->setEmail(new UserEmail($command->getEmail()));
 
         if ($command->getPassword())
-            $user->setPassword(new UserPassword($this->passwordHasher->hash($command->getPassword())));
+            $user->setPassword(new UserPassword($this->hasher->hash($command->getPassword())));
 
         $validationHandler = new ValidationNotificationHandler();
         $user->validate(

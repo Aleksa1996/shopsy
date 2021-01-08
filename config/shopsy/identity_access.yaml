@@ -36,8 +36,8 @@ services:
   App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository'
 
   # Services
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\BcryptPasswordHasher: ~
-  App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\BcryptPasswordHasher'
+  App\Common\Infrastructure\Service\Hasher\BcryptHasher: ~
+  App\Common\Infrastructure\Service\Hasher\Hasher: '@App\Common\Infrastructure\Service\Hasher\BcryptHasher'
 
   App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer: ~
   App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer'
@@ -54,7 +54,7 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
     tags: [ 'app.command.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Query\UserQueryHandler:
@@ -74,7 +74,7 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserHandler:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
     tags: [ 'app.command.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserHandler:
@@ -129,12 +129,12 @@ services:
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
     tags: [ 'doctrine.fixture.orm' ]
 
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Auth\DataFixtures\ClientFixtures:
     arguments:
       $clientRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository'
-      $passwordHasher: '@App\Shopsy\IdentityAccess\Main\Domain\Service\PasswordHasher'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
     tags: [ 'doctrine.fixture.orm' ]
