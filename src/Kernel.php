@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterQueryHandlerPass;
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterCommandHandlerPass;
+use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterEventSubscriberPass;
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterMiddlewarePass;
 
 class Kernel extends BaseKernel
@@ -44,5 +45,6 @@ class Kernel extends BaseKernel
     {
         $container->addCompilerPass(new RegisterCommandHandlerPass());
         $container->addCompilerPass(new RegisterQueryHandlerPass());
+        $container->addCompilerPass(new RegisterEventSubscriberPass());
     }
 }

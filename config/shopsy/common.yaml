@@ -35,8 +35,7 @@ services:
     tags:
       - { name: 'app.command.middleware', priority: 4 }
 
-  App\Common\Application\Command\CommandExceptionHandler:
-    public: false
+  App\Common\Application\Command\CommandExceptionHandler: ~
 
   App\Common\Application\Bus\Command\CommandBus:
     arguments:
@@ -44,6 +43,14 @@ services:
 
   # Query Bus
   App\Common\Application\Bus\Query\QueryBus: ~
+
+  # Domain events
+  App\Common\Domain\Event\DomainEventPublisher:
+    factory: [ 'App\Common\Domain\Event\DomainEventPublisher', 'instance' ]
+    public: true
+
+  App\Common\Domain\Event\LoggerEventSubscriber:
+    tags: [ 'app.domain.event.subscriber' ]
 
   # Transactional session
   App\Common\Infrastructure\Application\Command\DoctrineSession:
