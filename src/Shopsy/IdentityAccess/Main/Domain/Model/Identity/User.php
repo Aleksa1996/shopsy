@@ -13,22 +13,16 @@ use App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\UserValidator;
 class User
 {
     /**
-     * User id
-     *
      * @var UserId
      */
     protected $id;
 
     /**
-     * User Full name
-     *
      * @var UserFullName
      */
     protected $fullName;
 
     /**
-     * User name
-     *
      * @var UserUsername
      */
     protected $username;
@@ -41,11 +35,19 @@ class User
     protected $email;
 
     /**
-     * User password
-     *
      * @var UserPassword
      */
     protected $password;
+
+    /**
+     * @var UserActive
+     */
+    protected $active;
+
+    /**
+     * @var UserAvatar
+     */
+    protected $avatar;
 
     /**
      * @var ArrayCollection<Role>
@@ -71,13 +73,15 @@ class User
      * @param UserEmail $email
      * @param UserPassword $password
      */
-    public function __construct(UserId $id, UserFullName $fullName, UserUsername $username, UserEmail $email, UserPassword $password, array $roles = [])
+    public function __construct(UserId $id, UserFullName $fullName, UserUsername $username, UserEmail $email, UserPassword $password, UserActive $active, UserAvatar $avatar = null, array $roles = [])
     {
         $this->setId($id);
         $this->setFullName($fullName);
         $this->setUsername($username);
         $this->setEmail($email);
         $this->setPassword($password);
+        $this->setActive($active);
+        $this->setAvatar($avatar);
         $this->setRoles($roles);
         $this->setCreatedOn(new DateTime());
         $this->setUpdatedOn(new DateTime());
@@ -202,6 +206,46 @@ class User
     public function setPassword(UserPassword $password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return  UserActive
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param UserActive $active
+     *
+     * @return  self
+     */
+    public function setActive(UserActive $active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return  UserAvatar
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param UserAvatar $avatar
+     *
+     * @return  self
+     */
+    public function setAvatar(?UserAvatar $avatar)
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

@@ -4,10 +4,11 @@ namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
 use App\Common\Application\Command\CommandException;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
-use App\Common\Domain\Validator\ValidationNotificationHandler;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Common\Infrastructure\Service\Hasher\Hasher;
+use App\Common\Domain\Validator\ValidationNotificationHandler;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
@@ -61,6 +62,9 @@ class UpdateUserHandler implements CommandHandler
 
         if ($command->getPassword())
             $user->setPassword(new UserPassword($this->hasher->hash($command->getPassword())));
+
+        if ($command->getActive() !== null)
+            $user->setActive(new UserActive($command->getActive()));
 
         $validationHandler = new ValidationNotificationHandler();
         $user->validate(

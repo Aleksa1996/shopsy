@@ -12,7 +12,7 @@ class LoggerEventSubscriber implements DomainEventSubscriber
     public function handle($aDomainEvent)
     {
         try {
-            var_dump(get_class($aDomainEvent));
+            // var_dump(get_class($aDomainEvent));
         } catch (\Exception $e) {
         }
     }

@@ -12,6 +12,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Common\Infrastructure\Service\Hasher\Hasher;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
 
 class CreateUserHandler implements CommandHandler
 {
@@ -47,7 +48,8 @@ class CreateUserHandler implements CommandHandler
             new UserFullName($command->getFullName()),
             new UserUsername($command->getUsername()),
             new UserEmail($command->getEmail()),
-            new UserPassword($this->hasher->hash($command->getPassword()))
+            new UserPassword($this->hasher->hash($command->getPassword())),
+            new UserActive($command->getActive())
         );
 
         $validationHandler = new ValidationNotificationHandler();

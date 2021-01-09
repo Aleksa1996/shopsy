@@ -55,4 +55,9 @@ class UpdateUserDto implements RequestDto
      * )
      */
     public $password;
+
+    /**
+     * @Assert\Type("bool")
+     */
+    public $active;
 }

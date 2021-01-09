@@ -26,5 +26,7 @@ class RegisterEventSubscriberPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall('subscribe', [new Reference($id)]);
         }
+
+        $container->get(DomainEventPublisher::class);
     }
 }

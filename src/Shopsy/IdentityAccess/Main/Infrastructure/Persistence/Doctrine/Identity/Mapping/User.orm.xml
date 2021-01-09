@@ -7,10 +7,16 @@
         <id name="id" column="id" type="user_id">
             <generator strategy="NONE"/>
         </id>
+        <indexes>
+            <index columns="username"/>
+            <index columns="email"/>
+        </indexes>
         <field name="fullName" column="full_name" type="user_full_name" length="220"/>
         <field name="username" column="username" type="user_username" length="220" unique="true"/>
         <field name="email" column="email" type="user_email" length="220" unique="true"/>
         <field name="password" column="password" type="user_password" length="220"/>
+        <field name="active" column="active" type="user_active"/>
+        <field name="avatar" column="avatar" type="user_avatar" nullable="true"/>
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>
 

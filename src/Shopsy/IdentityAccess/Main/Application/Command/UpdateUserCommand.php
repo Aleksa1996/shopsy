@@ -32,20 +32,34 @@ class UpdateUserCommand implements Command
     private $password;
 
     /**
+     * @var string
+     */
+    private $active;
+
+    /**
+     * @var string
+     */
+    private $avatar;
+
+    /**
      * UpdateUserCommand constructor.
      *
      * @param $fullName
      * @param $username
      * @param $email
      * @param $password
+     * @param $active
+     * @param $avatar
      */
-    public function __construct($id, $fullName, $username, $email, $password)
+    public function __construct($id, $fullName, $username, $email, $password, $active, $avatar = null)
     {
         $this->id = $id;
         $this->fullName = $fullName;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
+        $this->active = $active;
+        $this->avatar = $avatar;
     }
 
     /**
@@ -96,5 +110,25 @@ class UpdateUserCommand implements Command
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Get the value of active
+     *
+     * @return  string
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Get the value of avatar
+     *
+     * @return  string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 }

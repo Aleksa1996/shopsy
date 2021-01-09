@@ -51,4 +51,10 @@ class CreateUserDto implements RequestDto
      * )
      */
     public $password;
+
+    /**
+     * @Assert\NotNull
+     * @Assert\Type("bool")
+     */
+    public $active;
 }

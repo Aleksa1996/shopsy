@@ -106,7 +106,9 @@ class UsersController extends BaseController
             $userDto->fullName,
             $userDto->username,
             $userDto->email,
-            $userDto->password
+            $userDto->password,
+            $userDto->active,
+            null
         );
         $this->commandBus->handle($command);
 
@@ -135,7 +137,9 @@ class UsersController extends BaseController
             $userDto->fullName,
             $userDto->username,
             $userDto->email,
-            $userDto->password
+            $userDto->password,
+            $userDto->active,
+            null
         );
         $this->commandBus->handle($command);
 

@@ -33,6 +33,10 @@ class UserId extends UuidType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
         $className = self::className;
 
         return new $className($value);

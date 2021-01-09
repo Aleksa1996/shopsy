@@ -35,6 +35,10 @@ class UserEmail extends StringType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
         if ($value instanceof UserEmailValueObject) {
             return $value->getEmail();
         }

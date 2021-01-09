@@ -7,6 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Common\Infrastructure\Service\Hasher\Hasher;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
@@ -47,6 +48,7 @@ class UserFixtures extends Fixture
                     new UserUsername($this->faker->username),
                     new UserEmail($this->faker->email),
                     new UserPassword($this->hasher->hash('pass123')),
+                    new UserActive(true)
                 )
             );
         }
@@ -58,6 +60,7 @@ class UserFixtures extends Fixture
                 new UserUsername('admin'),
                 new UserEmail('admin@shopsy.com'),
                 new UserPassword($this->hasher->hash('admin123')),
+                new UserActive(true)
             )
         );
 

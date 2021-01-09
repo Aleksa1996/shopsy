@@ -22,6 +22,8 @@ class DtoUserTransformer implements UserTransformer
             $user->getFullName()->getFullName(),
             $user->getUsername()->getUsername(),
             $user->getEmail()->getEmail(),
+            $user->getAvatar() === null ? null : $user->getAvatar()->getAvatar(),
+            $user->getActive() === null ? null : $user->getActive()->getActive(),
             $user->getCreatedOn()->format(\DateTime::ATOM),
             $user->getUpdatedOn()->format(\DateTime::ATOM)
         );

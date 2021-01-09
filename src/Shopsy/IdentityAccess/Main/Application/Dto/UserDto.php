@@ -29,6 +29,16 @@ class UserDto extends Dto
     /**
      * @var string
      */
+    private $avatar;
+
+    /**
+     * @var string
+     */
+    private $active;
+
+    /**
+     * @var string
+     */
     private $createdOn;
 
     /**
@@ -43,18 +53,19 @@ class UserDto extends Dto
      * @param string $fullName
      * @param string $username
      * @param string $email
-     * @param bool $active
      * @param string $avatar
-     * @param string $signature
+     * @param bool $active
      * @param string $createdOn
      * @param string $updatedOn
      */
-    public function __construct($id, $fullName, $username, $email, $createdOn, $updatedOn)
+    public function __construct($id, $fullName, $username, $email, $avatar, $active, $createdOn, $updatedOn)
     {
         $this->id = $id;
         $this->fullName = $fullName;
         $this->username = $username;
         $this->email = $email;
+        $this->avatar = $avatar;
+        $this->active = $active;
         $this->createdOn = $createdOn;
         $this->updatedOn = $updatedOn;
     }
@@ -89,6 +100,22 @@ class UserDto extends Dto
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 
     /**

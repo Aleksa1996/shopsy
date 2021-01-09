@@ -12,6 +12,8 @@ doctrine:
             user_username: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserUsername
             user_email: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserEmail
             user_password: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserPassword
+            user_active: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserActive
+            user_avatar: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Types\UserAvatar
             permissions: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Types\RolePermissions
 
     orm:
