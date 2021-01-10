@@ -7,7 +7,7 @@ use App\Common\Domain\Event\DomainEventSubscriber;
 class LoggerEventSubscriber implements DomainEventSubscriber
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function handle($aDomainEvent)
     {
@@ -18,7 +18,7 @@ class LoggerEventSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isSubscribedTo($aDomainEvent)
     {

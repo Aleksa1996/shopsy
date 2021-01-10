@@ -20,7 +20,7 @@ class Id extends UuidType
     const className = IdValueObject::class;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @param string|UuidInterface|null $value
      * @param AbstractPlatform $platform

@@ -13,6 +13,7 @@ use App\Common\Infrastructure\Delivery\Symfony\Validator as CustomAssert;
 class UpdateUserDto implements RequestDto
 {
     /**
+     * @Assert\Type("string")
      * @Assert\NotBlank(allowNull=true)
      * @Assert\Length(
      *      min = 2,
@@ -25,6 +26,7 @@ class UpdateUserDto implements RequestDto
     public $fullName;
 
     /**
+     * @Assert\Type("string")
      * @Assert\NotBlank(allowNull=true)
      * @Assert\Length(
      *      min = 4,
@@ -37,6 +39,7 @@ class UpdateUserDto implements RequestDto
     public $username;
 
     /**
+     * @Assert\Type("string")
      * @Assert\NotBlank(allowNull=true)
      * @Assert\Email(
      *     message = "The email '{{ value }}' is not a valid email."
@@ -45,6 +48,7 @@ class UpdateUserDto implements RequestDto
     public $email;
 
     /**
+     * @Assert\Type("string")
      * @Assert\NotBlank(allowNull=true)
      * @Assert\Length(
      *      min = 5,

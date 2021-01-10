@@ -18,7 +18,7 @@ class AnyOfSpecification extends Specification
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isSatisfiedBy($object)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Common\Infrastructure\Delivery\Symfony\ParamConverter;
 
+use Laminas\Hydrator\ReflectionHydrator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -72,6 +73,9 @@ class RequestBodyParamConverter implements ParamConverterInterface
         if ($format === null && empty($data) && $request->request->count() > 0) {
             $format = 'json';
             $data = json_encode($request->request->all());
+        } else if ($format === null && empty($data) && $request->files->count() > 0) {
+            $format = 'json';
+            $data = '[]';
         }
 
         if ($format === null) {
@@ -89,6 +93,11 @@ class RequestBodyParamConverter implements ParamConverterInterface
         } catch (ExceptionInterface $e) {
             // TODO: Convert to BaseHttpException
             return $this->throwException(new BadRequestHttpException($e->getMessage(), $e), $configuration);
+        }
+
+        if ($request->files->count() > 0) {
+            $hydrator = new ReflectionHydrator();
+            $object = $hydrator->hydrate($request->files->all(), $object);
         }
 
         $request->attributes->set($configuration->getName(), $object);

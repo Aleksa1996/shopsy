@@ -8,18 +8,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Common\Application\Bus\Command\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
+use App\Common\Infrastructure\Service\FileUploader\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQuery;
 use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
-use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\QueryBusExceptionDecorator;
+use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessCommandExceptionHandler;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessQueryExceptionHandler;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessCommandExceptionHandler;
 
 class UsersController extends BaseController
 {
@@ -34,15 +36,21 @@ class UsersController extends BaseController
     private $commandBus;
 
     /**
+     * @var FileUploader
+     */
+    private $fileUploader;
+
+    /**
      * UsersController Constructor
      *
      * @param QueryBus $queryBus
      * @param CommandBus $commandBus
      */
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus)
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus, FileUploader $fileUploader)
     {
         $this->queryBus = new QueryBusExceptionDecorator($queryBus, new IdentityAccessQueryExceptionHandler());
         $this->commandBus = new CommandBusExceptionDecorator($commandBus, new IdentityAccessCommandExceptionHandler());
+        $this->fileUploader = $fileUploader;
     }
 
     /**
@@ -163,5 +171,22 @@ class UsersController extends BaseController
         $this->commandBus->handle($command);
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Route("/users/{id}/avatar", name="users_avatar", methods={"POST"})
+     * @ParamConverter("uploadUserAvatarDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto")
+     *
+     * @return JsonResponse
+     */
+    public function avatar($id, UploadUserAvatarDto $uploadUserAvatarDto, Request $request)
+    {
+        $path = sprintf('/identity_access/users/avatar/%s/avatar.%s', $id, $uploadUserAvatarDto->avatar->guessExtension());
+        $this->fileUploader->upload(
+            $path,
+            fopen($uploadUserAvatarDto->avatar->getPathname(), 'r')
+        );
+
+        return new JsonResponse(['url' => sprintf('http://localstack.devshopsy.com%s', $path)], 201);
     }
 }

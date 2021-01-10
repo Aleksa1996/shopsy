@@ -109,7 +109,7 @@ final class InotifyHMR implements HotModuleReloaderInterface, BootableInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @throws AssertionFailedException
      */
@@ -130,7 +130,7 @@ final class InotifyHMR implements HotModuleReloaderInterface, BootableInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function tick(Server $server): void
     {

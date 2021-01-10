@@ -46,7 +46,7 @@ class RolePermissions extends JsonType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
