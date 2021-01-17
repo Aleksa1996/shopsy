@@ -6,12 +6,9 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     public: false
 
+  # Server Configuration
   App\Common\Infrastructure\ServerConfiguration:
-    arguments:
-      $kernelProjectDir: '%kernel.project_dir%'
-      $appSecret: '%env(APP_SECRET)%'
-      $appHostname: '%env(APP_HOSTNAME)%'
-      $appSSLEnabled: '%env(bool:APP_SSL_ENABLED)%'
+    class: App\Common\Infrastructure\ServerConfiguration
     public: true
 
   # Command Bus
@@ -81,30 +78,11 @@ services:
   App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiErrorNormalizer:
     tags: [ 'serializer.normalizer' ]
 
-# Flysystem
+  # Filesystem
   flysystem.adapter.local:
     class: League\Flysystem\Local\LocalFilesystemAdapter
     arguments:
       $location: '%kernel.project_dir%/public'
-    public: false
-
-  aws.s3.client:
-    class: Aws\S3\S3Client
-    arguments:
-       - {
-          credentials: false,
-          region: '%env(APP_AWS_REGION)%',
-          version: '%env(APP_AWS_VERSION)%',
-          scheme: '%env(APP_AWS_SCHEME)%',
-          endpoint: '%env(APP_AWS_ENDPOINT)%',
-          use_path_style_endpoint: '%env(bool:APP_AWS_USE_PATH_STYLE_ENDPOINT)%'
-        }
-
-  flysystem.adapter.s3:
-    class: League\Flysystem\AwsS3V3\AwsS3V3Adapter
-    arguments:
-      $client: '@aws.s3.client'
-      $bucket: '%env(APP_AWS_BUCKET)%'
     public: false
 
   flysystem.local:
@@ -112,16 +90,11 @@ services:
     arguments:
       $adapter: '@flysystem.adapter.local'
 
-  flysystem.s3:
-    class: League\Flysystem\Filesystem
+  League\Flysystem\Filesystem: '@flysystem.local'
+
+  app.common.infrastructure.service.fileUploader.localFileUploader:
+    class: App\Common\Infrastructure\Service\FileUploader\LocalFileUploader
     arguments:
-      $adapter: '@flysystem.adapter.s3'
+      $filesystem: '@flysystem.local'
 
-  League\Flysystem\Filesystem: '@flysystem.s3'
-
-  app.common.infrastructure.service.fileUploader.awsS3FileUploader:
-    class: App\Common\Infrastructure\Service\FileUploader\AwsS3FileUploader
-    arguments:
-      $filesystem: '@flysystem.s3'
-
-  App\Common\Infrastructure\Service\FileUploader\FileUploader: '@app.common.infrastructure.service.fileUploader.awsS3FileUploader'
+  App\Common\Infrastructure\Service\FileUploader\FileUploader: '@app.common.infrastructure.service.fileUploader.localFileUploader'

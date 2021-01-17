@@ -2,10 +2,12 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use App\Common\Application\Bus\Query\QueryBus;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Common\Application\Bus\Command\CommandBus;
+use App\Common\Infrastructure\ServerConfiguration;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserQuery;
 use App\Common\Infrastructure\Service\FileUploader\FileUploader;
@@ -36,6 +38,11 @@ class UsersController extends BaseController
     private $commandBus;
 
     /**
+     * @var ServerConfiguration
+     */
+    private $serverConfiguration;
+
+    /**
      * @var FileUploader
      */
     private $fileUploader;
@@ -46,10 +53,11 @@ class UsersController extends BaseController
      * @param QueryBus $queryBus
      * @param CommandBus $commandBus
      */
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus, FileUploader $fileUploader)
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus, ServerConfiguration $serverConfiguration, FileUploader $fileUploader)
     {
         $this->queryBus = new QueryBusExceptionDecorator($queryBus, new IdentityAccessQueryExceptionHandler());
         $this->commandBus = new CommandBusExceptionDecorator($commandBus, new IdentityAccessCommandExceptionHandler());
+        $this->serverConfiguration = $serverConfiguration;
         $this->fileUploader = $fileUploader;
     }
 
@@ -174,19 +182,23 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users/{id}/avatar", name="users_avatar", methods={"POST"})
+     * @Route("/users/avatar", name="users_avatar", methods={"POST"})
      * @ParamConverter("uploadUserAvatarDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto")
      *
      * @return JsonResponse
      */
-    public function avatar($id, UploadUserAvatarDto $uploadUserAvatarDto, Request $request)
+    public function avatar(UploadUserAvatarDto $uploadUserAvatarDto, Request $request)
     {
-        $path = sprintf('/identity_access/users/avatar/%s/avatar.%s', $id, $uploadUserAvatarDto->avatar->guessExtension());
+        $path = sprintf('/users/avatar/%s/avatar.%s',  Uuid::uuid6()->toString(), $uploadUserAvatarDto->avatar->guessExtension());
+
         $this->fileUploader->upload(
             $path,
             fopen($uploadUserAvatarDto->avatar->getPathname(), 'r')
         );
 
-        return new JsonResponse(['url' => sprintf('http://localstack.devshopsy.com%s', $path)], 201);
+        $bucketUrl = $this->serverConfiguration->getEnv('APP_IDENTITY_ACCESS_AWS_BUCKET', 'http://localstack.devmikroe.com/identity-access');
+        return new JsonResponse([
+            'url' => $bucketUrl . $path
+        ], 201);
     }
 }

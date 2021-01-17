@@ -11,6 +11,11 @@ services:
     resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Delivery/Symfony/Controller'
     tags: [ 'controller.service_arguments' ]
 
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller\UsersController:
+    bind:
+      $fileUploader: '@identityAccess.service.fileUploader.awsS3FileUploader'
+    tags: [ 'controller.service_arguments' ]
+
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\:
     resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Domain/Service/Auth/OAuth2/Repository'
 
@@ -93,27 +98,27 @@ services:
     namespace: App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\
     resource: '%app.resources.identity_access%/Main/Infrastructure/Domain/Service/Auth/OAuth2'
 
-  league.oauth2.server.private_crypt_key:
+  identityAccess.league.oauth2.server.privateCryptKey:
     class: League\OAuth2\Server\CryptKey
     arguments:
       $keyPath: '%env(OAUTH2_PRIVATE_KEY)%'
       $passPhrase: null
       $keyPermissionsCheck: false
 
-  league.oauth2.server.public_crypt_key:
+  identityAccess.league.oauth2.server.publicCryptKey:
     class: League\OAuth2\Server\CryptKey
     arguments:
       $keyPath: '%env(OAUTH2_PUBLIC_KEY)%'
       $passPhrase: null
       $keyPermissionsCheck: false
 
-  League\OAuth2\Server\Grant\PasswordGrant:
+  identityAccess.league.oauth2.server.grant.passwordGrant:
     class: League\OAuth2\Server\Grant\PasswordGrant
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\UserRepository'
       $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\RefreshTokenRepository'
 
-  League\OAuth2\Server\Grant\RefreshTokenGrant:
+  identityAccess.league.oauth2.server.grant.refreshTokenGrant:
     class: League\OAuth2\Server\Grant\RefreshTokenGrant
     arguments:
       $refreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\RefreshTokenRepository'
@@ -124,17 +129,17 @@ services:
       $clientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\ClientRepository'
       $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\AccessTokenRepository'
       $scopeRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\ScopeRepository'
-      $privateKey: '@league.oauth2.server.private_crypt_key'
+      $privateKey: '@identityAccess.league.oauth2.server.privateCryptKey'
       $encryptionKey: '%env(OAUTH2_ENCRYPTION_KEY)%'
     calls:
-      - enableGrantType: [ '@League\OAuth2\Server\Grant\PasswordGrant' ]
-      - enableGrantType: [ '@League\OAuth2\Server\Grant\RefreshTokenGrant' ]
+      - enableGrantType: [ '@identityAccess.league.oauth2.server.grant.passwordGrant' ]
+      - enableGrantType: [ '@identityAccess.league.oauth2.server.grant.refreshTokenGrant' ]
 
   League\OAuth2\Server\ResourceServer:
     class: League\OAuth2\Server\ResourceServer
     arguments:
       $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\AccessTokenRepository'
-      $publicKey: '@league.oauth2.server.public_crypt_key'
+      $publicKey: '@identityAccess.league.oauth2.server.publicCryptKey'
 
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication:
     arguments:
@@ -143,7 +148,7 @@ services:
       $authorizationServer: '@League\OAuth2\Server\AuthorizationServer'
   App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication'
 
-# Test
+  # Test
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
@@ -157,9 +162,32 @@ services:
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
     tags: [ 'doctrine.fixture.orm' ]
 
-# Security
+  # Security
   App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\SecurityUserProvider:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
 
   App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\OAuth2Authenticator: ~
+
+  #Filesystem
+  identityAccess.aws.s3.client:
+    class: Aws\S3\S3Client
+    arguments:
+       - {credentials: {key: '%env(APP_IDENTITY_ACCESS_AWS_ACCESS_KEY_ID)%', secret: '%env(APP_IDENTITY_ACCESS_AWS_SECRET_ACCESS_KEY)%'}, region: '%env(APP_AWS_REGION)%', version: '%env(APP_AWS_VERSION)%', scheme: '%env(APP_AWS_SCHEME)%', endpoint: '%env(APP_AWS_ENDPOINT)%', use_path_style_endpoint: '%env(bool:APP_AWS_USE_PATH_STYLE_ENDPOINT)%' }
+
+  identityAccess.league.flysystem.adapter.aws.s3:
+    class: League\Flysystem\AwsS3V3\AwsS3V3Adapter
+    arguments:
+      $client: '@identityAccess.aws.s3.client'
+      $bucket: '%env(APP_IDENTITY_ACCESS_AWS_BUCKET_NAME)%'
+    public: false
+
+  identityAccess.league.flysystem.s3:
+    class: League\Flysystem\Filesystem
+    arguments:
+      $adapter: '@identityAccess.league.flysystem.adapter.aws.s3'
+
+  identityAccess.service.fileUploader.awsS3FileUploader:
+    class: App\Common\Infrastructure\Service\FileUploader\AwsS3FileUploader
+    arguments:
+      $filesystem: '@identityAccess.league.flysystem.s3'

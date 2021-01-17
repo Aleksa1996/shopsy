@@ -4,6 +4,7 @@ namespace App\Common\Infrastructure;
 
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class ServerConfiguration
 {
@@ -13,24 +14,9 @@ class ServerConfiguration
     private $router;
 
     /**
-     * @var string
+     * @var ContainerBagInterface
      */
-    private $kernelProjectDir;
-
-    /**
-     * @var string
-     */
-    private $appSecret;
-
-    /**
-     * @var string
-     */
-    private $appHostname;
-
-    /**
-     * @var string
-     */
-    private $appSSLEnabled;
+    private $params;
 
     /**
      * ServerConfiguration Constructor
@@ -41,13 +27,10 @@ class ServerConfiguration
      * @param string $appHostname
      * @param bool $appSSLEnabled
      */
-    public function __construct(RouterInterface $router, $kernelProjectDir, $appSecret, $appHostname, $appSSLEnabled)
+    public function __construct(RouterInterface $router, ContainerBagInterface $params)
     {
         $this->router = $router;
-        $this->kernelProjectDir = $kernelProjectDir;
-        $this->appSecret = $appSecret;
-        $this->appHostname = $appHostname;
-        $this->appSSLEnabled = $appSSLEnabled;
+        $this->params = $params;
     }
 
     /**
@@ -67,7 +50,7 @@ class ServerConfiguration
      */
     public function getKernelProjectDir()
     {
-        return $this->kernelProjectDir;
+        return $this->params->get('kernel.project_dir');
     }
 
     /**
@@ -75,7 +58,7 @@ class ServerConfiguration
      */
     public function getAppSecret()
     {
-        return $this->appSecret;
+        return $_ENV['APP_SECRET'] ?? null;
     }
 
     /**
@@ -83,7 +66,7 @@ class ServerConfiguration
      */
     public function getHostname()
     {
-        return $this->appHostname;
+        return $_ENV['APP_HOSTNAME'] ?? null;
     }
 
     /**
@@ -91,7 +74,7 @@ class ServerConfiguration
      */
     public function isSslEnabled()
     {
-        return  filter_var($this->appSSLEnabled, FILTER_VALIDATE_BOOLEAN);
+        return  filter_var($_ENV['APP_SSL_ENABLED'], FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -100,5 +83,16 @@ class ServerConfiguration
     public function getScheme()
     {
         return $this->isSslEnabled() ? 'https' : 'http';
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getEnv($key, $default)
+    {
+        return $_ENV[$key] ?? $default;
     }
 }
