@@ -148,6 +148,11 @@ services:
       $authorizationServer: '@League\OAuth2\Server\AuthorizationServer'
   App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication'
 
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Access\SymfonyVoterAuthorization:
+    arguments:
+      $authorizationChecker: '@security.authorization_checker'
+  App\Shopsy\IdentityAccess\Main\Domain\Service\Access\Authorization: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Access\SymfonyVoterAuthorization'
+
   # Test
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:
     arguments:
@@ -191,3 +196,7 @@ services:
     class: App\Common\Infrastructure\Service\FileUploader\AwsS3FileUploader
     arguments:
       $filesystem: '@identityAccess.league.flysystem.s3'
+
+  # Voters
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\Voter\UserVoter:
+    tags: [ 'security.voter' ]

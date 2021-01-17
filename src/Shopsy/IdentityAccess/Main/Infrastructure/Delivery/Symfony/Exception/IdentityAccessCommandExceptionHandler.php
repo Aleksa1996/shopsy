@@ -5,6 +5,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Excepti
 use App\Common\Application\ExceptionHandler;
 use App\Common\Application\Command\CommandException;
 use App\Common\Infrastructure\Delivery\Symfony\ResponseDto\ErrorDto;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UnauthorizedCommandException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\ValidationErrorCommandException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserAuthFailedCommandException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserNotFoundCommandException;
@@ -26,6 +27,10 @@ class IdentityAccessCommandExceptionHandler implements ExceptionHandler
 
         if ($e instanceof ValidationErrorCommandException) {
             throw IdentityAccessHttpException::createFromCommandException($e, 400);
+        }
+
+        if ($e instanceof UnauthorizedCommandException) {
+            throw IdentityAccessHttpException::createFromCommandException($e, 401);
         }
 
         if ($e instanceof CommandException) {

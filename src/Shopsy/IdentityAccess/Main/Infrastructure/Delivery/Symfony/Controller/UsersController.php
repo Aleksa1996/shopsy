@@ -62,7 +62,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users", name="users_index", methods={"GET"})
+     * @Route("/identity-access/users", name="identity_access_users_index", methods={"GET"})
      *
      * @param Request $request
      *
@@ -91,7 +91,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users/{id}", name="users_show", methods={"GET"})
+     * @Route("/identity-access/users/{id}", name="identity_access_users_show", methods={"GET"})
      *
      * @param Request $request
      *
@@ -109,7 +109,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users", name="users_create", methods={"POST"})
+     * @Route("/identity-access/users", name="identity_access_users_create", methods={"POST"})
      * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto")
      *
      * @param Request $request
@@ -141,7 +141,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users/{id}", name="users_update", methods={"PUT","PATCH"})
+     * @Route("/identity-access/users/{id}", name="identity_access_users_update", methods={"PUT","PATCH"})
      * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto")
      *
      * @return JsonResponse
@@ -169,7 +169,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users/{id}", name="users_destroy", methods={"DELETE"})
+     * @Route("/identity-access/users/{id}", name="identity_access_users_destroy", methods={"DELETE"})
      *
      * @return JsonResponse
      */
@@ -182,7 +182,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/users/avatar", name="users_avatar", methods={"POST"})
+     * @Route("/identity-access/users/avatar", name="identity_access_users_avatar", methods={"POST"})
      * @ParamConverter("uploadUserAvatarDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto")
      *
      * @return JsonResponse
