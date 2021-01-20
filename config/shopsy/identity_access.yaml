@@ -16,83 +16,6 @@ services:
       $fileUploader: '@identityAccess.service.fileUploader.awsS3FileUploader'
     tags: [ 'controller.service_arguments' ]
 
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\:
-    resource: '%kernel.project_dir%/src/Shopsy/IdentityAccess/Main/Infrastructure/Domain/Service/Auth/OAuth2/Repository'
-
-  # Repository
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository:
-    arguments:
-      $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository'
-
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository:
-    arguments:
-      $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository'
-
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository:
-    arguments:
-      $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository'
-
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository:
-    arguments:
-      $registry: '@doctrine'
-  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository'
-
-  # Services
-  App\Common\Infrastructure\Service\Hasher\BcryptHasher: ~
-  App\Common\Infrastructure\Service\Hasher\Hasher: '@App\Common\Infrastructure\Service\Hasher\BcryptHasher'
-
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer: ~
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer'
-
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer: ~
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer'
-
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer: ~
-  App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer'
-
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory: ~
-  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory'
-
-  App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
-    tags: [ 'app.command.handler' ]
-
-  App\Shopsy\IdentityAccess\Main\Application\Query\UserQueryHandler:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
-      $userTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer'
-    tags: [ 'app.query.handler' ]
-
-  App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQueryHandler:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
-      $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer'
-    tags: [ 'app.query.handler' ]
-
-  App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserHandler:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
-    tags: [ 'app.command.handler' ]
-
-  App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserHandler:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-    tags: [ 'app.command.handler' ]
-
-  App\Shopsy\IdentityAccess\Main\Application\Command\AuthUserHandler:
-    arguments:
-      $authenticationResponseTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer'
-      $authentication: '@App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Authentication'
-    tags: [ 'app.command.handler' ]
-
   # League OAuth2 Server
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\:
     namespace: App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\
@@ -141,19 +64,115 @@ services:
       $accessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\Repository\AccessTokenRepository'
       $publicKey: '@identityAccess.league.oauth2.server.publicCryptKey'
 
+  # Security
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\SecurityUserProvider:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\OAuth2Authenticator: ~
+
+  # Voter
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\Voter\UserVoter:
+    tags: [ 'security.voter' ]
+
+  # Repository
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\DoctrineUserRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineClientRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AccessTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineAccessTokenRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\RefreshTokenRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Auth\DoctrineRefreshTokenRepository'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\DoctrineRoleRepository:
+    class: App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\DoctrineRoleRepository
+    arguments:
+      $registry: '@doctrine'
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\DoctrineRoleRepository'
+
+  # Transformer
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserTransformer'
+
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoUserCollectionTransformer'
+
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory: ~
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory'
+
+  # Domain Service
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication:
     arguments:
       $clientRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\ClientRepository'
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
       $authorizationServer: '@League\OAuth2\Server\AuthorizationServer'
-  App\Shopsy\IdentityAccess\Main\Domain\Service\Identity\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication'
+  App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication'
 
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Access\SymfonyVoterAuthorization:
     arguments:
       $authorizationChecker: '@security.authorization_checker'
   App\Shopsy\IdentityAccess\Main\Domain\Service\Access\Authorization: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Access\SymfonyVoterAuthorization'
 
+  # Application Service
+  App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQueryHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
+      $userCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserCollectionTransformer'
+    tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Query\UserQueryHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
+      $userTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer'
+    tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\AuthUserHandler:
+    arguments:
+      $authenticationResponseTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer'
+      $authentication: '@App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication'
+    tags: [ 'app.command.handler' ]
+
   # Test
+  App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Access\DataFixtures\RoleFixtures:
+    class: App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Access\DataFixtures\RoleFixtures
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'doctrine.fixture.orm' ]
+
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\DataFixtures\UserFixtures:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
@@ -166,13 +185,6 @@ services:
       $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
     tags: [ 'doctrine.fixture.orm' ]
-
-  # Security
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\SecurityUserProvider:
-    arguments:
-      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
-
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\OAuth2Authenticator: ~
 
   #Filesystem
   identityAccess.aws.s3.client:
@@ -196,7 +208,3 @@ services:
     class: App\Common\Infrastructure\Service\FileUploader\AwsS3FileUploader
     arguments:
       $filesystem: '@identityAccess.league.flysystem.s3'
-
-  # Voters
-  App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Security\Voter\UserVoter:
-    tags: [ 'security.voter' ]

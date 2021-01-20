@@ -25,6 +25,11 @@ class UserVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
+        var_dump($token->isAuthenticated());
+        var_dump($token->getRoleNames());
+        var_dump($token->getAttributes());
+        dd($subject);
+
         return true;
     }
 }

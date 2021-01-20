@@ -1,4 +1,8 @@
-controllers:
+common_controllers:
+    resource: ../../src/Common/Infrastructure/Delivery/Symfony/Controller/
+    type: annotation
+
+identity_access_controllers:
     resource: ../../src/Shopsy/IdentityAccess/Main/Infrastructure/Delivery/Symfony/Controller/
     type: annotation
 

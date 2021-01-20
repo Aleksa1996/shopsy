@@ -6,6 +6,11 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     public: false
 
+  # Controller
+  App\Common\Infrastructure\Delivery\Symfony\Controller\IndexController:
+    class: App\Common\Infrastructure\Delivery\Symfony\Controller\IndexController
+    tags: [ 'controller.service_arguments' ]
+
   # Server Configuration
   App\Common\Infrastructure\ServerConfiguration:
     class: App\Common\Infrastructure\ServerConfiguration
@@ -78,23 +83,27 @@ services:
   App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiErrorNormalizer:
     tags: [ 'serializer.normalizer' ]
 
+  # Common Infrastructure Service
+  App\Common\Infrastructure\Service\Hasher\BcryptHasher: ~
+  App\Common\Infrastructure\Service\Hasher\Hasher: '@App\Common\Infrastructure\Service\Hasher\BcryptHasher'
+
   # Filesystem
-  flysystem.adapter.local:
+  league.flysystem.adapter.local:
     class: League\Flysystem\Local\LocalFilesystemAdapter
     arguments:
       $location: '%kernel.project_dir%/public'
     public: false
 
-  flysystem.local:
+  league.flysystem.local:
     class: League\Flysystem\Filesystem
     arguments:
-      $adapter: '@flysystem.adapter.local'
+      $adapter: '@league.flysystem.adapter.local'
 
-  League\Flysystem\Filesystem: '@flysystem.local'
+  League\Flysystem\Filesystem: '@league.flysystem.local'
 
   app.common.infrastructure.service.fileUploader.localFileUploader:
     class: App\Common\Infrastructure\Service\FileUploader\LocalFileUploader
     arguments:
-      $filesystem: '@flysystem.local'
+      $filesystem: '@league.flysystem.local'
 
   App\Common\Infrastructure\Service\FileUploader\FileUploader: '@app.common.infrastructure.service.fileUploader.localFileUploader'
