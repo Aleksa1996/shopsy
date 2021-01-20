@@ -39,9 +39,15 @@ class SecurityUserProvider implements UserProviderInterface
             return null;
         }
 
+        $roles = [];
+        foreach ($user->getRoles() as $r) {
+            $roles[] = $r->getIdentifier();
+        }
+
         return new SecurityUser(
             $user->getId()->getId(),
-            $user->getUsername()->getUsername()
+            $user->getUsername()->getUsername(),
+            $roles
         );
     }
 

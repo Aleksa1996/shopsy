@@ -18,9 +18,9 @@ class CommandExceptionHandler implements ExceptionHandler
         }
 
         if ($e instanceof DomainException) {
-            throw new CommandException('Domain Error', $e->getMessage(), [], $e->getMessage(), $e->getCode(), $e->getPrevious());
+            throw new CommandException('Domain Error', $e->getMessage(), [], $e->getMessage(), $e->getCode(), $e);
         }
 
-        throw new CommandException('Internal Error', 'Command failed to execute', [], $e->getMessage(), $e->getCode(), $e->getPrevious());
+        throw new CommandException('Internal Error', 'Command failed to execute', [], $e->getMessage(), $e->getCode(), $e);
     }
 }

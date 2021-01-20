@@ -4,6 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Securit
 
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RolePermission;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class UserVoter extends Voter
@@ -25,11 +26,10 @@ class UserVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
-        var_dump($token->isAuthenticated());
-        var_dump($token->getRoleNames());
-        var_dump($token->getAttributes());
-        dd($subject);
+        if ($attribute === RolePermission::LIST_ACTION && in_array('ROLE_ADMIN', $token->getUser()->getRoles())) {
+            return true;
+        }
 
-        return true;
+        return false;
     }
 }

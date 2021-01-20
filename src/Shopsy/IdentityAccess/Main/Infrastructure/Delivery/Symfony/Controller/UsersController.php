@@ -196,7 +196,7 @@ class UsersController extends BaseController
             fopen($uploadUserAvatarDto->avatar->getPathname(), 'r')
         );
 
-        $bucketUrl = $this->serverConfiguration->getEnv('APP_IDENTITY_ACCESS_AWS_BUCKET', 'http://localstack.devmikroe.com/identity-access');
+        $bucketUrl = $this->serverConfiguration->getEnv('APP_IDENTITY_ACCESS_AWS_BUCKET', 'http://localstack.devshopsy.com/identity-access');
         return new JsonResponse([
             'url' => $bucketUrl . $path
         ], 201);

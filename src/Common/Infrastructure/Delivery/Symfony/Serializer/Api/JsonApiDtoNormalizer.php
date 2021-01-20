@@ -2,8 +2,9 @@
 
 namespace App\Common\Infrastructure\Delivery\Symfony\Serializer\Api;
 
-use App\Common\Infrastructure\ServerConfiguration;
 use App\Common\Application\Query\Dto\Dto;
+use App\Common\Infrastructure\ServerConfiguration;
+use App\Shopsy\IdentityAccess\Main\Application\Dto\RoleDto;
 use App\Shopsy\IdentityAccess\Main\Application\Dto\UserDto;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -15,7 +16,8 @@ class JsonApiDtoNormalizer implements NormalizerInterface, ContextAwareNormalize
     public const FORMAT = 'json';
     public const CONTEXT_FORMAT = 'jsonApi';
     public const TYPES = [
-        UserDto::class => 'users'
+        UserDto::class => 'users',
+        RoleDto::class => 'roles'
     ];
 
     /**

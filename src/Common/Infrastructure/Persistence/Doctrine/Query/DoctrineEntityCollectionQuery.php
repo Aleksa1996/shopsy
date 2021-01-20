@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query;
+namespace App\Common\Infrastructure\Persistence\Doctrine\Query;
 
-abstract class DoctrineUserCollectionQuery extends DoctrineQuery
+
+abstract class DoctrineEntityCollectionQuery extends DoctrineQuery
 {
     /**
      * @var Pagination
@@ -10,7 +11,7 @@ abstract class DoctrineUserCollectionQuery extends DoctrineQuery
     protected $pagination;
 
     /**
-     * DoctrineActiveUserQuery constructor
+     * DoctrineActiveEntityQuery constructor
      *
      * @param Pagination $pagination
      * @param Sort $sort

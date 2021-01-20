@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Query;
 
 use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityQuery;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 
-class DoctrineUserIdQuery extends DoctrineEntityQuery
+class DoctrineByIdRoleQuery extends DoctrineEntityQuery
 {
     /**
      * @var int|string
@@ -14,7 +14,7 @@ class DoctrineUserIdQuery extends DoctrineEntityQuery
     private $id;
 
     /**
-     * DoctrineUserIdQuery Constructor
+     * DoctrineByIdRoleQuery Constructor
      *
      * @param int|string $id
      */

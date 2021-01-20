@@ -112,8 +112,17 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer: ~
   App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoAuthTransformer'
 
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoRoleTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\RoleTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoRoleTransformer'
+
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoRoleCollectionTransformer: ~
+  App\Shopsy\IdentityAccess\Main\Application\Transformer\RoleCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\DtoRoleCollectionTransformer'
+
   App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory: ~
   App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQueryFactory'
+
+  App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Query\DoctrineRoleQueryFactory: ~
+  App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleQueryFactory: '@App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Query\DoctrineRoleQueryFactory'
 
   # Domain Service
   App\Shopsy\IdentityAccess\Main\Infrastructure\Domain\Service\Auth\OAuth2\OAuth2Authentication:
@@ -165,6 +174,20 @@ services:
       $authenticationResponseTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\AuthTransformer'
       $authentication: '@App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication'
     tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Query\RoleCollectionQueryHandler:
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+      $roleQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleQueryFactory'
+      $roleCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\RoleCollectionTransformer'
+    tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Query\RoleQueryHandler:
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+      $roleQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleQueryFactory'
+      $roleTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\RoleTransformer'
+    tags: [ 'app.query.handler' ]
 
   # Test
   App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Access\DataFixtures\RoleFixtures:

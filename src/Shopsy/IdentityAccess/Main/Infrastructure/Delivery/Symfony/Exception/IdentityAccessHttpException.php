@@ -27,7 +27,7 @@ class IdentityAccessHttpException extends BaseHttpException
 
         $errors[] = new ErrorDto($e->getUserFriendlyTitle(), $e->getUserFriendlyMessage());
 
-        return new static($errors, $statusCode, $e->getUserFriendlyMessage(), $e->getCode(), [], $e->getPrevious());
+        return new static($errors, $statusCode, $e->getUserFriendlyMessage(), $e->getCode(), [], $e);
     }
 
     /**
@@ -48,6 +48,6 @@ class IdentityAccessHttpException extends BaseHttpException
 
         $errors[] = new ErrorDto($e->getUserFriendlyTitle(), $e->getUserFriendlyMessage());
 
-        return new static($errors, $statusCode, $e->getUserFriendlyMessage(), $e->getCode(), [], $e->getPrevious());
+        return new static($errors, $statusCode, $e->getUserFriendlyMessage(), $e->getCode(), [], $e);
     }
 }

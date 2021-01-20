@@ -4,9 +4,13 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Acc
 
 use App\Common\Domain\Id;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Common\Domain\RepositoryQueryResult;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityQuery;
+use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityCollectionQuery;
 
 class DoctrineRoleRepository extends ServiceEntityRepository implements RoleRepository
 {
@@ -75,6 +79,20 @@ class DoctrineRoleRepository extends ServiceEntityRepository implements RoleRepo
      */
     public function query($query)
     {
-        throw new \BadMethodCallException('Not implemented');
+        $queryBuilder = $this->createQueryBuilder('r');
+        $queryBuilder->addCriteria($query->toCriteria());
+
+        if ($query instanceof DoctrineEntityQuery) {
+            $result = $queryBuilder->getQuery()->getOneOrNullResult();
+            return new RepositoryQueryResult($result, $result ? 1 : 0);
+        }
+
+        if ($query instanceof DoctrineEntityCollectionQuery && !is_null($query->getPagination())) {
+            $paginator = new Paginator($queryBuilder);
+            return new RepositoryQueryResult($paginator, count($paginator));
+        }
+
+        $result = $queryBuilder->getQuery()->getResult();
+        return new RepositoryQueryResult($result, count($result));
     }
 }

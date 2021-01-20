@@ -16,6 +16,6 @@ class QueryExceptionHandler implements ExceptionHandler
             throw $e;
         }
 
-        throw new QueryException('Internal Error', 'Query failed to execute', [], $e->getMessage(), $e->getCode(), $e->getPrevious());
+        throw new QueryException('Internal Error', 'Query failed to execute', [], $e->getMessage(), $e->getCode(), $e);
     }
 }

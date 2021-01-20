@@ -43,7 +43,7 @@ class IdentityAccessCommandExceptionHandler implements ExceptionHandler
             $e->getMessage(),
             $e->getCode(),
             [],
-            $e->getPrevious()
+            $e
         );
     }
 }

@@ -38,7 +38,7 @@ class IdentityAccessQueryExceptionHandler implements ExceptionHandler
             $e->getMessage(),
             $e->getCode(),
             [],
-            $e->getPrevious()
+            $e
         );
     }
 }

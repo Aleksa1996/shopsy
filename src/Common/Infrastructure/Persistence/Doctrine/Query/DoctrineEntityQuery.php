@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query;
+namespace App\Common\Infrastructure\Persistence\Doctrine\Query;
 
 
-abstract class DoctrineUserQuery extends DoctrineQuery
+abstract class DoctrineEntityQuery extends DoctrineQuery
 {
     /**
      * @return mixed

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query;
+namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Access\Query;
 
 use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityQuery;
 use Doctrine\Common\Collections\Criteria;
 
-class DoctrineUserFilterQuery extends DoctrineEntityQuery
+class DoctrineRoleFilterQuery extends DoctrineEntityQuery
 {
     /**
      * @var array
@@ -17,15 +17,14 @@ class DoctrineUserFilterQuery extends DoctrineEntityQuery
      */
     protected $supportedFields = [
         'id',
-        'email',
-        'created_on',
-        'updated_on',
-        'full_name',
-        'username'
+        'name',
+        'identifier',
+        'createdOn',
+        'updatedOn'
     ];
 
     /**
-     * DoctrineUserFilterQuery Constructor
+     * DoctrineRoleFilterQuery Constructor
      *
      * @param array $filter
      * @param Sort $sort

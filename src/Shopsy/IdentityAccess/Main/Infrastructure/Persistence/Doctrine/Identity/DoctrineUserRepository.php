@@ -12,10 +12,10 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserQuery;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Persistence\Doctrine\Identity\Query\DoctrineUserCollectionQuery;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
+use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityQuery;
+use App\Common\Infrastructure\Persistence\Doctrine\Query\DoctrineEntityCollectionQuery;
 
 class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
 {
@@ -89,12 +89,12 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         $queryBuilder = $this->createQueryBuilder('u');
         $queryBuilder->addCriteria($query->toCriteria());
 
-        if ($query instanceof DoctrineUserQuery) {
+        if ($query instanceof DoctrineEntityQuery) {
             $result = $queryBuilder->getQuery()->getOneOrNullResult();
             return new RepositoryQueryResult($result, $result ? 1 : 0);
         }
 
-        if ($query instanceof DoctrineUserCollectionQuery && !is_null($query->getPagination())) {
+        if ($query instanceof DoctrineEntityCollectionQuery && !is_null($query->getPagination())) {
             $paginator = new Paginator($queryBuilder);
             return new RepositoryQueryResult($paginator, count($paginator));
         }
