@@ -22,6 +22,11 @@ class RoleDto extends Dto
     private $identifier;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @var string
      */
     private $permissions;
@@ -42,15 +47,17 @@ class RoleDto extends Dto
      * @param int|string $id
      * @param string $name
      * @param string $identifier
+     * @param bool $active
      * @param string $permissions
      * @param string $createdOn
      * @param string $updatedOn
      */
-    public function __construct($id, $name, $identifier, $permissions, $createdOn, $updatedOn)
+    public function __construct($id, $name, $identifier, $active, $permissions, $createdOn, $updatedOn)
     {
         $this->id = $id;
         $this->name = $name;
         $this->identifier = $identifier;
+        $this->active = $active;
         $this->permissions = $permissions;
         $this->createdOn = $createdOn;
         $this->updatedOn = $updatedOn;
@@ -78,6 +85,14 @@ class RoleDto extends Dto
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 
     /**

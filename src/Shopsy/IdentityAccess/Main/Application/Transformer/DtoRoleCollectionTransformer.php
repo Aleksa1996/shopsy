@@ -21,6 +21,7 @@ class DtoRoleCollectionTransformer implements RoleCollectionTransformer
                 $role->getId()->getId(),
                 $role->getName(),
                 $role->getIdentifier(),
+                $role->getActive(),
                 $role->getPermissions(),
                 $role->getCreatedOn()->format(\DateTime::ATOM),
                 $role->getUpdatedOn()->format(\DateTime::ATOM)

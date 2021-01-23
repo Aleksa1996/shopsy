@@ -53,6 +53,9 @@ class UpdateRoleHandler implements CommandHandler
         if ($command->getIdentifier())
             $role->setIdentifier($command->getIdentifier());
 
+        if ($command->getActive() !== null)
+            $role->setActive($command->getActive());
+
         if ($command->getPermissions())
             $role->setPermissions($command->getPermissions());
 

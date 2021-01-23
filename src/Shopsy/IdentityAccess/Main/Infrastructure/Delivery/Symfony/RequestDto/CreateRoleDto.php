@@ -56,4 +56,10 @@ class CreateRoleDto implements RequestDto
      * )
      */
     public $identifier;
+
+    /**
+     * @Assert\NotNull
+     * @Assert\Type("bool")
+     */
+    public $active;
 }

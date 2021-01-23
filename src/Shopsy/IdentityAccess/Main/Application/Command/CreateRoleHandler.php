@@ -42,6 +42,7 @@ class CreateRoleHandler implements CommandHandler
             $this->roleRepository->nextIdentity(),
             $command->getName(),
             $command->getIdentifier(),
+            $command->getActive(),
             $command->getPermissions()
         );
 

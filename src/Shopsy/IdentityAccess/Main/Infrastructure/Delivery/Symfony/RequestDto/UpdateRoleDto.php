@@ -56,4 +56,9 @@ class UpdateRoleDto implements RequestDto
      * )
      */
     public $identifier;
+
+    /**
+     * @Assert\Type("bool")
+     */
+    public $active;
 }

@@ -37,7 +37,8 @@ class RoleFixtures extends Fixture
         $role = new Role(
             $this->roleRepository->nextIdentity(),
             'User Role',
-            'ROLE_USER'
+            'ROLE_USER',
+            true
         );
         $role->addPermission(
             RolePermission::LIST_ACTION,
@@ -48,7 +49,8 @@ class RoleFixtures extends Fixture
         $role = new Role(
             $this->roleRepository->nextIdentity(),
             'Admin Role',
-            'ROLE_ADMIN'
+            'ROLE_ADMIN',
+            true
         );
         $role->addPermission(
             RolePermission::LIST_ACTION,

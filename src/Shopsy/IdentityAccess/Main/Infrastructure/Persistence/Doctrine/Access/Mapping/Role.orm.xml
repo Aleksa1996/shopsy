@@ -3,8 +3,13 @@
         <id name="id" column="id" type="uuid">
             <generator strategy="NONE"/>
         </id>
-        <field name="name" column="name" type="string" />
-        <field name="identifier" column="identifier" type="string" />
+        <indexes>
+            <index columns="name"/>
+            <index columns="identifier"/>
+        </indexes>
+        <field name="name" column="name" type="string" unique="true" />
+        <field name="identifier" column="identifier" type="string" unique="true" />
+        <field name="active" column="active" type="boolean" />
         <field name="permissions" column="permissions" type="permissions" />
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>

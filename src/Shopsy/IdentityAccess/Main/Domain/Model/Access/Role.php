@@ -25,6 +25,11 @@ class Role
     protected $identifier;
 
     /**
+     * @var bool
+     */
+    protected $active;
+
+    /**
      * @var RolePermission[]
      */
     protected $permissions = [];
@@ -45,20 +50,21 @@ class Role
      * @param Id $id
      * @param string $name
      * @param string $identifier
+     * @param bool $active
+     * @param array $permissions
      */
-    public function __construct(Id $id, string $name, string $identifier, array $permissions = [])
+    public function __construct(Id $id, string $name, string $identifier, bool $active, array $permissions = [])
     {
         $this->setId($id);
         $this->setName($name);
         $this->setIdentifier($identifier);
+        $this->setActive($active);
         $this->setPermissions($permissions);
         $this->setCreatedOn(new DateTimeImmutable());
         $this->setUpdatedOn(new DateTimeImmutable());
     }
 
     /**
-     * Get the value of id
-     *
      * @return  Id
      */
     public function getId()
@@ -114,6 +120,26 @@ class Role
     public function setIdentifier(string $identifier)
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param  bool  $active
+     *
+     * @return  self
+     */
+    public function setActive(bool $active)
+    {
+        $this->active = $active;
 
         return $this;
     }

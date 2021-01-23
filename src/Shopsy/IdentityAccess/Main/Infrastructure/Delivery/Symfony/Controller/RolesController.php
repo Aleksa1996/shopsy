@@ -119,6 +119,7 @@ class RolesController extends BaseController
         $command = new CreateRoleCommand(
             $roleDto->name,
             $roleDto->identifier,
+            $roleDto->active,
             []
         );
         $this->commandBus->handle($command);
@@ -147,6 +148,7 @@ class RolesController extends BaseController
             $id,
             $roleDto->name,
             $roleDto->identifier,
+            $roleDto->active,
             []
         );
         $this->commandBus->handle($command);

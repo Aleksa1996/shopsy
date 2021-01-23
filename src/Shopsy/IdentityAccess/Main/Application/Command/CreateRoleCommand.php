@@ -17,6 +17,11 @@ class CreateRoleCommand implements Command
     private $identifier;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @var string
      */
     private $permissions;
@@ -26,12 +31,14 @@ class CreateRoleCommand implements Command
      *
      * @param $name
      * @param $identifier
+     * @param $active
      * @param $permissions
      */
-    public function __construct($name, $identifier, $permissions)
+    public function __construct($name, $identifier, $active, $permissions)
     {
         $this->name = $name;
         $this->identifier = $identifier;
+        $this->active = $active;
         $this->permissions = $permissions;
     }
 
@@ -49,6 +56,14 @@ class CreateRoleCommand implements Command
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 
     /**

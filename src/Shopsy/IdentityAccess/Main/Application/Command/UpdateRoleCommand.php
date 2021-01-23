@@ -22,6 +22,11 @@ class UpdateRoleCommand implements Command
     private $identifier;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @var string
      */
     private $permissions;
@@ -32,13 +37,15 @@ class UpdateRoleCommand implements Command
      * @param $id
      * @param $name
      * @param $identifier
+     * @param $active
      * @param $permissions
      */
-    public function __construct($id, $name, $identifier, $permissions)
+    public function __construct($id, $name, $identifier, $active, $permissions)
     {
         $this->id = $id;
         $this->name = $name;
         $this->identifier = $identifier;
+        $this->active = $active;
         $this->permissions = $permissions;
     }
 
@@ -64,6 +71,14 @@ class UpdateRoleCommand implements Command
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * @return  bool
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 
     /**
