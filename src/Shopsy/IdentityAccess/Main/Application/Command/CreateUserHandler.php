@@ -2,17 +2,18 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
-use App\Common\Application\Command\CommandException;
 use App\Common\Application\Command\CommandHandler;
+use App\Common\Infrastructure\Service\Hasher\Hasher;
+use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserAvatar;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
-use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
-use App\Common\Infrastructure\Service\Hasher\Hasher;
-use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\ValidationErrorCommandException;
 
 class CreateUserHandler implements CommandHandler
 {
@@ -49,14 +50,15 @@ class CreateUserHandler implements CommandHandler
             new UserUsername($command->getUsername()),
             new UserEmail($command->getEmail()),
             new UserPassword($this->hasher->hash($command->getPassword())),
-            new UserActive($command->getActive())
+            new UserActive($command->getActive()),
+            $command->getAvatar() ? new UserAvatar($command->getAvatar()) : null
         );
 
         $validationHandler = new ValidationNotificationHandler();
         $user->validate($validationHandler, $this->userRepository);
 
         if ($validationHandler->hasErrors()) {
-            throw CommandException::createFromValidationNotificationHandler($validationHandler);
+            throw ValidationErrorCommandException::createFromValidationNotificationHandler($validationHandler);
         }
 
         $this->userRepository->add($user);

@@ -21,6 +21,13 @@ interface RoleRepository
     public function findByIdentifier(string $identifier);
 
     /**
+     * @param string $name
+     *
+     * @return Role
+     */
+    public function findByName(string $name);
+
+    /**
      * @param Role $role
      */
     public function add(Role $role);

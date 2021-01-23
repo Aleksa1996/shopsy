@@ -5,6 +5,7 @@ namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Excepti
 use App\Common\Application\ExceptionHandler;
 use App\Common\Application\Query\QueryException;
 use App\Common\Infrastructure\Delivery\Symfony\ResponseDto\ErrorDto;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\RoleNotFoundQueryException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UnauthorizedQueryException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\ValidationErrorQueryException;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Query\UserNotFoundQueryException;
@@ -17,6 +18,10 @@ class IdentityAccessQueryExceptionHandler implements ExceptionHandler
     public function handle(\Exception $e)
     {
         if ($e instanceof UserNotFoundQueryException) {
+            throw IdentityAccessHttpException::createFromQueryException($e, 404);
+        }
+
+        if ($e instanceof RoleNotFoundQueryException) {
             throw IdentityAccessHttpException::createFromQueryException($e, 404);
         }
 

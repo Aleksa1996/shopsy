@@ -44,12 +44,12 @@ class RoleQueryHandler implements QueryHandler
     /**
      * @inheritDoc
      */
-    public function execute(RoleQuery $request = null)
+    public function execute(RoleQuery $query = null)
     {
-        $sort = Sort::create($request->getSort());
+        $sort = Sort::create($query->getSort());
 
         $repositoryQueryResult = $this->roleRepository->query(
-            $this->roleQueryFactory->filter($request->getFilter() ?? [], $sort)
+            $this->roleQueryFactory->filter($query->getFilter() ?? [], $sort)
         );
 
         if (!$repositoryQueryResult || empty($repositoryQueryResult->getData())) {

@@ -64,4 +64,10 @@ class UpdateUserDto implements RequestDto
      * @Assert\Type("bool")
      */
     public $active;
+
+    /**
+     * @Assert\NotBlank(allowNull=true)
+     * @Assert\Type("string")
+     */
+    public $avatar;
 }

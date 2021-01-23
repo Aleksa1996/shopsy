@@ -4,6 +4,8 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Model\Access;
 
 use DateTimeImmutable;
 use App\Common\Domain\Id;
+use App\Common\Domain\Validator\ValidationNotificationHandler;
+use App\Shopsy\IdentityAccess\Main\Domain\Service\Access\RoleValidator;
 
 class Role
 {
@@ -245,5 +247,16 @@ class Role
         $this->updatedOn = $updatedOn;
 
         return $this;
+    }
+
+    /**
+     * @param ValidationNotificationHandler $validationNotificationHandler
+     * @param UserRepository $roleRepository
+     *
+     * @return void
+     */
+    public function validate(ValidationNotificationHandler $validationNotificationHandler, RoleRepository $roleRepository)
+    {
+        (new RoleValidator($validationNotificationHandler, $this, $roleRepository))->validate();
     }
 }

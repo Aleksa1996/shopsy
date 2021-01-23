@@ -91,7 +91,7 @@ class JsonApiNormalizer implements NormalizerInterface, ContextAwareNormalizerIn
         }
 
         $route = $context['request']->get('_route');
-        $requestParams = $context['request']->request->all() + $context['request']->query->all();
+        $requestParams = $context['request']->request->all() + $context['request']->query->all() + $context['request']->attributes->get('_route_params');
 
         $generateUrl = fn ($params) => $this->serverConfiguration->generateUrl($route, array_replace_recursive($requestParams, $params));
 

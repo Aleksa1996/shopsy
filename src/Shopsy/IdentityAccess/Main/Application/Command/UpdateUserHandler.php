@@ -3,7 +3,6 @@
 namespace App\Shopsy\IdentityAccess\Main\Application\Command;
 
 use App\Common\Application\Command\CommandHandler;
-use App\Common\Application\Command\CommandException;
 use App\Common\Infrastructure\Service\Hasher\Hasher;
 use App\Common\Domain\Validator\ValidationNotificationHandler;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserId;
@@ -15,6 +14,8 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\UserNotFoundCommandException;
+use App\Shopsy\IdentityAccess\Main\Application\Exception\Command\ValidationErrorCommandException;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserAvatar;
 
 class UpdateUserHandler implements CommandHandler
 {
@@ -66,6 +67,9 @@ class UpdateUserHandler implements CommandHandler
         if ($command->getActive() !== null)
             $user->setActive(new UserActive($command->getActive()));
 
+        if ($command->getAvatar() !== null)
+            $user->setAvatar(new UserAvatar($command->getAvatar()));
+
         $validationHandler = new ValidationNotificationHandler();
         $user->validate(
             $validationHandler,
@@ -73,7 +77,7 @@ class UpdateUserHandler implements CommandHandler
         );
 
         if ($validationHandler->hasErrors()) {
-            throw CommandException::createFromValidationNotificationHandler($validationHandler);
+            throw ValidationErrorCommandException::createFromValidationNotificationHandler($validationHandler);
         }
     }
 }

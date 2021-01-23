@@ -2,7 +2,6 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Controller;
 
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use App\Common\Application\Bus\Query\QueryBus;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +20,6 @@ use App\Common\Infrastructure\Delivery\Symfony\Decorator\QueryBusExceptionDecora
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateRoleDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateRoleDto;
-use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadRoleAvatarDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessQueryExceptionHandler;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessCommandExceptionHandler;
 
@@ -108,76 +106,70 @@ class RolesController extends BaseController
         ]);
     }
 
-    // /**
-    //  * @Route("/identity-access/roles", name="identity_access_roles_create", methods={"POST"})
-    //  * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateRoleDto")
-    //  *
-    //  * @param Request $request
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function create(Request $request, CreateRoleDto $userDto)
-    // {
-    //     $command = new CreateRoleCommand(
-    //         $userDto->fullName,
-    //         $userDto->username,
-    //         $userDto->email,
-    //         $userDto->password,
-    //         $userDto->active,
-    //         null
-    //     );
-    //     $this->commandBus->handle($command);
+    /**
+     * @Route("/identity-access/roles", name="identity_access_roles_create", methods={"POST"})
+     * @ParamConverter("roleDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateRoleDto")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function create(Request $request, CreateRoleDto $roleDto)
+    {
+        $command = new CreateRoleCommand(
+            $roleDto->name,
+            $roleDto->identifier,
+            []
+        );
+        $this->commandBus->handle($command);
 
-    //     $query = new RoleQuery([
-    //         'username' => $userDto->username,
-    //         'email' => $userDto->email
-    //     ]);
-    //     $response = $this->queryBus->handle($query);
+        $query = new RoleQuery([
+            'name' => $roleDto->name,
+            'identifier' => $roleDto->identifier
+        ]);
+        $response = $this->queryBus->handle($query);
 
-    //     return $this->json($response, JsonResponse::HTTP_CREATED, [], [
-    //         'jsonApi' => true,
-    //         'request' => $request
-    //     ]);
-    // }
+        return $this->json($response, JsonResponse::HTTP_CREATED, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
+    }
 
-    // /**
-    //  * @Route("/identity-access/roles/{id}", name="identity_access_roles_update", methods={"PUT","PATCH"})
-    //  * @ParamConverter("userDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateRoleDto")
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function update($id, UpdateRoleDto $userDto, Request $request)
-    // {
-    //     $command = new UpdateRoleCommand(
-    //         $id,
-    //         $userDto->fullName,
-    //         $userDto->username,
-    //         $userDto->email,
-    //         $userDto->password,
-    //         $userDto->active,
-    //         null
-    //     );
-    //     $this->commandBus->handle($command);
+    /**
+     * @Route("/identity-access/roles/{id}", name="identity_access_roles_update", methods={"PUT","PATCH"})
+     * @ParamConverter("roleDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateRoleDto")
+     *
+     * @return JsonResponse
+     */
+    public function update($id, UpdateRoleDto $roleDto, Request $request)
+    {
+        $command = new UpdateRoleCommand(
+            $id,
+            $roleDto->name,
+            $roleDto->identifier,
+            []
+        );
+        $this->commandBus->handle($command);
 
-    //     $query = new RoleQuery(['id' => $id]);
-    //     $response = $this->queryBus->handle($query);
+        $query = new RoleQuery(['id' => $id]);
+        $response = $this->queryBus->handle($query);
 
-    //     return $this->json($response, JsonResponse::HTTP_OK, [], [
-    //         'jsonApi' => true,
-    //         'request' => $request
-    //     ]);
-    // }
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
+    }
 
-    // /**
-    //  * @Route("/identity-access/roles/{id}", name="identity_access_roles_destroy", methods={"DELETE"})
-    //  *
-    //  * @return JsonResponse
-    //  */
-    // public function destroy($id)
-    // {
-    //     $command = new DestroyRoleCommand($id);
-    //     $this->commandBus->handle($command);
+    /**
+     * @Route("/identity-access/roles/{id}", name="identity_access_roles_destroy", methods={"DELETE"})
+     *
+     * @return JsonResponse
+     */
+    public function destroy($id)
+    {
+        $command = new DestroyRoleCommand($id);
+        $this->commandBus->handle($command);
 
-    //     return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-    // }
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
 }

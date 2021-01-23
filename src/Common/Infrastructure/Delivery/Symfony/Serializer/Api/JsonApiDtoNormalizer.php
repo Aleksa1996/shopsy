@@ -48,7 +48,7 @@ class JsonApiDtoNormalizer implements NormalizerInterface, ContextAwareNormalize
     public function normalize($object, $format = null, array $context = [])
     {
         $route = $context['request']->get('_route');
-        $params = $context['request']->request->all() + $context['request']->query->all();
+        $params = $context['request']->request->all() + $context['request']->query->all() + $context['request']->attributes->get('_route_params');
 
         $data = [
             'type' => self::TYPES[get_class($object)],

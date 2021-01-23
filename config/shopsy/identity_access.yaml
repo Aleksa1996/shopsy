@@ -175,6 +175,21 @@ services:
       $authentication: '@App\Shopsy\IdentityAccess\Main\Domain\Service\Auth\Authentication'
     tags: [ 'app.command.handler' ]
 
+  App\Shopsy\IdentityAccess\Main\Application\Command\CreateRoleHandler:
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\UpdateRoleHandler:
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\DestroyRoleHandler:
+    arguments:
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
   App\Shopsy\IdentityAccess\Main\Application\Query\RoleCollectionQueryHandler:
     arguments:
       $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'

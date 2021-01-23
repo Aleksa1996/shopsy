@@ -48,6 +48,20 @@ class DoctrineRoleRepository extends ServiceEntityRepository implements RoleRepo
 
     /**
      * @inheritDoc
+     */
+    public function findByName(string $name)
+    {
+        return $this
+            ->createQueryBuilder('r')
+            ->where('r.name = :name')
+            ->setParameter('name', $name)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritDoc
      *
      * @throws ORMException
      */

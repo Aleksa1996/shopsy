@@ -54,17 +54,17 @@ class RoleCollectionQueryHandler implements QueryHandler
     /**
      * @inheritDoc
      */
-    public function execute(RoleCollectionQuery $request = null)
+    public function execute(RoleCollectionQuery $query = null)
     {
         // if (!$this->authorization->authorize(RolePermission::LIST_ACTION, Role::class)) {
         //     throw new UserPermissionDeniedException();
         // }
 
-        $pagination = new Pagination($request->getPage(), $request->getLimit());
-        $sort = Sort::create($request->getSort());
+        $pagination = new Pagination($query->getPage(), $query->getLimit());
+        $sort = Sort::create($query->getSort());
 
         $repositoryQueryResult = $this->roleRepository->query(
-            $this->roleQueryFactory->filterCollection($request->getFilter() ?? [], $pagination, $sort)
+            $this->roleQueryFactory->filterCollection($query->getFilter() ?? [], $pagination, $sort)
         );
 
         $this->roleCollectionTransformer->write(
