@@ -20,7 +20,7 @@
         <field name="createdOn" column="created_on" type="datetime"/>
         <field name="updatedOn" column="updated_on" type="datetime"/>
 
-        <many-to-many field="roles" target-entity="App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role">
+        <many-to-many field="roles" target-entity="App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role" fetch="EXTRA_LAZY">
             <join-table name="identity_access_users_roles">
                 <join-columns>
                     <join-column name="user_id" referenced-column-name="id" />

@@ -8,18 +8,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @OA\Schema(
- *      schema="create_user_roles_dto",
- *      title="Attaching Role to User model",
- *      description="Attaching Role to User model",
+ *      schema="update_user_roles_dto",
+ *      title="Attaching/Detaching Role to User model",
+ *      description="Attaching/Detaching Role to User model",
  * )
  */
-class CreateUserRolesDto implements RequestDto
+class ReplaceRolesOfUserDto implements RequestDto
 {
     /**
-     * @Assert\NotBlank
      * @Assert\Type("array")
      * @Assert\All({
-     *      @Assert\NotBlank,
      *      @Assert\Uuid
      * })
      * @OA\Property(

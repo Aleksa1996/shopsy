@@ -253,12 +253,38 @@ class User
     /**
      * @return  Role[]
      */
-    public function getRoles()
+    public function getRoles($offset = null, $length = null)
     {
-        return $this->roles->toArray();
+        if (\is_null($offset)) {
+            return $this->roles->toArray();
+        }
+
+        return $this->roles->slice($offset, $length);
     }
 
     /**
+     * @return  Role[]
+     */
+    public function getRolesWithCriteria($criteria)
+    {
+        if (!$this->roles->isInitialized()) {
+            $this->roles->initialize();
+        }
+        return $this->roles->matching($criteria)->toArray();
+    }
+
+    /**
+     * @return  Role[]
+     */
+    public function getRoleCountWithCriteria($criteria)
+    {
+        if (!$this->roles->isInitialized()) {
+            $this->roles->initialize();
+        }
+        return $this->roles->matching($criteria)->count();
+    }
+
+   /**
      * @param  Role[]  $roles
      *
      * @return  self
@@ -273,7 +299,7 @@ class User
     /**
      * @param Role $role
      *
-     * @return  Role[]
+     * @return  self
      */
     public function attachRole(Role $role)
     {
@@ -291,17 +317,72 @@ class User
     /**
      * @param Role $role
      *
-     * @return  Role[]
+     * @return  self
      */
     public function detachRole(Role $role)
     {
         foreach ($this->roles as $key => $r) {
             if ($r->getId()->equals($role->getId())) {
                 unset($this->roles[$key]);
+                break;
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @param Role $role
+     *
+     * @return self
+     */
+    public function detachAllRoles()
+    {
+        foreach ($this->roles as $r) {
+            $this->detachRole($r);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Role $role
+     *
+     * @return bool
+     */
+    public function hasRole(Role $role)
+    {
+        foreach ($this->roles as $r) {
+            if ($r->getIdentifier() === $role->getIdentifier()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $roleIdentifier
+     *
+     * @return bool
+     */
+    public function hasRoleIdentifier(string $roleIdentifier)
+    {
+        foreach ($this->roles as $r) {
+            if ($r->getIdentifier() === $roleIdentifier) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRoleCount()
+    {
+        return $this->roles->count();
     }
 
     /**
@@ -319,6 +400,14 @@ class User
         }
 
         return false;
+    }
+
+    /**
+     * @return  string
+     */
+    public function getDefaultRoleIdentifier()
+    {
+        return 'ROLE_USER';
     }
 
     /**

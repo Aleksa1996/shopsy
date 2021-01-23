@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      description="Detaching Role to User model",
  * )
  */
-class DestroyUserRolesDto implements RequestDto
+class DetachRolesFromUserDto implements RequestDto
 {
     /**
      * @Assert\NotBlank

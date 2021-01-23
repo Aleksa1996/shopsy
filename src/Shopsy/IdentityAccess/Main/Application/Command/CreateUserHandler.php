@@ -9,6 +9,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\User;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserEmail;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserAvatar;
+use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
@@ -23,6 +24,11 @@ class CreateUserHandler implements CommandHandler
     private $userRepository;
 
     /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    /**
      * @var Hasher
      */
     private $hasher;
@@ -31,11 +37,13 @@ class CreateUserHandler implements CommandHandler
      * CreateUserHandler constructor.
      *
      * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
      * @param Hasher $hasher
      */
-    public function __construct(UserRepository $userRepository, Hasher $hasher)
+    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository, Hasher $hasher)
     {
         $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
         $this->hasher = $hasher;
     }
 
@@ -53,6 +61,9 @@ class CreateUserHandler implements CommandHandler
             new UserActive($command->getActive()),
             $command->getAvatar() ? new UserAvatar($command->getAvatar()) : null
         );
+
+        $role = $this->roleRepository->findByIdentifier($user->getDefaultRoleIdentifier());
+        $user->attachRole($role);
 
         $validationHandler = new ValidationNotificationHandler();
         $user->validate($validationHandler, $this->userRepository);

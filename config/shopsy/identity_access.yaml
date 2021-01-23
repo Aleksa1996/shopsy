@@ -141,6 +141,7 @@ services:
   App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserHandler:
     arguments:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
       $hasher: '@App\Common\Infrastructure\Service\Hasher\Hasher'
     tags: [ 'app.command.handler' ]
 
@@ -167,6 +168,31 @@ services:
       $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
       $userQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserQueryFactory'
       $userTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\UserTransformer'
+    tags: [ 'app.query.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\AttachRolesToUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\ReplaceRolesOfUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Command\DetachRolesFromUserHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $roleRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleRepository'
+    tags: [ 'app.command.handler' ]
+
+  App\Shopsy\IdentityAccess\Main\Application\Query\UserRolesCollectionQueryHandler:
+    arguments:
+      $userRepository: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserRepository'
+      $roleCollectionTransformer: '@App\Shopsy\IdentityAccess\Main\Application\Transformer\RoleCollectionTransformer'
+      $roleQueryFactory: '@App\Shopsy\IdentityAccess\Main\Domain\Model\Access\RoleQueryFactory'
     tags: [ 'app.query.handler' ]
 
   App\Shopsy\IdentityAccess\Main\Application\Command\AuthUserHandler:

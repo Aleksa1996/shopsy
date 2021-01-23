@@ -17,11 +17,18 @@ use App\Shopsy\IdentityAccess\Main\Application\Command\CreateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateUserCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\UserCollectionQuery;
 use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyUserCommand;
+use App\Shopsy\IdentityAccess\Main\Application\Query\UserRolesCollectionQuery;
+use App\Shopsy\IdentityAccess\Main\Application\Command\AttachRolesToUserCommand;
+use App\Shopsy\IdentityAccess\Main\Application\Command\DetachRolesFromUserCommand;
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\QueryBusExceptionDecorator;
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
+use App\Shopsy\IdentityAccess\Main\Application\Command\ReplaceRolesOfUserCommand;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UpdateUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\AttachRolesToUserDto;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\ReplaceRolesOfUserDto;
+use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\DetachRolesFromUserDto;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessQueryExceptionHandler;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\Exception\IdentityAccessCommandExceptionHandler;
 
@@ -200,5 +207,98 @@ class UsersController extends BaseController
         return new JsonResponse([
             'url' => $bucketUrl . $path
         ], 201);
+    }
+
+
+    /**
+     * @Route("/identity-access/users/{id}/roles", name="identity_access_users_index_roles", methods={"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function rolesIndex($id, Request $request)
+    {
+        $queryParams = $this->getQueryParams($request, [
+            'page',
+            'filter',
+            'sort'
+        ]);
+
+        $query = new UserRolesCollectionQuery(
+            $id,
+            empty($queryParams['page']['number']) ? 1 : (int)$queryParams['page']['number'],
+            empty($queryParams['page']['size']) ? 10 : (int)$queryParams['page']['size'],
+            $queryParams['filter'] ?? [],
+            $queryParams['sort'] ?? []
+        );
+
+        $response = $this->queryBus->handle($query);
+
+        return $this->json($response, JsonResponse::HTTP_OK, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
+    }
+
+    /**
+     * @Route("/identity-access/users/{id}/roles", name="identity_access_users_create_roles", methods={"POST"})
+     * @ParamConverter("userRolesDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\AttachRolesToUserDto")
+     *
+     * @return JsonResponse
+     */
+    public function rolesCreate($id, AttachRolesToUserDto $userRolesDto, Request $request)
+    {
+        $command = new AttachRolesToUserCommand(
+            $id,
+            $userRolesDto->id
+        );
+
+        $response = $this->commandBus->handle($command);
+
+        return $this->json($response, JsonResponse::HTTP_NO_CONTENT, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
+    }
+
+    /**
+     * @Route("/identity-access/users/{id}/roles", name="identity_access_users_update_roles", methods={"PUT","PATCH"})
+     * @ParamConverter("userRolesDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\ReplaceRolesOfUserDto")
+     *
+     * @return JsonResponse
+     */
+    public function rolesUpdate($id, ReplaceRolesOfUserDto $userRolesDto, Request $request)
+    {
+        $command = new ReplaceRolesOfUserCommand(
+            $id,
+            $userRolesDto->id
+        );
+
+        $response = $this->commandBus->handle($command);
+
+        return $this->json($response, JsonResponse::HTTP_NO_CONTENT, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
+    }
+
+    /**
+     * @Route("/identity-access/users/{id}/roles", name="identity_access_users_destroy_roles", methods={"DELETE"})
+     * @ParamConverter("userRolesDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\DetachRolesFromUserDto")
+     *
+     * @return JsonResponse
+     */
+    public function rolesDestroy($id, DetachRolesFromUserDto $userRolesDto, Request $request)
+    {
+        $command = new DetachRolesFromUserCommand(
+            $id,
+            $userRolesDto->id
+        );
+
+        $response = $this->commandBus->handle($command);
+
+        return $this->json($response, JsonResponse::HTTP_NO_CONTENT, [], [
+            'jsonApi' => true,
+            'request' => $request
+        ]);
     }
 }
