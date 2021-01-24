@@ -35,10 +35,9 @@ class DoctrineStoredDomainEventRepository extends ServiceEntityRepository implem
     public function append(DomainEvent $domainEvent)
     {
         $storedEvent = new StoredDomainEvent(
-            new Id(),
-            get_class($domainEvent),
+            $domainEvent->getType(),
+            $this->serializer->serialize($domainEvent, 'json'),
             $domainEvent->getOccurredOn(),
-            $this->serializer->serialize($domainEvent, 'json')
         );
         $this->getEntityManager()->persist($storedEvent);
     }
@@ -46,7 +45,7 @@ class DoctrineStoredDomainEventRepository extends ServiceEntityRepository implem
     /**
      * @inheritDoc
      */
-    public function allStoredEventsSince(Id $id)
+    public function allStoredEventsSince($id)
     {
         $query = $this->createQueryBuilder('e');
 

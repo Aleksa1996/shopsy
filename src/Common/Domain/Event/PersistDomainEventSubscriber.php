@@ -3,6 +3,7 @@
 namespace App\Common\Domain\Event;
 
 use App\Common\Domain\Event\DomainEventSubscriber;
+use App\Common\Domain\Event\PublishableDomainEvent;
 use App\Common\Domain\Event\StoredDomainEventRepository;
 
 class PersistDomainEventSubscriber implements DomainEventSubscriber
@@ -35,6 +36,6 @@ class PersistDomainEventSubscriber implements DomainEventSubscriber
      */
     public function isSubscribedTo($domainEvent)
     {
-        return true;
+        return $domainEvent instanceof PublishableDomainEvent;
     }
 }

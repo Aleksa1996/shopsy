@@ -2,12 +2,12 @@
 
 namespace App\Common\Domain\Event;
 
-use App\Common\Domain\Id;
-
 class StoredDomainEvent implements DomainEvent
 {
+    use ImplementsDomainEvent;
+
     /**
-     * @var Id
+     * @var mixed
      */
     private $id;
 
@@ -22,26 +22,19 @@ class StoredDomainEvent implements DomainEvent
     private $body;
 
     /**
-     * @var \DateTimeImmutable
-     */
-    private $occurredOn;
-
-    /**
-     * @param Id $id
      * @param string $type
-     * @param \DateTimeImmutable $occurredOn
      * @param string $body
+     * @param \DateTimeImmutable $occurredOn
      */
-    public function __construct(Id $id, string $type, \DateTimeImmutable $occurredOn, string $body)
+    public function __construct(string $type, string $body, \DateTimeImmutable $occurredOn)
     {
-        $this->id = $id;
         $this->type = $type;
         $this->body = $body;
         $this->occurredOn = $occurredOn;
     }
 
     /**
-     * @return Id
+     * @return mixed
      */
     public function getId()
     {
@@ -62,13 +55,5 @@ class StoredDomainEvent implements DomainEvent
     public function getBody()
     {
         return $this->body;
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getOccurredOn()
-    {
-        return $this->occurredOn;
     }
 }

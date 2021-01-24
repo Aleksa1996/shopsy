@@ -6,18 +6,16 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
+use App\Common\Domain\Event\ImplementsDomainEvent;
 
 class LoginFailed implements DomainEvent
 {
+    use ImplementsDomainEvent;
+
     /**
      * @var UserId|UserEmail|UserUsername
      */
     private $identity;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $occurredOn;
 
     /**
      * LoginFailed Constructor.
@@ -39,10 +37,10 @@ class LoginFailed implements DomainEvent
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return string
      */
-    public function getOccurredOn()
+    public function getType()
     {
-        return $this->occurredOn;
+        return 'identity_access.LoginFailed';
     }
 }

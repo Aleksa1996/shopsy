@@ -6,9 +6,12 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
+use App\Common\Domain\Event\ImplementsDomainEvent;
 
 class AuthorizationSucceed implements DomainEvent
 {
+    use ImplementsDomainEvent;
+
     /**
      * @var mixed
      */
@@ -18,11 +21,6 @@ class AuthorizationSucceed implements DomainEvent
      * @var mixed
      */
     private $subject;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $occurredOn;
 
     /**
      * AuthorizationSucceed Constructor.
@@ -54,10 +52,10 @@ class AuthorizationSucceed implements DomainEvent
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return string
      */
-    public function getOccurredOn()
+    public function getType()
     {
-        return $this->occurredOn;
+        return 'identity_access.AuthorizationSucceed';
     }
 }

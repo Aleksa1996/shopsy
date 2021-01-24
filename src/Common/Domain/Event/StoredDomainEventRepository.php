@@ -2,8 +2,6 @@
 
 namespace App\Common\Domain\Event;
 
-use App\Common\Domain\Id;
-
 interface StoredDomainEventRepository
 {
     /**
@@ -14,9 +12,9 @@ interface StoredDomainEventRepository
     public function append(DomainEvent $domainEvent);
 
     /**
-     * @param Id $id
+     * @param mixed $id
      *
      * @return array
      */
-    public function allStoredEventsSince(Id $id);
+    public function allStoredEventsSince($id);
 }
