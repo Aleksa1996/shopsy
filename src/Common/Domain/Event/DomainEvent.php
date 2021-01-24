@@ -2,12 +2,12 @@
 
 namespace App\Common\Domain\Event;
 
-use DateTime;
+use DateTimeImmutable;
 
 interface DomainEvent
 {
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
     public function getOccurredOn();
 }

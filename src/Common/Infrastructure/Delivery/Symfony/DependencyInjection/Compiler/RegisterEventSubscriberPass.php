@@ -27,6 +27,5 @@ class RegisterEventSubscriberPass implements CompilerPassInterface
             $definition->addMethodCall('subscribe', [new Reference($id)]);
         }
 
-        $container->get(DomainEventPublisher::class);
     }
 }

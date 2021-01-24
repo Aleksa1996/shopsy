@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterQueryHandlerPass;
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterCommandHandlerPass;
 use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterEventSubscriberPass;
-use App\Common\Infrastructure\Delivery\Symfony\DependencyInjection\Compiler\RegisterMiddlewarePass;
 
 class Kernel extends BaseKernel
 {

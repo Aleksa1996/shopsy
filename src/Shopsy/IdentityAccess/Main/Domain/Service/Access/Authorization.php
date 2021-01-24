@@ -2,7 +2,7 @@
 
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Access;
 
-use App\Common\Domain\Event\DomainEventPublisher;
+use App\Common\Domain\Event\Facade\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\AuthorizationAttempted;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\AuthorizationFailed;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\AuthorizationSucceed;
@@ -37,8 +37,8 @@ abstract class Authorization
     }
 
     /**
-     * @param mixed $identity
-     * @param mixed $password
+     * @param mixed $attribute
+     * @param mixed $subject
      *
      * @return AuthenticateResponse
      */

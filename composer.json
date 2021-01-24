@@ -15,6 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
         "fakerphp/faker": "^1.13",
+        "indragunawan/facade-bundle": "^0.2.0",
         "k911/swoole-bundle": "^0.8.2",
         "laminas/laminas-hydrator": "^4.1",
         "league/flysystem": "^2.0",

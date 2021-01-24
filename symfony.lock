@@ -144,6 +144,9 @@
     "guzzlehttp/psr7": {
         "version": "1.7.0"
     },
+    "indragunawan/facade-bundle": {
+        "version": "v0.2.0"
+    },
     "k911/swoole-bundle": {
         "version": "v0.8.2"
     },

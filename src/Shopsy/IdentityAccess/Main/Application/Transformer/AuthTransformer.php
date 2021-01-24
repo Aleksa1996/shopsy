@@ -9,7 +9,7 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Auth\AuthResponse;
 interface AuthTransformer
 {
     /**
-     * @param AuthResponse $user
+     * @param AuthResponse $authenticationResponse
      *
      * @return mixed
      */

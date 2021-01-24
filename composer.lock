@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ec294d23a6e9754c3b94326f21d908c",
+    "content-hash": "5cbd1b33e63c40906c90c3af99383e4f",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2042,6 +2042,56 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.7.0"
             },
             "time": "2020-09-30T07:37:11+00:00"
+        },
+        {
+            "name": "indragunawan/facade-bundle",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IndraGunawan/facade-bundle.git",
+                "reference": "cffd28a73b46fbd2e964961f919199b6a8a6860b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IndraGunawan/facade-bundle/zipball/cffd28a73b46fbd2e964961f919199b6a8a6860b",
+                "reference": "cffd28a73b46fbd2e964961f919199b6a8a6860b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "psr/container": "^1.0",
+                "symfony/dependency-injection": "^3.4 || ^4.0 || ^5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5.2 || ^8.0",
+                "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Indragunawan\\FacadeBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Indra Gunawan",
+                    "email": "hello@indra.my.id",
+                    "homepage": "https://github.com/IndraGunawan"
+                }
+            ],
+            "description": "Support Facades for Symfony services.",
+            "support": {
+                "issues": "https://github.com/IndraGunawan/facade-bundle/issues",
+                "source": "https://github.com/IndraGunawan/facade-bundle/tree/v0.2.0"
+            },
+            "time": "2020-03-07T18:54:04+00:00"
         },
         {
             "name": "k911/swoole-bundle",

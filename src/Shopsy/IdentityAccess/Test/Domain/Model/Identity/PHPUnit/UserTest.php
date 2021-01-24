@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shopsy\IdentityAccess\Test\Infrastructure\Persistence\Doctrine\Identity\PHPUnit;
+namespace App\Shopsy\IdentityAccess\Test\Domain\Model\Identity\PHPUnit;
 
 use App\Common\Domain\Id;
 use PHPUnit\Framework\TestCase;
@@ -12,9 +12,23 @@ use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserActive;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserFullName;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserPassword;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Identity\UserUsername;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserTest extends TestCase
+class UserTest extends KernelTestCase
 {
+    /**
+     * @return void
+     */
+    public static function setUpBeforeClass(): void
+    {
+        //start the symfony kernel
+        $kernel = static::createKernel();
+        $kernel->boot();
+
+        //get the DI container
+        self::$container = $kernel->getContainer();
+    }
+
     /**
      * @return void
      */

@@ -5,14 +5,14 @@ namespace App\Common\Domain\Event;
 interface DomainEventSubscriber
 {
     /**
-     * @param DomainEvent $aDomainEvent
+     * @param DomainEvent $domainEvent
      */
-    public function handle($aDomainEvent);
+    public function handle($domainEvent);
 
     /**
-     * @param DomainEvent $aDomainEvent
+     * @param DomainEvent $domainEvent
      *
      * @return bool
      */
-    public function isSubscribedTo($aDomainEvent);
+    public function isSubscribedTo($domainEvent);
 }

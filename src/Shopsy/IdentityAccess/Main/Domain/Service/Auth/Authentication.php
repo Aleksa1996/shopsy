@@ -3,7 +3,7 @@
 namespace App\Shopsy\IdentityAccess\Main\Domain\Service\Auth;
 
 
-use App\Common\Domain\Event\DomainEventPublisher;
+use App\Common\Domain\Event\Facade\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginFailed;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginSucceed;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\LoginAttempted;

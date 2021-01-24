@@ -4,7 +4,7 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Model\Identity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Common\Domain\Event\DomainEventPublisher;
+use App\Common\Domain\Event\Facade\DomainEventPublisher;
 use App\Shopsy\IdentityAccess\Main\Domain\Event\UserCreated;
 use App\Shopsy\IdentityAccess\Main\Domain\Model\Access\Role;
 use App\Common\Domain\Validator\ValidationNotificationHandler;

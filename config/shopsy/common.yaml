@@ -51,8 +51,20 @@ services:
     factory: [ 'App\Common\Domain\Event\DomainEventPublisher', 'instance' ]
     public: true
 
-  App\Common\Domain\Event\LoggerEventSubscriber:
+  App\Common\Domain\Event\PersistDomainEventSubscriber:
+    arguments:
+      $storedDomainEventRepository: '@App\Common\Domain\Event\StoredDomainEventRepository'
     tags: [ 'app.domain.event.subscriber' ]
+    public: true
+
+  # Repository
+  App\Common\Infrastructure\Persistence\Doctrine\Event\DoctrineStoredDomainEventRepository:
+    arguments:
+      $registry: '@doctrine'
+  App\Common\Domain\Event\StoredDomainEventRepository: '@App\Common\Infrastructure\Persistence\Doctrine\Event\DoctrineStoredDomainEventRepository'
+
+  # Facade
+  App\Common\Domain\Event\Facade\DomainEventPublisher: ~
 
   # Transactional session
   App\Common\Infrastructure\Application\Command\DoctrineSession:
