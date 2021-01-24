@@ -1,35 +1,35 @@
 # # Default configuration for extension with alias: "swoole"
-# parameters:
-#     env(HOST): 0.0.0.0
-#     env(PORT): '1215'
-#     env(API_HOST): 0.0.0.0
-#     env(API_PORT): '1216'
-#     env(SWOOLE_LOG_STREAM_PATH): "%kernel.logs_dir%/swoole_%kernel.environment%.log"
+parameters:
+    env(HOST): 0.0.0.0
+    env(PORT): '9000'
+    env(API_HOST): 0.0.0.0
+    env(API_PORT): '1216'
+    env(SWOOLE_LOG_STREAM_PATH): "%kernel.logs_dir%/swoole_%kernel.environment%.log"
 
-# swoole:
-#     http_server:
-#         host: "%env(HOST)%"
-#         port: "%env(PORT)%"
-#         running_mode: process
-#         trusted_hosts:
-#             - "%env(TRUSTED_HOSTS)%"
-#         trusted_proxies:
-#             - "%env(TRUSTED_PROXIES)%"
-#         hmr: auto
-#         api:
-#             enabled: false
-#             host: "%env(API_HOST)%"
-#             port: "%env(API_PORT)%"
-#         static:
-#              public_dir: "%kernel.project_dir%/public"
-#              strategy: off
-#         settings:
-#             log_file: '%env(resolve:SWOOLE_LOG_STREAM_PATH)%'
-#             task_worker_count: auto
-#             worker_count: 1
-#             reactor_count: 1
-#         services:
-#             entity_manager_handler: true
-#         exception_handler:
-#             type: auto # One of "json"; "production"; "custom"; "auto"
-#             verbosity: auto # One of "trace"; "verbose"; "default"; "auto"
+swoole:
+    http_server:
+        host: "%env(HOST)%"
+        port: "%env(PORT)%"
+        running_mode: process
+        # trusted_hosts:
+        #     - "%env(TRUSTED_HOSTS)%"
+        # trusted_proxies:
+        #     - "%env(TRUSTED_PROXIES)%"
+        hmr: auto
+        api:
+            enabled: false
+            host: "%env(API_HOST)%"
+            port: "%env(API_PORT)%"
+        static:
+                public_dir: "%kernel.project_dir%/public"
+                strategy: off
+        settings:
+            log_file: '%env(resolve:SWOOLE_LOG_STREAM_PATH)%'
+            task_worker_count: auto
+            worker_count: 1
+            reactor_count: 1
+        services:
+            entity_manager_handler: true
+        exception_handler:
+            type: auto # One of "json"; "production"; "custom"; "auto"
+            verbosity: auto # One of "trace"; "verbose"; "default"; "auto"

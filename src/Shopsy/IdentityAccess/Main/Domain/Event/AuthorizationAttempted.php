@@ -7,8 +7,9 @@ namespace App\Shopsy\IdentityAccess\Main\Domain\Event;
 use DateTimeImmutable;
 use App\Common\Domain\Event\DomainEvent;
 use App\Common\Domain\Event\ImplementsDomainEvent;
+use App\Common\Domain\Event\PublishableDomainEvent;
 
-class AuthorizationAttempted implements DomainEvent
+class AuthorizationAttempted implements DomainEvent, PublishableDomainEvent
 {
     use ImplementsDomainEvent;
 

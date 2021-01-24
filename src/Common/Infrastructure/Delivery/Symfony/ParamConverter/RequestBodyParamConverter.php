@@ -70,10 +70,10 @@ class RequestBodyParamConverter implements ParamConverterInterface
         $format = $request->getContentType();
         $data = $request->getContent();
 
-        if ($format === null && empty($data) && $request->request->count() > 0) {
+        if ($format === null && $request->request->count() > 0) {
             $format = 'json';
             $data = json_encode($request->request->all());
-        } else if ($format === null && empty($data) && $request->files->count() > 0) {
+        } else if ($format === null && $request->files->count() > 0) {
             $format = 'json';
             $data = '[]';
         }
