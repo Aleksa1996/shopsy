@@ -6,16 +6,13 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Common\Application\Bus\Query\QueryBus;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Common\Application\Bus\Command\CommandBus;
-use App\Common\Infrastructure\ServerConfiguration;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Shopsy\IdentityAccess\Main\Application\Query\RoleQuery;
-use App\Common\Infrastructure\Service\FileUploader\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Common\Infrastructure\Delivery\Symfony\Controller\BaseController;
 use App\Shopsy\IdentityAccess\Main\Application\Command\CreateRoleCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Command\UpdateRoleCommand;
 use App\Shopsy\IdentityAccess\Main\Application\Query\RoleCollectionQuery;
-use App\Shopsy\IdentityAccess\Main\Application\Command\DestroyRoleCommand;
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\QueryBusExceptionDecorator;
 use App\Common\Infrastructure\Delivery\Symfony\Decorator\CommandBusExceptionDecorator;
 use App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\CreateRoleDto;
@@ -36,27 +33,15 @@ class RolesController extends BaseController
     private $commandBus;
 
     /**
-     * @var ServerConfiguration
-     */
-    private $serverConfiguration;
-
-    /**
-     * @var FileUploader
-     */
-    private $fileUploader;
-
-    /**
      * RolesController Constructor
      *
      * @param QueryBus $queryBus
      * @param CommandBus $commandBus
      */
-    public function __construct(QueryBus $queryBus, CommandBus $commandBus, ServerConfiguration $serverConfiguration, FileUploader $fileUploader)
+    public function __construct(QueryBus $queryBus, CommandBus $commandBus)
     {
         $this->queryBus = new QueryBusExceptionDecorator($queryBus, new IdentityAccessQueryExceptionHandler());
         $this->commandBus = new CommandBusExceptionDecorator($commandBus, new IdentityAccessCommandExceptionHandler());
-        $this->serverConfiguration = $serverConfiguration;
-        $this->fileUploader = $fileUploader;
     }
 
     /**
@@ -160,18 +145,5 @@ class RolesController extends BaseController
             'jsonApi' => true,
             'request' => $request
         ]);
-    }
-
-    /**
-     * @Route("/identity-access/roles/{id}", name="identity_access_roles_destroy", methods={"DELETE"})
-     *
-     * @return JsonResponse
-     */
-    public function destroy($id)
-    {
-        $command = new DestroyRoleCommand($id);
-        $this->commandBus->handle($command);
-
-        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

@@ -176,19 +176,6 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/identity-access/users/{id}", name="identity_access_users_destroy", methods={"DELETE"})
-     *
-     * @return JsonResponse
-     */
-    public function destroy($id)
-    {
-        $command = new DestroyUserCommand($id);
-        $this->commandBus->handle($command);
-
-        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-    }
-
-    /**
      * @Route("/identity-access/users/avatar", name="identity_access_users_avatar", methods={"POST"})
      * @ParamConverter("uploadUserAvatarDto", class="App\Shopsy\IdentityAccess\Main\Infrastructure\Delivery\Symfony\RequestDto\UploadUserAvatarDto")
      *
