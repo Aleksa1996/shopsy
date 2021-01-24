@@ -90,9 +90,29 @@ class OAuth2Authentication extends Authentication
             'password' => $password
         ];
 
+        $server = [
+            'HTTP_HOST' => $this->serverConfiguration->getEnv('APP_HOSTNAME'),
+            'HTTP_CACHE_CONTROL' => 'no-cache',
+            'HTTP_USER_AGENT' => 'PostmanRuntime/7.26.8',
+            'HTTP_ACCEPT' => 'application/json',
+            'SCRIPT_FILENAME' => '/var/www/html/public/index.php',
+            'PATH_TRANSLATED' => '/var/www/html/public',
+            'PATH_INFO' => '',
+            'REQUEST_SCHEME' => 'http',
+            'SERVER_PROTOCOL' => 'HTTP/1.1',
+            'DOCUMENT_ROOT' => '/var/www/html/public',
+            'DOCUMENT_URI' => '/index.php',
+            'REQUEST_URI' => '/oauth2/access_token',
+            'SCRIPT_NAME' => '/index.php',
+            'CONTENT_TYPE' => 'multipart/form-data; boundary=--------------------------103980797895047227460316',
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING' => '',
+            'PHP_SELF' => '/index.php',
+        ];
+
         $psr17Factory = new Psr17Factory();
         $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
-        $symfonyRequest = new Request([], $postData, [], [], [], $_SERVER);
+        $symfonyRequest = new Request([], $postData, [], [], [], $server);
 
         return $psrHttpFactory->createRequest($symfonyRequest);
     }

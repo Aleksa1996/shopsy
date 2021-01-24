@@ -154,7 +154,7 @@ class OAuth2Authenticator extends AbstractGuardAuthenticator
         try {
             $serverRequest = $this->resourceServer->validateAuthenticatedRequest($serverRequest);
         } catch (OAuthServerException $e) {
-            throw new AuthenticationException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            throw new AuthenticationException($e->getMessage(), $e->getCode(), $e);
         }
 
         $httpFoundationFactory = new HttpFoundationFactory();

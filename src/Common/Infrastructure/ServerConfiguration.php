@@ -91,7 +91,7 @@ class ServerConfiguration
      *
      * @return mixed
      */
-    public function getEnv($key, $default)
+    public function getEnv($key, $default = null)
     {
         return $_ENV[$key] ?? $default;
     }

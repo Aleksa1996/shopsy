@@ -78,19 +78,19 @@ services:
     tags: [ 'request.param_converter' ]
 
   # Serializer
-  App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer:
-    arguments:
-      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
-      $objectNormalizer: '@serializer.normalizer.object'
-    tags:
-      - {name: 'serializer.normalizer', priority: 20}
-
   App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiNormalizer:
     arguments:
       $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
       $jsonApiDtoNormalizer: '@App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer'
     tags:
       - {name: 'serializer.normalizer', priority: 21}
+
+  App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiDtoNormalizer:
+    arguments:
+      $serverConfiguration: '@App\Common\Infrastructure\ServerConfiguration'
+      $objectNormalizer: '@serializer.normalizer.object'
+    tags:
+      - {name: 'serializer.normalizer', priority: 20}
 
   App\Common\Infrastructure\Delivery\Symfony\Serializer\Api\JsonApiErrorNormalizer:
     tags: [ 'serializer.normalizer' ]
